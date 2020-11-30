@@ -1,0 +1,128 @@
+.our-experts-area {
+    .container-fluid {
+        padding: {
+            left: 0;
+            right: 0;
+        };
+        .row {
+            margin: {
+                left: 0;
+                right: 0;
+            };
+            .col-lg-6 {
+                padding: {
+                    left: 0;
+                    right: 0;
+                };
+            }
+        }
+    }
+}
+.our-experts-image {
+    height: 100%;
+    background: {
+        image: url(../../../../assets/img/experts-img.jpg);
+        position: center center;
+        size: cover;
+        repeat: no-repeat;
+    };
+    img {
+        display: none;
+    }
+}
+.our-experts-content {
+    padding: 160px 80px 150px;
+    background: {
+        image: url(../../../../assets/img/experts-bg.jpg);
+        position: center center;
+        size: cover;
+        repeat: no-repeat;
+    };
+    .content {
+        max-width: 500px;
+
+        .sub-title {
+            display: block;
+            text-transform: uppercase;
+            color: var(--whiteColor);
+            font-size: 20px;
+            margin-bottom: 12px;
+            font: {
+                size: 20px;
+                weight: 600;
+            };
+        }
+        h2 {
+            margin-bottom: 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font: {
+                size: 50px;
+                weight: 600;
+            };
+        }
+        .default-btn {
+            margin-top: 25px;
+            background-color: var(--blackColor);
+        }
+    }
+}
+
+@media only screen and (max-width: 767px) {
+
+    .our-experts-image {
+        height: auto;
+        background-image: unset !important;
+
+        img {
+            display: inline-block;
+        }
+    }
+    .our-experts-content {
+        padding: 60px 15px 45px;
+
+        .content {
+            max-width: 100%;
+            text-align: center;
+
+            .sub-title {
+                font-size: 16px;
+            }
+            h2 {
+                font-size: 28px;
+            }
+        }
+    }
+
+}
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+
+    .our-experts-image {
+        height: auto;
+        background-image: unset !important;
+
+        img {
+            display: inline-block;
+        }
+    }
+    .our-experts-content {
+        padding: 100px 25px 85px;
+
+        .content {
+            max-width: 500px;
+            text-align: center;
+            margin: {
+                left: auto;
+                right: auto;
+            };
+        }
+    }
+
+}
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+
+    .our-experts-content {
+        padding: 110px 45px 100px;
+    }
+
+}

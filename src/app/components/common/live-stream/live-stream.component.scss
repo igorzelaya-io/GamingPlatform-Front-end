@@ -1,0 +1,180 @@
+.live-stream-area {
+    position: relative;
+    z-index: 1;
+    background: {
+        image: url(../../../../assets/img/awards-bg.jpg);
+        position: center center;
+        repeat: no-repeat;
+        size: cover;
+    };
+    &.bg-color {
+        background: {
+            color: var(--blackColor);
+            image: unset !important;
+        };
+    }
+}
+.live-stream-tabs {
+    .nav-tabs {
+        background-color: var(--blackColor);
+        border: none;
+
+        .nav-item {
+            margin-bottom: -1px;
+
+            .nav-link {
+                border: none;
+                padding: 12px 45px 7px 30px;
+                text-transform: uppercase;
+                letter-spacing: 2px;
+                -webkit-clip-path: polygon(0 0, 100% 0%, 85% 100%, 0% 100%);
+                clip-path: polygon(0 0, 100% 0%, 85% 100%, 0% 100%);
+                font: {
+                    size: 22px;
+                    weight: 600;
+                };
+                border: {
+                    top: {
+                        left: {
+                            radius: 0;
+                        };
+                        right: {
+                            radius: 0;
+                        };
+                    };
+                };
+                &.active {
+                    background-color: var(--mainColor) !important;
+                    color: var(--whiteColor) !important;
+                }
+                &:hover {
+                    color: var(--mainColor);
+                }
+            }
+        }
+    }
+    .tab-content {
+        background-color: transparent;
+        padding: 0;
+
+        .row {
+            margin: 0;
+
+            .col-lg-7, .col-lg-5, .col-lg-4 {
+                padding: 0;
+            }
+        }
+    }
+}
+.single-live-stream-box {
+    overflow: hidden;
+    position: relative;
+
+    .link-btn {
+        display: block;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        z-index: 2;
+    }
+    .content {
+        position: absolute;
+        left: 0;
+        right: 0;
+        opacity: 0;
+        visibility: hidden;
+        transition: var(--transition);
+        bottom: -20px;
+        background-color: rgba(12, 3, 5, .75);
+        padding: 28px 40px 20px;
+
+        h3 {
+            margin-bottom: 0;
+            text-transform: uppercase;
+            display: inline-block;
+            font: {
+                size: 34px;
+                weight: 600;
+            };
+            i {
+                width: 40px;
+                height: 40px;
+                line-height: 40px;
+                text-align: center;
+                background-color: #d2d0d1;
+                color: var(--mainColor);
+                font-size: 18px;
+                display: inline-block;
+                border-radius: 50%;
+                transition: var(--transition);
+                position: relative;
+                top: -5px;
+                margin-left: 10px;
+            }
+        }
+    }
+    &:hover {
+        .content {
+            opacity: 1;
+            visibility: visible;
+            bottom: 0;
+
+            h3 {
+                i {
+                    background-color: var(--mainColor);
+                    color: var(--whiteColor);
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 767px) {
+
+    .single-live-stream-box {
+        .content {
+            padding: 18px 15px 13px;
+            opacity: 1;
+            visibility: visible;
+            bottom: 0;
+
+            h3 {
+                font-size: 22px;
+
+                i {
+                    top: -3px;
+                }
+            }
+        }
+    }
+    .live-stream-tabs {
+        .nav-tabs {
+            display: block;
+
+            .nav-item {
+                margin-bottom: 0;
+                display: block;
+
+                .nav-link {
+                    padding: 14px 45px 7px 20px;
+                    letter-spacing: 1px;
+                    font-size: 18px;
+                    display: block;
+                    text-align: center;
+                    clip-path: unset !important;
+                    border-bottom: 1px solid #272626;
+                }
+                &:first-child {
+                    border-top: 1px solid #272626;
+                }
+            }
+        }
+        .tab-content {
+            background-color: transparent;
+            padding: 0;
+        }
+    }
+
+}

@@ -1,0 +1,89 @@
+.history-area {
+    position: relative;
+    z-index: 1;
+    padding: {
+        top: 280px;
+        bottom: 280px;
+    };
+    background: {
+        image: url(../../../../assets/img/history-bg.jpg);
+        position: center center;
+        repeat: no-repeat;
+        size: cover;
+    };
+    &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        z-index: -1;
+        background-color: #1b060a;
+        opacity: .50;
+    }
+}
+.history-content {
+    text-align: center;
+
+    .video-btn {
+        display: inline-block;
+        width: 82px;
+        line-height: 83px;
+        height: 82px;
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, .90);
+        text-align: center;
+        color: var(--mainColor);
+        font-size: 35px;
+
+        &:hover {
+            background-color: var(--mainColor);
+            color: var(--whiteColor);
+        }
+    }
+    h2 {
+        text-transform: uppercase;
+        margin: {
+            bottom: 0;
+            top: 30px;
+        };
+        font: {
+            family: var(--fontFamily2);
+            size: 32px;
+        };
+    }
+}
+
+@media only screen and (max-width: 767px) {
+
+    .history-area {
+        padding: {
+            top: 140px;
+            bottom: 140px;
+        };
+    }
+    .history-content {
+        .video-btn {
+            width: 70px;
+            line-height: 70px;
+            height: 70px;
+            font-size: 30px;
+        }
+        h2 {
+            margin-top: 30px;
+            font-size: 20px;
+        }
+    }
+
+}
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+
+    .history-area {
+        padding: {
+            top: 180px;
+            bottom: 180px;
+        };
+    }
+
+}

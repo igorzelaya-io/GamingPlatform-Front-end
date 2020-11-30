@@ -1,0 +1,57 @@
+.error-content {
+    text-align: center;
+
+    h3 {
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin: {
+            bottom: 8px;
+            top: 50px;
+        };
+        font: {
+            size: 50px;
+            weight: 700;
+        };
+    }
+    p {
+        color: #c2c0c0;
+        max-width: 550px;
+        margin: {
+            left: auto;
+            right: auto;
+            bottom: 0;
+        };
+    }
+    .default-btn {
+        margin-top: 30px;
+    }
+}
+
+@media only screen and (max-width: 767px) {
+    
+    .error-content {
+        h3 {
+            margin-top: 35px;
+            font-size: 28px;
+        }
+        p {
+            max-width: 100%;
+        }
+    }
+
+}
+@media only screen and (min-width: 576px) and (max-width: 767px) {
+
+}
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+
+}
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+
+}
+@media only screen and (min-width: 1200px) and (max-width: 1355px) {
+
+}
+@media only screen and (min-width: 1550px) {
+
+}

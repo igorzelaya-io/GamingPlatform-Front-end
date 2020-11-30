@@ -1,0 +1,13 @@
+.magazine-demo {
+    position: relative;
+    z-index: 1;
+
+    &.bg-image {
+        background: {
+            image: url(../../../../assets/img/main-banner-bg2.jpg);
+            position: center center;
+            size: cover;
+            repeat: no-repeat;
+        };
+    }
+}

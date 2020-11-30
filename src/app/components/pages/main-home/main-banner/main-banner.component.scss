@@ -1,0 +1,211 @@
+.main-banner {
+    position: relative;
+    z-index: 1;
+    padding: {
+        top: 150px;
+    };
+    background: {
+        image: url(../../../../../assets/d1images/mainblogwallpaper.png);
+        position: center center;
+        repeat: no-repeat;
+        size: cover;
+    };
+    &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        background: {
+            image: url(../../../../../assets/d1images/mainblogwallpaper.png);
+            position: bottom;
+            repeat: no-repeat;
+        };
+    }
+}
+.main-banner-content {
+    text-align: center;
+    max-width: 790px;
+    margin: {
+        left: auto;
+        right: auto;
+    };
+    .sub-title {
+        display: block;
+        color: var(--mainColor);
+        text-transform: uppercase;
+        margin-bottom: 13px;
+        letter-spacing: 23px;
+        font: {
+            size: 20px;
+            weight: 400;
+        };
+    }
+    .logo {
+        margin-bottom: 30px;
+    }
+    h6 {
+        margin-bottom: 0;
+        text-transform: uppercase;
+        font: {
+            size: 24px;
+            weight: 400;
+        };
+    }
+    .btn-box {
+        margin-top: 50px;
+
+        .default-btn {
+            margin-right: 15px;
+        }
+        .optional-btn {
+            margin-left: 15px;
+
+            &::after {
+                margin: 1px 0;
+            }
+        }
+    }
+}
+.main-banner-image {
+    text-align: center;
+}
+.banner-video-box {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+
+    &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        z-index: -1;
+        margin: -12px;
+        background: {
+            image: url(../../../../../assets/img/main-banner-video-bg.jpg);
+            position: center center;
+            size: cover;
+            repeat: no-repeat;
+        };
+    }
+    .content {
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        right: 0;
+        text-align: center;
+        z-index: 2;
+
+        .video-btn {
+            display: inline-block;
+            width: 82px;
+            line-height: 83px;
+            height: 82px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, .90);
+            text-align: center;
+            color: var(--mainColor);
+            font-size: 35px;
+
+            &:hover {
+                background-color: var(--mainColor);
+                color: var(--whiteColor);
+            }
+        }
+        .title {
+            display: block;
+            text-transform: uppercase;
+            margin-top: 25px;
+            font: {
+                family: var(--fontFamily2);
+                size: 30px;
+            };
+        }
+    }
+}
+
+@media only screen and (max-width: 767px) {
+
+    .main-banner {
+        padding: {
+            top: 185px;
+            bottom: 60px;
+        };
+        &::before {
+            display: none;
+        }
+    }
+    .main-banner-content {
+        max-width: 100%;
+        margin: {
+            left: 0;
+            right: 0;
+        };
+        .sub-title {
+            margin-bottom: 13px;
+            letter-spacing: 5px;
+            font-size: 18px;
+        }
+        .logo {
+            margin-bottom: 20px;
+        }
+        h6 {
+            font-size: 18px;
+        }
+        .btn-box {
+            margin-top: 30px;
+
+            .default-btn {
+                margin-right: 8px;
+            }
+            .optional-btn {
+                margin-left: 8px;
+            }
+        }
+    }
+    .banner-video-box {
+        &::before {
+            margin: -5px;
+        }
+        .content {
+            .title {
+                margin-top: 20px;
+                font-size: 15px;
+            }
+            .video-btn {
+                width: 60px;
+                line-height: 60px;
+                height: 60px;
+                font-size: 28px;
+            }
+        }
+    }
+
+}
+@media only screen and (min-width: 576px) and (max-width: 767px) {
+
+}
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+
+    .main-banner-image {
+        margin-top: 30px;
+    }
+    
+}
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+
+}
+@media only screen and (min-width: 1200px) and (max-width: 1355px) {
+
+}
+@media only screen and (min-width: 1550px) {
+
+    
+
+}

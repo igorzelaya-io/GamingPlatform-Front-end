@@ -1,0 +1,116 @@
+.featured-games-inner {
+    background-color: #1b060a;
+}
+.featured-games-content {
+    .content {
+        padding: 110px 45px 45px;
+
+        .sub-title {
+            display: block;
+            text-transform: uppercase;
+            color: var(--mainColor);
+            margin-bottom: 10px;
+            font: {
+                size: 20px;
+                weight: 600;
+            };
+        }
+        h2 {
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font: {
+                size: 32px;
+                weight: 600;
+            };
+        }
+        .read-more-btn {
+            display: inline-block;
+            font-size: 20px;
+            text-transform: uppercase;
+            margin-top: 5px;
+            
+            i {
+                margin-left: 5px;
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 767px) {
+
+    .featured-games-content {
+        .content {
+            text-align: center;
+            padding: 95px 20px 30px;
+
+            .sub-title {
+                font-size: 16px;
+            }
+            h2 {
+                margin-bottom: 12px;
+                font-size: 22px;
+            }
+            .read-more-btn {
+                font-size: 17px;
+            }
+        }
+        .owl-theme {
+            .owl-nav {
+                left: 20px;
+                top: 30px;
+
+                [class*=owl-] {
+                    font-size: 20px;
+                }
+            }
+            .owl-dots {
+                right: 20px;
+                top: 35px;
+            }
+        }
+    }
+
+}
+@media only screen and (min-width: 576px) and (max-width: 767px) {
+
+}
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+
+}
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+
+    .featured-games-content {
+        .content {
+            padding: 25px;
+
+            h2 {
+                font-size: 30px;
+            }
+        }
+        .owl-theme {
+            .owl-nav {
+                display: none;
+            }
+            .owl-dots {
+                right: 15px;
+                top: auto;
+                bottom: 25px;
+            }
+        }
+    }
+
+}
+@media only screen and (min-width: 1200px) and (max-width: 1355px) {
+
+    .featured-games-content {
+        .content {
+            padding: 110px 40px 45px;
+
+            h2 {
+                font-size: 30px;
+            }
+        }
+    }
+
+}

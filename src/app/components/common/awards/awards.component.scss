@@ -1,0 +1,133 @@
+.awards-area {
+    position: relative;
+    z-index: 1;
+    background: {
+        image: url(../../../../assets/img/awards-bg.jpg);
+        position: center center;
+        repeat: no-repeat;
+        size: cover;
+    };
+}
+.awards-image {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+
+    .shape {
+        position: absolute;
+        z-index: -1;
+        left: 0;
+        right: 0;
+        top: 90px;
+        animation: {
+            name: rotateme;
+            duration: 140s;
+            iteration-count: infinite;
+            timing-function: linear;
+        };
+    }
+}
+.awards-content {
+    text-align: center;
+    position: relative;
+    z-index: 1;
+
+    .sub-title {
+        display: block;
+        text-transform: uppercase;
+        color: var(--mainColor);
+        margin-bottom: 12px;
+        font: {
+            size: 20px;
+            weight: 600;
+        };
+    }
+    h2 {
+        margin-bottom: 0;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font: {
+            size: 50px;
+            weight: 600;
+        };
+    }
+    .row {
+        padding: {
+            left: 60px;
+            right: 60px;
+        };
+    }
+    .image {
+        margin-top: 50px;
+    }
+    .shape {
+        position: absolute;
+        left: 0;
+        right: 0;
+        text-align: center;
+        z-index: -1;
+        bottom: -35px;
+        margin: {
+            left: auto;
+            right: auto;
+        };
+        img {
+            &:nth-child(1) {
+                position: relative;
+                top: 25px;
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 767px) {
+
+    .awards-image {
+        .shape {
+            animation: unset !important;
+        }
+    }
+    .awards-content {
+        margin-top: 35px;
+
+        .sub-title {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        h2 {
+            font-size: 28px;
+        }
+        .shape {
+            display: none;
+        }
+        .image {
+            margin-top: 35px;
+        }
+        .row {
+            padding: {
+                left: 0;
+                right: 0;
+            };
+        }
+    }
+
+}
+@media only screen and (min-width: 576px) and (max-width: 767px) {
+
+}
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+
+    .awards-image {
+        .shape {
+            top: 30px;
+        }
+    }
+    .awards-content {
+        margin-top: 45px;
+
+        .shape {
+            bottom: -50px;
+        }
+    }
+
+}

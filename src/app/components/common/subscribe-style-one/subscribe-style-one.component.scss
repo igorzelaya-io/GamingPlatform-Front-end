@@ -1,0 +1,126 @@
+.subscribe-inner {
+    text-align: center;
+    padding: {
+        left: 100px;
+        right: 100px;
+    };
+    background: {
+        image: url(../../../../assets/img/subscribe-bg.jpg);
+        position: center center;
+        repeat: no-repeat;
+        size: cover;
+    };
+    .sub-title {
+        display: block;
+        text-transform: uppercase;
+        color: var(--mainColor);
+        margin-bottom: 12px;
+        font: {
+            size: 20px;
+            weight: 600;
+        };
+    }
+    h2 {
+        margin-bottom: 0;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font: {
+            size: 50px;
+            weight: 600;
+        };
+    }
+    .newsletter-form {
+        position: relative;
+        max-width: 700px;
+        margin: {
+            top: 40px;
+            left: auto;
+            right: auto;
+        };
+        label {
+            display: block;
+            margin-bottom: 0;
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            color: var(--whiteColor);
+            font-size: 22px;
+            transform: translateY(-50%);
+        }
+        .input-newsletter {
+            display: block;
+            width: 100%;
+            height: 50px;
+            background-color: #1a0c09;
+            padding: 5px 0 0 58px;
+            transition: var(--transition);
+            color: var(--whiteColor);
+            border: none;
+            font: {
+                size: 18px;
+                weight: 400;
+            };
+            &::placeholder {
+                text-transform: uppercase;
+                color: #999999;
+                transition: var(--transition);
+            }
+            &:focus {
+                padding-top: 3px;
+
+                &::placeholder {
+                    color: transparent;
+                }
+            }
+        }
+        .default-btn {
+            position: absolute;
+            right: 0;
+            top: 0;
+            height: 50px;
+            padding-top: 13.5px;
+        }
+    }
+}
+
+@media only screen and (max-width: 767px) {
+
+    .subscribe-inner {
+        padding: {
+            left: 25px;
+            right: 25px;
+        };
+        .sub-title {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        h2 {
+            font-size: 28px;
+        }
+        .newsletter-form {
+            max-width: 100%;
+            margin: {
+                top: 25px;
+                left: 0;
+                right: 0;
+            };
+            .default-btn {
+                position: relative;
+                height: auto;
+                padding-top: 13px;
+                margin-top: 15px;
+            }
+            .input-newsletter {
+                padding: 5px 0 0 40px;
+                font-size: 16px;
+            }
+            label {
+                left: 10px;
+                top: 10px;
+                font-size: 20px;
+                transform: unset;
+            }
+        }
+    }
+
+}
