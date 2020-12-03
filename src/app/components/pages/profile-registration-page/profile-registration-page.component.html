@@ -8,34 +8,195 @@
     </div>
 </section>
 <section class="profile-authentication-area ptb-100">
-    <div class="container">
+    <div *ngIf="!isSuccessfulRegister && !isSignUpFailed" class="container">
         <div class="row">
             <div class="col-lg-6 col-md-12">
                 <div class="register-form">
-                    <h2>Register</h2>
+                    <h2>Personal Information</h2>
+                    <form>
+                        <div class="form-group">
+                            <label>First Name</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                required
+                                maxlength="12"
+                                placeholder="Name"
+                                [formControl]="txtFirstName"
+                            >
+                        </div>
+                        <div class="alert alert-danger" *ngIf="txtFirstName.invalid && (txtFirstName.dirty || txtFirstName.touched)">
+                            <div *ngIf="txtFirstName.errors.required">
+                                Name is required
+                            </div>
+                        </div>
+                        <div>
+                            <div class="form-group">
+                                <label>Birth Name</label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    required
+                                    maxlength="12"
+                                    placeholder="Birth Name"
+                                    [formControl]="txtBirthName"
+                                >
+                            </div>
+                            <div class="alert alert-danger" *ngIf="txtBirthName.invalid && (txtBirthName.touched || txtBirthName.dirty)">
+                                <div *ngIf="txtBirthName.errors.required">
+                                    Birth name is required
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input 
+                                type="email" 
+                                class="form-control" 
+                                placeholder="Email"
+                                required
+                                [formControl]="txtEmail"
+                            >
+                        </div>
+                        <div class="alert alert-danger" *ngIf="txtEmail.invalid && (txtEmail.dirty || txtEmail.touched)">
+                            <div *ngIf="txtEmail.errors.required">
+                                Please enter a valid email.
+                            </div>
+                        </div>
+                        <label>BirthDate</label>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-lg-3 col-md-12">
+                                    <div class="form-group">
+                                            <input
+                                                class="form-control"
+                                                required 
+                                                maxlength="2"
+                                                placeholder="Day" 
+                                                [formControl]="txtDay"					
+                                            >					  
+                                    </div>
+                                    <div class="alert alert-danger" *ngIf="txtDay.invalid && (txtDay.dirty || txtDay.touched)">
+                                        <div *ngIf="txtDay.errors.required">
+                                            Day is required.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-12">
+                                    <form required [formControl]="txtMonth">
+                                        <div class="form-group">
+                                            <select class="form-control">
+                                                <option value="" disabled>Select Month</option>
+                                            <option *ngFor="let month of months; let i = index" value="{{i}}">{{month}}</option>
+                                            </select>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="col-lg-3 col-md-12">
+                                    <div class="form-group">
+                                        <input
+                                            (ngSubmit)="validateYearInput()"
+                                            type="text"
+                                            required
+                                            class="form-control"
+                                            [formControl]="txtYear"
+                                            placeholder="Year"
+                                            maxlength="4"
+                                        >
+                                    </div>
+                                    <div class="alert alert-danger" *ngIf="txtYear.invalid && (txtYear.dirty || txtYear.touched)">
+                                        <div *ngIf="txtYear.errors.required">
+                                            Year is required.
+                                        </div>
+                                        <div *ngIf="!isValidYear">
+                                            Please enter a valid year.
+                                        </div>
+                                    </div>
 
+                                </div>
+                            </div>
+                        </div>
+                        <form [formControl]="txtCountry" (ngSubmit)="dropdownOnSubmit()">
+                            <div class="form-group">
+                                <label>Country</label>
+                                <select class="form-control">
+                                    <option value="" disabled>Select Country</option>
+                                    <option *ngFor="let country of countryInfo; let i = index" value="{{i}}">{{country.CountryName}}</option>
+                                </select>    
+                            </div>
+                        </form>
+                    </form>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-12">
+                <div class="register-form">
+                    <h3>Account Information</h3>
                     <form>
                         <div class="form-group">
                             <label>Username</label>
-                            <input type="text" class="form-control" placeholder="Username or email">
+                            <input type="text" class="form-control" placeholder="Username">
                         </div>
+                        <div>
 
-                        <div class="form-group">
-                            <label>Email</label>
-                            <input type="email" class="form-control" placeholder="Username or email">
                         </div>
-
                         <div class="form-group">
                             <label>Password</label>
-                            <input type="password" class="form-control" placeholder="Password">
+                            <input 
+                                type="password" 
+                                class="form-control"
+                                required 
+                                placeholder="Password"
+                                [formControl]="txtPassword" 
+                                minlength="8"   
+                           >
                         </div>
-
+                        <div class="alert alert-danger" *ngIf="txtPassword.invalid && (txtPassword.dirty || txtPassword.touched)">
+                            <div *ngIf="txtPassword.errors.required">
+                                Password is a required field.
+                            </div>
+                            <div *ngIf="txtPassword.errors.minlength">
+                               Password must be at least 8 characters lonzg.
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Repeat Password</label>
+                            <input
+                                required
+                                minlength="8"
+                                class="form-control"
+                                [formControl]="txtPasswordRepeat"
+                                placeholder="Password"
+                                type="password"
+                            >
+                        </div>
+                        <div class="alert alert-danger" *ngIf="txtPasswordRepeat.invalid && (txtPasswordRepeat.touched || txtPasswordRepeat.dirty)">
+                            <div *ngIf="txtPasswordRepeat.errors.required">
+                                Password is a required field.
+                            </div>
+                            <div *ngIf="txtPasswordRepeat.errors.minlength">
+                                Password must be at least 8 characters long.
+                            </div>
+                        </div>
                         <p class="description">The password should be at least eight characters long. To make it stronger, use upper and lower case letters, numbers, and symbols like ! " ? $ % ^ & )</p>
-
-                        <button type="submit">Register</button>
+                        
+                        <button type="submit" (click)="onSubmit();" 
+                            [disabled]="txtFirstName.invalid || txtBirthName.invalid || txtEmail.invalid || txtDay.invalid || !isSubmittedDropDownContent || isClicked || txtUserName.invalid 
+                            || txtPassword.invalid || txtPasswordRepeat.invalid || !areEqualPasswords "
+                        >
+                            Register
+                        </button>
                     </form>
                 </div>
             </div>
         </div>
+    </div>
+    <div *ngIf="isSuccessfulRegister">
+        <h2>You've registered Successfylly</h2>
+    </div>
+    <div class="alert alert-danger" *ngIf="isSignUpFailed">
+        <h2>
+            Registration failed.
+        </h2>
+        <h3>{{errorMessage}}</h3>
     </div>
 </section>

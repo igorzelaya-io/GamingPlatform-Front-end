@@ -1,20 +1,31 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { UserAuthRequest } from '../models/userauthrequest';
+import { UserLoginRequest } from '../models/userloginrequest';
+import { MessageResponse} from '../models/messageresponse';
+import { JwtResponse } from '../models/jwtresponse';
 
 const AUTH_API_ENDPOINT = 'http://localhost:8080/auth';
+
+const httpOptions = {
+  headers: new HttpHeaders({'Content-Type': 'application/json'})
+};
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthenticationService {
 
-  constructor(httpClient: HttpClient) { 
-
+  constructor(private httpClient: HttpClient){
+  
   }
 
+  public login(credentials: UserLoginRequest): Observable<JwtResponse>{
+    return this.httpClient.post<JwtResponse>(AUTH_API_ENDPOINT + '/login', credentials, httpOptions);
+  }
 
-
-
-
-
+  public signup(userAuthRequest: UserAuthRequest): Observable<MessageResponse>{
+    return this.httpClient.post<MessageResponse>(AUTH_API_ENDPOINT + '/signup', userAuthRequest, httpOptions);
+  }
 }

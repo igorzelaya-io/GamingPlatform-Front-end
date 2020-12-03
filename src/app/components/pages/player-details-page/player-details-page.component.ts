@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { User } from '../../../models/user';
+import { TokenStorageService } from 'src/app/services/token-storage.service';
 
 @Component({
   selector: 'app-player-details-page',
@@ -7,9 +9,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PlayerDetailsPageComponent implements OnInit {
 
-  constructor() { }
+  isAdmin = false;
+  constructor(private tokenService: TokenStorageService) {
 
+  }
+  
+  user: User = new User();
+  
   ngOnInit(): void {
+    
   }
 
 }

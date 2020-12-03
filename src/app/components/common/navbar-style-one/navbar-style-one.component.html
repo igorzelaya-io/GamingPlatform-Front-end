@@ -69,9 +69,9 @@
 
                         <li class="nav-item"><a routerLink="/products-list" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">Shop</a></li>
                         
-                        <!-- *ngIf="!isAuthenticated" -->
-                        <li class="nav-item"><a routerLink="/login" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">Login</a></li>
-                        <li class="nav-item"><a routerLink="/register" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">Sign Up</a></li>
+                         
+                        <li *ngIf="!isAuthenticated" class="nav-item"><a routerLink="/login" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">Login</a></li>
+                        <li *ngIf="!isAuthenticated" class="nav-item"><a routerLink="/register" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">Sign Up</a></li>
                         
                             <!-- <ul class="dropdown-menu"> -->
                             <!--    <li class="nav-item"><a routerLink="/products-list-1" class="nav-link" routerLinkActive="active"[routerLinkActiveOptions]="{exact: true}">Products List 01</a></li>
@@ -86,8 +86,16 @@
 
                                 <li class="nav-item"><a routerLink="/my-account" class="nav-link" routerLinkActive="active"[routerLinkActiveOptions]="{exact: true}">My Account</a></li>
                             </ul> -->
-                        
+                        <li *ngIf="isAuthenticated" class="nav-item"><a href="javascript:void(0)" class="nav-link">Profilee<i class="flaticon-down-arrow"></i></a>
+                            <ul class="dropdown-menu">
+                                <li class="nav-item"><a class="nav-link" routerLink="/account-details" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Account</a></li>
+                                
 
+
+
+                                <li class="nav-item"><a class="nav-link" (click)="logOut()">Log Out</a></li>
+                            </ul>
+                        </li>  
                         <!-- <li class="nav-item"><a href="javascript:void(0)" class="nav-link">Blog <i class="flaticon-down-arrow"></i></a>
                             <ul class="dropdown-menu">
                                 <li class="nav-item"><a routerLink="/blog-1" class="nav-link" routerLinkActive="active"[routerLinkActiveOptions]="{exact: true}">Grid (2 in Row)</a></li>
