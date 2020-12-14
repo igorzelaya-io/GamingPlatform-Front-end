@@ -18,20 +18,24 @@ import { MatchDetailsPageComponent } from './components/pages/match-details-page
 import { TournamentsDetailsPageComponent } from './components/pages/tournaments-details-page/tournaments-details-page.component';
 import { StreamSchedulePageComponent } from './components/pages/stream-schedule-page/stream-schedule-page.component';
 import { AccountDetailsComponent } from './components/pages/account-details/account-details';
+import { TournamentCreationPageComponent } from './components/pages/tournament-creation/tournament-creation-page';
+import { MyTeamsPageComponent } from './components/pages/my-teams/my-teams-page';
 const routes: Routes = [
     {path: '', component: MainHomeComponent},
     {path: 'tournaments', component: TournamentsHomeComponent},
+    {path: 'tournament-creation', component: TournamentCreationPageComponent},
+    {path: 'tournament-details', component: TournamentsDetailsPageComponent},
     {path: 'streaming', component: StreamingHomeComponent},
-    {path: 'team', component: TeamPageComponent},
+    {path: 'our-team', component: TeamPageComponent},
+    {path: 'my-teams', component: MyTeamsPageComponent},
+    {path: 'team-details', component: TeamDetailsPageComponent},
     {path: 'coming-soon', component: ComingSoonPageComponent},
     {path: 'error', component: ErrorPageComponent},
     {path: 'stream-schedule', component: StreamSchedulePageComponent},
-    {path: 'single-tournament', component: TournamentsDetailsPageComponent},
     {path: 'single-match', component: MatchDetailsPageComponent},
-    {path: 'single-team', component: TeamDetailsPageComponent},
     {path: 'single-player', component: PlayerDetailsPageComponent},
     {path: 'account-details', component: AccountDetailsComponent},
-    {path: 'products-list', component: ProductsListPageTwoComponent},
+    {path: 'shop', component: ProductsListPageTwoComponent},
     {path: 'cart', component: CartPageComponent},
     {path: 'checkout', component: CheckoutPageComponent},
     {path: 'single-products', component: ProductsDetailsPageComponent},

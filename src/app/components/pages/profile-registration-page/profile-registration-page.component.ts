@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { UserAuthRequest } from '../../../models/userauthrequest';
+import { UserAuthRequest } from '../../../models/user/userauthrequest';
 import { AuthenticationService } from '../../../services/authentication.service'; 
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';

@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { FormControl } from '@angular/forms';
-import { UserLoginRequest} from '../../../models/userloginrequest';
+import { UserLoginRequest} from '../../../models/user/userloginrequest';
 import { TokenStorageService } from '../../../services/token-storage.service'; 
-import { User } from 'src/app/models/user';
+import { User } from 'src/app/models/user/user';
 import { UserService } from '../../../services/user.service';
 import { JwtResponse } from 'src/app/models/jwtresponse';
 @Component({

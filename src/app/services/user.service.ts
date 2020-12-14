@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { User } from '../models/user';
+import { User } from '../models/user/user';
 import {retry, catchError } from 'rxjs/operators';
 
 const USER_API = 'localhost://8080/usersapi/users'; 
@@ -14,6 +14,7 @@ export class UserService {
   constructor(private httpClient: HttpClient) {
 
   }
+  
   
   private handleError<T>(operation = 'operation', result ?: T){
     return(error: any): Observable<T> => {

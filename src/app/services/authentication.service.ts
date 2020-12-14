@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { UserAuthRequest } from '../models/userauthrequest';
-import { UserLoginRequest } from '../models/userloginrequest';
+import { UserAuthRequest } from '../models/user/userauthrequest';
+import { UserLoginRequest } from '../models/user/userloginrequest';
 import { MessageResponse} from '../models/messageresponse';
 import { JwtResponse } from '../models/jwtresponse';
 

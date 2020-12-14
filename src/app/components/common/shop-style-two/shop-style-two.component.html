@@ -4,14 +4,20 @@
         <h2>Our Gaming Products</h2>
     </div>
 
-    <div class="products-slides owl-carousel owl-theme">
-        <div class="single-products-item">
+    <div *ngIf="!services">
+        <h1>
+            No available items.
+        </h1>
+    </div>
+    
+    <div *ngIf="services" class="products-slides owl-carousel owl-theme">
+        <div *ngFor="let service of services" class="single-products-item">
             <div class="products-image">
                 <div class="bg-image">
                     <img src="assets/img/products-shape.png" alt="image">
                 </div>
 
-                <img src="assets/img/products-img1.png" alt="image" class="main-image">
+                <img src="service.serviceImage" alt="image" class="main-image">
 
                 <a routerLink="/" class="add-to-cart-btn">Add To Cart</a>
             </div>

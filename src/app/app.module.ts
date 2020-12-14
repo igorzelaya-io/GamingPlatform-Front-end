@@ -57,7 +57,8 @@ import { PlayerDetailsPageComponent } from './components/pages/player-details-pa
 import { ProfileRegistrationPageComponent } from './components/pages/profile-registration-page/profile-registration-page.component';
 import { AccountDetailsComponent } from './components/pages/account-details/account-details';
 import { ShopStyleOneComponent } from './components/pages/shop-style-one/shop-style-one.component';
-
+import { TournamentCreationPageComponent } from './components/pages/tournament-creation/tournament-creation-page';
+import { MyTeamsPageComponent } from './components/pages/my-teams/my-teams-page';
 @NgModule({
   declarations: [
     AppComponent,
@@ -67,6 +68,8 @@ import { ShopStyleOneComponent } from './components/pages/shop-style-one/shop-st
     PartnerComponent,
     TeamComponent,
     NewsComponent,
+   TournamentCreationPageComponent,
+    MyTeamsPageComponent,
     MatchesStyleOneComponent,
     MainBannerComponent,
     NavbarStyleOneComponent,

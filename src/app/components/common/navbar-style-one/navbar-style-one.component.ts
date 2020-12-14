@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
 import { TokenStorageService } from 'src/app/services/token-storage.service';
-import { User } from 'src/app/models/user';
+import { User } from 'src/app/models/user/user';
 
 @Component({
     selector: 'app-navbar-style-one',
@@ -22,7 +22,7 @@ export class NavbarStyleOneComponent implements OnInit {
 
     isAuthenticated = false;
     user: User = new User();
-    
+
     constructor(private router: Router,
                 location: Location,
                 private tokenService: TokenStorageService
@@ -48,6 +48,9 @@ export class NavbarStyleOneComponent implements OnInit {
 
     ngOnInit(): void {
         this.isAuthenticated = !!this.tokenService.getToken();
+        if(this.isAuthenticated){
+            this.user = this.tokenService.getUser();
+        }
     }
     
 }
