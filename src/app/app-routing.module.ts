@@ -20,6 +20,7 @@ import { StreamSchedulePageComponent } from './components/pages/stream-schedule-
 import { AccountDetailsComponent } from './components/pages/account-details/account-details';
 import { TournamentCreationPageComponent } from './components/pages/tournament-creation/tournament-creation-page';
 import { MyTeamsPageComponent } from './components/pages/my-teams/my-teams-page';
+import { TeamCreationPageComponent } from './components/common/team-creation-page/team-creation-page.component';
 const routes: Routes = [
     {path: '', component: MainHomeComponent},
     {path: 'tournaments', component: TournamentsHomeComponent},
@@ -29,6 +30,7 @@ const routes: Routes = [
     {path: 'our-team', component: TeamPageComponent},
     {path: 'my-teams', component: MyTeamsPageComponent},
     {path: 'team-details', component: TeamDetailsPageComponent},
+    {path: 'team-creation', component: TeamCreationPageComponent},
     {path: 'coming-soon', component: ComingSoonPageComponent},
     {path: 'error', component: ErrorPageComponent},
     {path: 'stream-schedule', component: StreamSchedulePageComponent},

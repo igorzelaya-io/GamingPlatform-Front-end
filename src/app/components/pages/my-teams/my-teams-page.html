@@ -8,30 +8,16 @@
     </div>
 </section>
 
-<section class="blog-area ptb-100">
+<section class="blog-area ptb-100">     
     <div class="container">
+        <div>
+            <button>Create Team</button>
+        </div>
+        <div *ngIf="isEmpty" style="margin-left: 460px;">
+            <h1>{{message}}</h1>
+        </div>  
         <div class="row">
-            <div class="col-lg-6 col-md-6">
-                <div class="single-blog-post-box">
-                    <div class="post-image">
-                        <a routerLink="/">
-                            <img src="assets/img/main-blog-img1.jpg" alt="image">
-                        </a>
-                    </div>
-
-                    <div class="post-content">
-                        <ul class="post-meta">
-                            <li>By <a routerLink="/blog-1">John Smith</a></li>
-                            <li>June 12, 2020</li>
-                            <li><a routerLink="/blog-1">Game</a></li>
-                        </ul>
-                        <h3><a routerLink="/single-blog">Android tools for mobile game development</a></h3>
-                        <a routerLink="/single-blog" class="read-more-btn">Read More <i class="flaticon-null"></i></a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-6 col-md-6">
+            <div *ngFor="let team of teams" class="col-lg-6 col-md-6">
                 <div class="single-blog-post-box">
                     <div class="post-image">
                         <a routerLink="/single-blog">
@@ -41,96 +27,14 @@
 
                     <div class="post-content">
                         <ul class="post-meta">
-                            <li>By <a routerLink="/blog-1">John Smith</a></li>
-                            <li>June 11, 2020</li>
-                            <li>Programmer</li>
+                        <li>By <a routerLink="/blog-1">{{team.teamModerator}}</a></li>
+                        <li>{{team.teamCountry}}</li>
                         </ul>
-                        <h3><a routerLink="/single-blog">Conversion Rate the Sales Funnel Optimization</a></h3>
-                        <a routerLink="/single-blog" class="read-more-btn">Read More <i class="flaticon-null"></i></a>
+                        <h3><a routerLink="/single-blog">{{team.teamName}}</a></h3>
+                        <a routerLink="/single-blog" class="read-more-btn">View Team<i class="flaticon-null"></i></a>
                     </div>
                 </div>
             </div>
-
-            <div class="col-lg-6 col-md-6">
-                <div class="single-blog-post-box">
-                    <div class="post-image">
-                        <a routerLink="/single-blog">
-                            <img src="assets/img/main-blog-img3.jpg" alt="image">
-                        </a>
-                    </div>
-
-                    <div class="post-content">
-                        <ul class="post-meta">
-                            <li>By <a routerLink="/blog-1">John Smith</a></li>
-                            <li>June 10, 2020</li>
-                            <li>Spider-Man</li>
-                        </ul>
-                        <h3><a routerLink="/single-blog">Making Insomniac's Spider-Man do what a spider can</a></h3>
-                        <a routerLink="/single-blog" class="read-more-btn">Read More <i class="flaticon-null"></i></a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-6 col-md-6">
-                <div class="single-blog-post-box">
-                    <div class="post-image">
-                        <a routerLink="/single-blog">
-                            <img src="assets/img/main-blog-img4.jpg" alt="image">
-                        </a>
-                    </div>
-
-                    <div class="post-content">
-                        <ul class="post-meta">
-                            <li>By <a routerLink="/blog-1">John Smith</a></li>
-                            <li>June 09, 2020</li>
-                            <li>Mobile</li>
-                        </ul>
-                        <h3><a routerLink="/single-blog">How to hit the mark with mobile games development</a></h3>
-                        <a routerLink="/single-blog" class="read-more-btn">Read More <i class="flaticon-null"></i></a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-6 col-md-6">
-                <div class="single-blog-post-box">
-                    <div class="post-image">
-                        <a routerLink="/single-blog">
-                            <img src="assets/img/main-blog-img5.jpg" alt="image">
-                        </a>
-                    </div>
-
-                    <div class="post-content">
-                        <ul class="post-meta">
-                            <li>By <a routerLink="/blog-1">John Smith</a></li>
-                            <li>June 06, 2020</li>
-                            <li><a routerLink="/blog-1">Game</a></li>
-                        </ul>
-                        <h3><a routerLink="/single-blog">Zelda comes to Game Pass for its 10th anniversary</a></h3>
-                        <a routerLink="/single-blog" class="read-more-btn">Read More <i class="flaticon-null"></i></a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-6 col-md-6">
-                <div class="single-blog-post-box">
-                    <div class="post-image">
-                        <a routerLink="/single-blog">
-                            <img src="assets/img/main-blog-img6.jpg" alt="image">
-                        </a>
-                    </div>
-
-                    <div class="post-content">
-                        <ul class="post-meta">
-                            <li>By <a routerLink="/blog-1">John Smith</a></li>
-                            <li>June 05, 2020</li>
-                            <li><a routerLink="/blog-1">Hardware</a></li>
-                        </ul>
-                        <h3><a routerLink="/single-blog">What’s New In Matter of Hardware This Year?</a></h3>
-                        <a routerLink="/single-blog" class="read-more-btn">Read More <i class="flaticon-null"></i></a>
-                    </div>
-                </div>
-            </div>
-
         </div>
     </div>
 </section>

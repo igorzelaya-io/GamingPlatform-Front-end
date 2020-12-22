@@ -1,3 +1,26 @@
+button {
+    margin-top: 22px;
+    border: none;
+    display: block;
+    text-align: center;
+    overflow: hidden;
+    color: var(--whiteColor);
+    background-color: var(--mainColor);
+    transition: var(--transition);
+    width: 100%;
+    border-radius: 5px;
+    text-transform: uppercase;
+    padding: 16px 30px 12px;
+    letter-spacing: 1px;
+    font: {
+        weight: 600;
+        size: 20px;
+    };
+    &:hover {
+        background-color: var(--whiteColor);
+        color: var(--blackColor)
+    }
+}
 .single-popular-leagues-box {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
     background-color: #0b0a0b;
@@ -187,29 +210,6 @@
         }
     }
 }
-button {
-            margin-top: 22px;
-            border: none;
-            display: block;
-            text-align: center;
-            overflow: hidden;
-            color: var(--whiteColor);
-            background-color: var(--mainColor);
-            transition: var(--transition);
-            width: 100%;
-            border-radius: 5px;
-            text-transform: uppercase;
-            padding: 16px 30px 12px;
-            letter-spacing: 1px;
-            font: {
-                weight: 600;
-                size: 20px;
-            };
-            &:hover {
-                background-color: var(--whiteColor);
-                color: var(--blackColor)
-            }
-        }
 
 @media only screen and (max-width: 767px) {
 

@@ -1,0 +1,29 @@
+<form>
+    <mat-form-field>
+        <mat-chip-list #chipList>
+        
+            <mat-chip *ngFor="let user of this.userService.searchOption" (removed)="removeOption(user)">
+                <span>{{user.userName}}</span>
+            
+                <mat-icon matChipRemove>
+                    cancel
+                </mat-icon>
+            </mat-chip>
+        
+            <input #autocompleteInput 
+                type="text" 
+                placeholder="Enter username" 
+                aria-label="Number" matInput 
+                [formControl]="txtUsers"
+                [matAutocomplete]="auto" [matChipInputFor]="chipList"
+            >
+            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                <mat-option *ngFor="let user of autoCompleteList" [value]="user" 
+                    (onSelectionChange)="filterPostList($event)">
+                    {{user.userName}}
+                </mat-option>
+            </mat-autocomplete>
+       
+        </mat-chip-list>
+    </mat-form-field>
+</form>
