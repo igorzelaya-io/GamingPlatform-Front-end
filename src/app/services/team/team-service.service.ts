@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Team } from 'src/app/models/team';
 import { Observable, of, pipe  } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 import { TeamInviteRequest } from 'src/app/models/teamInviteRequest';
+import { ImageModel } from '../../models/imagemodel';
 
-
-const TEAM_API = '/teamsapi/team';
+const TEAM_API = 'http://localhost:8081/teamsapi/team';
 
 @Injectable({
   providedIn: 'root'
@@ -47,6 +47,18 @@ export class TeamService {
   public postTeam(team: Team): Observable<string>{
     return this.httpClient.post<string>(TEAM_API + '/create', team)
     .pipe(catchError(this.handleError('postTeam', {} as string)));
+  }
+
+  public postTeamWithImage(team: Team, fileData: FormData): Observable<string>{
+    return this.httpClient.post<string>(TEAM_API + '/create', {team, fileData})
+    .pipe(catchError(this.handleError('postTeamWithImage', {} as string)));
+  }
+
+  public addImageToTeam(team: Team, image: ImageModel): Observable<void>{
+    const formData = new FormData();
+    formData.append('image', image.imageFile, image.imageName);
+    team.teamImage = formData;
+    return;
   }
 
   public sendTeamInvite(teamInvite: TeamInviteRequest): Observable<string>{

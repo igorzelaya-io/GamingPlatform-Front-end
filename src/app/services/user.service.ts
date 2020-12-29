@@ -3,8 +3,10 @@ import { Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { User } from '../models/user/user';
 import {retry, catchError } from 'rxjs/operators';
+import { ImageModel } from '../models/imagemodel';
 
-const USER_API = '/usersapi/users';
+
+const USER_API = 'http://localhost:8080/usersapi/users';
 
 @Injectable({
   providedIn: 'root'
@@ -66,12 +68,19 @@ export class UserService {
                                           + '?userField=' + userField);
   }
 
+  public addImageToUser(user: User, imageModel: ImageModel): Observable<void>{
+    const formData: FormData = new FormData();
+    formData.append('image', imageModel.imageFile, imageModel.imageName);
+    user.userImage = formData;
+    return;
+  }
+
   filteredListOptions(): User[]{
     let users = this.userData;
     let filteredUsersList = [];
     for (let user of users){
-      for(let option of this.searchOption){
-        if(option.userName === user.userName){
+      for (let option of this.searchOption){
+        if (option.userName === user.userName){
           filteredUsersList.push(user);
         }
       }

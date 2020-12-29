@@ -2,16 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { TeamService } from '../../../services/team/team-service.service';
 import { HttpClient } from '@angular/common/http';
-import { Observable, from } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Team } from '../../../models/team';
 import { User } from '../../../models/user/user';
 import { UserService } from 'src/app/services/user.service';
+
 
 @Component({
   selector: 'app-team-creation-page',
   templateUrl: './team-creation-page.component.html',
   styleUrls: ['./team-creation-page.component.scss']
 })
+
 export class TeamCreationPageComponent implements OnInit {
   txtName: FormControl;
   txtCountry: FormControl;
@@ -32,6 +34,9 @@ export class TeamCreationPageComponent implements OnInit {
   isClicked = false;
 
   team: Team = new Team();
+
+  selectedImageFile: File;
+
   constructor(private teamService: TeamService,
               private userService: UserService,
               private httpClient: HttpClient) {
@@ -39,7 +44,6 @@ export class TeamCreationPageComponent implements OnInit {
     this.txtEmail = new FormControl();
     this.txtCountry = new FormControl();
     this.txtTeamModerator = new FormControl();
-
   }
 
   ngOnInit(): void {
@@ -52,7 +56,9 @@ export class TeamCreationPageComponent implements OnInit {
     this.team.teamName = this.txtName.value;
     this.team.teamEmail = this.txtEmail.value;
     this.team.teamCountry = this.txtCountry.value;
-    this.team.teamUsers = this.txtPlayers;
+    if (this.selectedImageFile !== null){
+      this.postTeamWithImage();
+    }
     this.teamService.postTeam(this.team).subscribe((response: string) => {
       this.message = response;
       console.log(response);
@@ -66,7 +72,6 @@ export class TeamCreationPageComponent implements OnInit {
 
   submitForm(){
     this.team.teamName = this.txtName.value;
-
   }
 
   clickedButton(): void{
@@ -111,14 +116,33 @@ export class TeamCreationPageComponent implements OnInit {
     this.getFilteredExpenseList();
   }
 
-
   getFilteredExpenseList(){
-    if(this.userService.searchOption.length > 0){
+    if (this.userService.searchOption.length > 0){
       this.allUsers = this.userService.filteredListOptions();
     }
     else{
       this.allUsers = this.userService.userData;
     }
   }
+
+  public onFileChanged(event){
+    this.selectedImageFile = event.target.files[0];
+  }
+
+  public postTeamWithImage(){
+    console.log(this.selectedImageFile);
+    const uploadImageData = new FormData();
+    uploadImageData.append('imageFile', this.selectedImageFile, this.selectedImageFile.name);
+    this.teamService.postTeamWithImage(this.team, uploadImageData)
+    .subscribe((resp: string) => {
+      console.log(resp);
+      this.message = resp;
+    },
+    err => {
+      console.error(err);
+      this.errorMessage = err;
+    });
+  }
+
 
 }

@@ -1,21 +1,25 @@
 import { Team } from '../team';
+import { ImageModel } from '../imagemodel';
 export class User {
 	userId: string;
 	userRealName: string;
 	userName: string;
 	userPassword: string;
 	userEmail: string;
-	userTeam: Team; 
+	userTeam: Team;
 	userBilling: Map<string, object>
 	userCountry: string;
 	userTokens: number;
 	userCash: number;
 	userBirthDate: Map<string, object>
 	userRoles: Array<string>;
-	userImage: File;
+	userImage: FormData;
+	userGetImage: ImageModel;
 
 	constructor(userRealName?: string, userName?: string, userPassword?: string,
-				userEmail?: string, userCountry?: string, userBirthDate?: Map<string, object>, userRoles?: Array<string>){
+		userEmail?: string, userCountry?: string, userBirthDate?: Map<string, object>,
+		userRoles?: Array<string>) {
+
 		this.userRealName = userRealName;
 		this.userName = userName;
 		this.userPassword = userPassword;

@@ -42,4 +42,8 @@ export class MyTeamsPageComponent implements OnInit {
   createButton(){
     this.router.navigate(['/team-creation'], {queryParams: {userId: this.user.userId}});
   }
+
+  passTeam(team: Team){
+    this.router.navigate(['/team-details'], {queryParams: { teamId: team.teamId}});
+  }
 }

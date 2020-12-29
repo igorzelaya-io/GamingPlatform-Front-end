@@ -1,4 +1,4 @@
-import { Team } from './team';
+import { Team } from './Team';
 import { User } from './user/user';
 export class TeamInviteRequest {
     teamRequest: Team;

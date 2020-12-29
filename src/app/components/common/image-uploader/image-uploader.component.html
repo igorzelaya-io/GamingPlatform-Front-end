@@ -1,0 +1,14 @@
+<label>
+    <span>Select Image</span>
+    <input
+        type="file"
+        #image
+        accept="image/"
+        (change)="processFile(image)"
+    >
+
+</label>
+<div *ngIf="selectedImage">
+
+
+</div>

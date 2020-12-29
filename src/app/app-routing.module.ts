@@ -20,7 +20,9 @@ import { StreamSchedulePageComponent } from './components/pages/stream-schedule-
 import { AccountDetailsComponent } from './components/pages/account-details/account-details';
 import { TournamentCreationPageComponent } from './components/pages/tournament-creation/tournament-creation-page';
 import { MyTeamsPageComponent } from './components/pages/my-teams/my-teams-page';
-import { TeamCreationPageComponent } from './components/common/team-creation-page/team-creation-page.component';
+import { TeamCreationPageComponent } from './components/pages/team-creation-page/team-creation-page.component';
+import { TeamInvitesPageComponent } from './components/pages/team-invites/team-invites-page';
+
 const routes: Routes = [
     {path: '', component: MainHomeComponent},
     {path: 'tournaments', component: TournamentsHomeComponent},
@@ -29,13 +31,14 @@ const routes: Routes = [
     {path: 'streaming', component: StreamingHomeComponent},
     {path: 'our-team', component: TeamPageComponent},
     {path: 'my-teams', component: MyTeamsPageComponent},
+    {path: 'team-invites', component: TeamInvitesPageComponent},
     {path: 'team-details', component: TeamDetailsPageComponent},
     {path: 'team-creation', component: TeamCreationPageComponent},
     {path: 'coming-soon', component: ComingSoonPageComponent},
     {path: 'error', component: ErrorPageComponent},
     {path: 'stream-schedule', component: StreamSchedulePageComponent},
     {path: 'single-match', component: MatchDetailsPageComponent},
-    {path: 'single-player', component: PlayerDetailsPageComponent},
+    {path: 'player-details', component: PlayerDetailsPageComponent},
     {path: 'account-details', component: AccountDetailsComponent},
     {path: 'shop', component: ProductsListPageTwoComponent},
     {path: 'cart', component: CartPageComponent},

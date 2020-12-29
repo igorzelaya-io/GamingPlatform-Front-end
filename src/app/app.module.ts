@@ -59,7 +59,7 @@ import { AccountDetailsComponent } from './components/pages/account-details/acco
 import { ShopStyleOneComponent } from './components/pages/shop-style-one/shop-style-one.component';
 import { TournamentCreationPageComponent } from './components/pages/tournament-creation/tournament-creation-page';
 import { MyTeamsPageComponent } from './components/pages/my-teams/my-teams-page';
-import { TeamCreationPageComponent } from './components/common/team-creation-page/team-creation-page.component';
+import { TeamCreationPageComponent } from './components/pages/team-creation-page/team-creation-page.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -67,6 +67,9 @@ import { MatAutocompleteModule} from '@angular/material/autocomplete';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { UserSearchBarComponent } from './components/common/user-search-bar/user-search-bar.component';
+import { TeamInvitesPageComponent} from './components/pages/team-invites/team-invites-page';
+import { ImageCropperComponent } from './components/common/image-cropper/image-cropper.component';
+import { ImageUploaderComponent } from './components/common/image-uploader/image-uploader.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -126,7 +129,10 @@ import { UserSearchBarComponent } from './components/common/user-search-bar/user
     ProfileRegistrationPageComponent,
     ShopStyleOneComponent,
     TeamCreationPageComponent,
-    UserSearchBarComponent
+    UserSearchBarComponent,
+    TeamInvitesPageComponent,
+    ImageCropperComponent,
+    ImageUploaderComponent
   ],
   imports: [
     BrowserModule,

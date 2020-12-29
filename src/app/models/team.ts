@@ -1,4 +1,4 @@
-import { User } from './user/user';
+import { User } from './user/User';
 import { Challenge} from './challenge';
 import { Tournament } from './tournament';
 import { ImageModel } from './imagemodel';
@@ -15,12 +15,13 @@ export class Team {
     teamModerator: User;
     teamEmail: string;
     teamRequests: Array<TeamInviteRequest>;
-    teamImage: ImageModel; 
+    teamImage: FormData;
+    imageToGet: ImageModel;
 
     constructor(teamId ?: string, teamCountry?: string, teamName?: string, 
                 teamStatus ?:string, teamUsers?: Array<User>, teamChallenges?: Array<Challenge>,
                 teamTournaments?: Array<Tournament>, teamModerator?: User, teamEmail?: string,
-                teamRequests?: Array<TeamInviteRequest>, teamImage?: ImageModel){
+                teamRequests?: Array<TeamInviteRequest>, teamImage?: FormData){
         this.teamId = teamId;
         this.teamCountry = teamCountry;
         this.teamName = teamName;
