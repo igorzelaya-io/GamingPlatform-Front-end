@@ -70,6 +70,7 @@ import { UserSearchBarComponent } from './components/common/user-search-bar/user
 import { TeamInvitesPageComponent} from './components/pages/team-invites/team-invites-page';
 import { ImageCropperComponent } from './components/common/image-cropper/image-cropper.component';
 import { ImageUploaderComponent } from './components/common/image-uploader/image-uploader.component';
+
 @NgModule({
   declarations: [
     AppComponent,

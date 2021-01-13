@@ -3,7 +3,7 @@ import { UserTeamService } from '../../../services/user-team.service';
 import { User } from '../../../models/user/user';
 import { Team } from '../../../models/team';
 import { TokenStorageService } from '../../../services/token-storage.service';
-import { TeamInviteRequest } from '../../../models/TeamInviteRequest';
+import { TeamInviteRequest } from '../../../models/teamInviteRequest';
 import { Router } from '@angular/router';
 
 @Component({

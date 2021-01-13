@@ -1,5 +1,5 @@
-import { Team } from './Team';
-import { User } from './user/user';
+import { Team } from './team';
+import { User } from './user/User';
 export class TeamInviteRequest {
     teamRequest: Team;
     requestedUser: User;

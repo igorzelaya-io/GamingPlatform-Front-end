@@ -11,7 +11,7 @@
 <section class="blog-area ptb-100">     
     <div class="container">
         <div>
-            <button>Create Team</button>
+            <button (click)="this.createButton()">Create Team</button>
         </div>
         <div *ngIf="isEmpty" style="margin-left: 460px;">
             <h1>{{message}}</h1>
@@ -56,24 +56,7 @@
                 </div>
             </div>
 
-            <div class="col-lg-6 col-md-6">
-                <div class="single-blog-post-box">
-                    <div class="post-image">
-                        <a routerLink="/single-blog">
-                            <img src="assets/img/team1.png" alt="image">
-                        </a>
-                    </div>
-
-                    <div class="post-content">
-                        <ul class="post-meta">
-                        <li>By <a routerLink="/blog-1">Igor Zelaya</a></li>
-                        <li>Honduras</li>
-                        </ul>
-                        <h3><a routerLink="/single-blog">Young Kingz</a></h3>
-                        <a class="read-more-btn">View Team<i class="flaticon-null"></i></a>
-                    </div>
-                </div>
-            </div>
+            
         
         
         </div>

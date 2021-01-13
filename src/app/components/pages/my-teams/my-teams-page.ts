@@ -40,7 +40,7 @@ export class MyTeamsPageComponent implements OnInit {
   }
 
   createButton(){
-    this.router.navigate(['/team-creation'], {queryParams: {userId: this.user.userId}});
+    this.router.navigate(['/team-creation'], {queryParams: { user: this.user}});
   }
 
   passTeam(team: Team){
