@@ -54,7 +54,7 @@ export class UserTeamService {
 
   public exitTeam(userId: string, teamId: string): Observable<string>{
     return this.httpClient.post<string>(USER_TEAMS_API + '/exit?userId=' + userId  +
-                                                        '?teamId=' + teamId,
+                                                         '?teamId=' + teamId,
                                                         {userId, teamId})
     .pipe(catchError(this.handleError('exitTeam', {} as string)));
   }
