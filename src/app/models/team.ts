@@ -1,4 +1,4 @@
-import { User } from './user/User';
+import { User } from './user/user';
 import { Challenge} from './challenge';
 import { Tournament } from './tournament';
 import { ImageModel } from './imagemodel';
