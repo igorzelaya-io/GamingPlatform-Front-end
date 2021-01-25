@@ -30,7 +30,7 @@ export class ImageUploaderComponent implements OnInit {
     this.selectedImage.imageSrc = ' ';
   }
 
-  public processFileOnTeam(image: any, team: Team): void{
+  public processFileOnTeam(image: any, team?: Team): void{
     const file: File = image.files[0];
     const reader: FileReader = new FileReader();
     reader.addEventListener('load', (event: any) => {
