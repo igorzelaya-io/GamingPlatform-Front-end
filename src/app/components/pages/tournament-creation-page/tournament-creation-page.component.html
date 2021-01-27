@@ -1,0 +1,104 @@
+<app-navbar-style-one></app-navbar-style-one>
+
+<section class="page-title-area page-title-bg1">
+    <div class="container">
+        <div class="page-title-content">
+            <h1 title="Register Team">Create Tournament</h1>
+        </div>
+    </div>
+</section>
+<section class="profile-authentication-area ptb-100">
+    <div *ngIf="!isSuccessfulTournamentCreation" class="container">
+        <div class="row">
+            <div class="col-lg-6 col-md-12">
+                <div class="register-form">
+                    <h2>Tournament Information</h2>
+                    <form>
+                        <div class="form-group">
+                            <label>TournamentName</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                required
+                                maxlength="40"
+                                placeholder="Tournament Name"
+                                [formControl]="txtName"
+                            >
+                        </div>
+                        <div class="alert alert-danger" *ngIf="txtName.invalid && (txtName.dirty || txtName.touched)">
+                            <div *ngIf="txtName.errors.required">
+                               Tournament Name is required
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Cash prize</label>
+                            <input 
+                                type="number"
+                                class="form-control" 
+                                placeholder="Email"
+                                required
+                                [formControl]="txtEmail"
+                            >
+                        </div>
+                        <div class="alert alert-danger" *ngIf="txtEmail.invalid && (txtEmail.dirty || txtEmail.touched)">
+                            <div *ngIf="txtEmail.errors.required">
+                                Please enter a valid email.
+                            </div>
+                        </div>
+                        
+                        <form [formControl]="txtCountry" (ngSubmit)="dropdownOnSubmit()">
+                            <div class="form-group">
+                                <label>Country</label>
+                                <select class="form-control">
+                                    <option disabled>Select Country</option>
+                                    <option *ngFor="let country of countryInfo; let i = index" value="{{i}}">{{country.CountryName}}</option>
+                                </select>    
+                            </div>
+                        </form>
+                    </form>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-12">
+                <div class="register-form">
+                    <form>
+                        <div class="form-group">
+                            <label>Search for Players</label>
+                            <app-user-search-bar (selectedOption)="onSelectedFilter($event)"></app-user-search-bar>
+                        </div>                        
+                        <label>Available Players</label>
+                        <div *ngFor="let user of allUsers">
+                            <p><b>Username: </b> {{user.userName}}</p>
+                            <p><b>Email: </b> {{user.userEmail}}</p>
+                            <p><b>Country: </b> {{user.userCountry}}</p>
+                        </div>
+                        <!-- <app-image-selector></app-image-selector> -->
+                        <!-- <div class="form-group">
+                            <label>Team Image</label>
+                            <input
+                                type="file"
+                                (change)="onFileChanged($event)"
+                            >
+                            <app-app-image-cropper></app-app-image-cropper>
+                        </div>-->
+                        <!-- <div>
+                            <app-image-uploader></app-image-uploader>
+                        </div> -->
+                        <button type="submit" (click)="onSubmit();" 
+                            [disabled]="txtName.invalid" >
+                            Register
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="isSuccessfulRegister">
+        <h2>You've registered Successfully</h2>
+    </div>
+    <div class="alert alert-danger" *ngIf="isSignUpFailed">
+        <h2>
+            Registration failed.
+        </h2>
+        <h3>{{errorMessage}}</h3>
+    </div>
+</section>

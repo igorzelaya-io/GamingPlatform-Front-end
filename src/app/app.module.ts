@@ -57,7 +57,6 @@ import { PlayerDetailsPageComponent } from './components/pages/player-details-pa
 import { ProfileRegistrationPageComponent } from './components/pages/profile-registration-page/profile-registration-page.component';
 import { AccountDetailsComponent } from './components/pages/account-details/account-details';
 import { ShopStyleOneComponent } from './components/pages/shop-style-one/shop-style-one.component';
-import { TournamentCreationPageComponent } from './components/pages/tournament-creation/tournament-creation-page';
 import { MyTeamsPageComponent } from './components/pages/my-teams/my-teams-page';
 import { TeamCreationPageComponent } from './components/pages/team-creation-page/team-creation-page.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -70,6 +69,8 @@ import { UserSearchBarComponent } from './components/common/user-search-bar/user
 import { TeamInvitesPageComponent} from './components/pages/team-invites/team-invites-page';
 import { ImageCropperComponent } from './components/common/image-cropper/image-cropper.component';
 import { ImageUploaderComponent } from './components/common/image-uploader/image-uploader.component';
+import { TournamentCreationPageComponent } from './components/pages/tournament-creation-page/tournament-creation-page';
+import { NumericTextBoxModule } from '@syncfusion/ej2-angular-inputs';
 
 @NgModule({
   declarations: [
@@ -80,7 +81,6 @@ import { ImageUploaderComponent } from './components/common/image-uploader/image
     PartnerComponent,
     TeamComponent,
     NewsComponent,
-   TournamentCreationPageComponent,
     MyTeamsPageComponent,
     MatchesStyleOneComponent,
     MainBannerComponent,
@@ -133,7 +133,10 @@ import { ImageUploaderComponent } from './components/common/image-uploader/image
     UserSearchBarComponent,
     TeamInvitesPageComponent,
     ImageCropperComponent,
-    ImageUploaderComponent
+    ImageUploaderComponent,
+	TournamentCreationPageComponent,
+	NumericTextBoxModule
+	
   ],
   imports: [
     BrowserModule,

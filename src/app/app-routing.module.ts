@@ -18,15 +18,14 @@ import { MatchDetailsPageComponent } from './components/pages/match-details-page
 import { TournamentsDetailsPageComponent } from './components/pages/tournaments-details-page/tournaments-details-page.component';
 import { StreamSchedulePageComponent } from './components/pages/stream-schedule-page/stream-schedule-page.component';
 import { AccountDetailsComponent } from './components/pages/account-details/account-details';
-import { TournamentCreationPageComponent } from './components/pages/tournament-creation/tournament-creation-page';
 import { MyTeamsPageComponent } from './components/pages/my-teams/my-teams-page';
 import { TeamCreationPageComponent } from './components/pages/team-creation-page/team-creation-page.component';
 import { TeamInvitesPageComponent } from './components/pages/team-invites/team-invites-page';
+import { TournamentCreationPageComponent } from './components/pages/tournament-creation-page/tournament-creation-page';
 
 const routes: Routes = [
     {path: '', component: MainHomeComponent},
     {path: 'tournaments', component: TournamentsHomeComponent},
-    {path: 'tournament-creation', component: TournamentCreationPageComponent},
     {path: 'tournament-details', component: TournamentsDetailsPageComponent},
     {path: 'streaming', component: StreamingHomeComponent},
     {path: 'our-team', component: TeamPageComponent},
@@ -46,6 +45,7 @@ const routes: Routes = [
     {path: 'single-products', component: ProductsDetailsPageComponent},
     {path: 'login', component: ProfileAuthenticationPageComponent},
     {path: 'register', component: ProfileRegistrationPageComponent},
+	{path: 'tournament-creation', component: TournamentCreationPageComponent},
     {path: '**', component: ErrorPageComponent}
 ];
 
