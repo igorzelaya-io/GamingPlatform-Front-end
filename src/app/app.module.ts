@@ -135,7 +135,7 @@ import { NumericTextBoxModule } from '@syncfusion/ej2-angular-inputs';
     ImageCropperComponent,
     ImageUploaderComponent,
 	TournamentCreationPageComponent,
-	NumericTextBoxModule
+	
 	
   ],
   imports: [
@@ -149,7 +149,8 @@ import { NumericTextBoxModule } from '@syncfusion/ej2-angular-inputs';
     BrowserAnimationsModule,
     MatAutocompleteModule,
     MatChipsModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    NumericTextBoxModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

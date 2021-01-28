@@ -1,11 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
-import { Tournament } from '../../models/tournament';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Tournament } from '../../models/tournament/tournament';
 import {retry, catchError } from 'rxjs/operators';
 import { Team } from '../../models/team';
 
 const TOURNAMENTS_API = 'http://localhost:8081/tournamentsapi/tournaments';
+
+const httpOptions = {
+  headers: new HttpHeaders({'Content-Type': 'application/json'})
+};
 
 @Injectable({
   providedIn: 'root'
@@ -75,7 +79,7 @@ export class TournamentService {
   }
 
   public removeTeamFromTournament(team: Team, tournament: Tournament): Observable<string> {
-    return this.httpClient.delete<string>(TOURNAMENTS_API + '/teams/remove', {team, tournament})
+     return this.httpClient.request<string>('DELETE', TOURNAMENTS_API + '/teams/remove', {body: {team, tournament}}) 
     .pipe(catchError(this.handleError('removeTeamFromTournament', {} as string)));
   }
 }

@@ -1,16 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { TeamService } from '../../../services/team/team-service.service';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
 import { Team } from '../../../models/team';
 import { User } from '../../../models/user/user';
-import { UserService } from '../../../services/user.service';
 import { TournamentTeamSize } from '../../../models/tournament/tournament-team-size.enum';
 import { Tournament } from '../../../models/tournament/tournament';
 import { TournamentMode } from '../../../models/tournament/tournament-mode.enum';
 import { TournamentFormat } from '../../../models/tournament/tournament-format.enum';
 import { TournamentService } from '../../../services/tournament/tournament.service';
+import { SharedService } from '../../../services/helpers/shared-service';
+
 
 @Component({
   selector: 'app-tournament-creation-page',
@@ -23,7 +21,6 @@ export class TournamentCreationPageComponent implements OnInit {
   txtLimitNumberOfTeams: number;
   txtPlatforms: FormControl;
   tournamentTeamSize: TournamentTeamSize;
-  tournamentGameMode: TournamentMode;
   tournamentFormat: TournamentFormat;
   tournamentModerator: User;
   tournamentDate: Date;
@@ -32,6 +29,17 @@ export class TournamentCreationPageComponent implements OnInit {
   tournamentRegion: FormControl;
   tournamentTeams: Array<Team>;
   
+  tournamentFormatString: string;
+  
+
+  @ViewChild('leagueFormatElement')
+  leagueFormatElement: ElementRef;
+
+  @ViewChild('pvpFormatElement')
+  pvpFormatElement: ElementRef;
+
+  tournamentGameMode: TournamentMode;
+
   message = ' ';
   errorMessage = ' ';
  
@@ -40,23 +48,51 @@ export class TournamentCreationPageComponent implements OnInit {
   isClicked = false;
   tournament: Tournament = new Tournament();
 
-  constructor(private tournamentService: TournamentService) {
+  constructor(private tournamentService: TournamentService,
+			  private renderer: Renderer2,
+	          private sharedService: SharedService) {
     this.txtName = new FormControl();
-    
+    this.txtPlatforms = new FormControl();
+	this.tournamentCashPrice = new FormControl();
+	this.tournamentEntryFee = new FormControl();
+	this.tournamentRegion = new FormControl();
+    this.leagueFormatElement = this.sharedService.get();
+	this.pvpFormatElement = this.sharedService.get();
   }
 
   ngOnInit(): void {
-   
+  	
   }
 
 
   onSubmit(){
-    
+    this.tournament.tournamentCashPrice = this.tournamentCashPrice.value;
+	this.tournament.tournamentEntryFee = this.tournamentEntryFee.value;
   }
 
   clickedButton(): void{
     this.isClicked = true;
   }
+
+  selectLeagueTournamentFormat(): void{	
+	if(this.pvpFormatElement.nativeElement.style.border === '3px solid blue'){
+		this.renderer.setStyle(this.pvpFormatElement.nativeElement, 'border', '3px solid red');
+	}
+	this.renderer.setStyle(this.leagueFormatElement.nativeElement, 'border','3px solid blue');
+	//this.leagueFormatElement.nativeElement.style.border = '3px solid blue;';
+	this.tournamentFormat = TournamentFormat.League;
+  	this.tournamentFormatString = TournamentFormat[this.tournamentFormat];
+  }
+
+  selectPvPTournamentFormat(): void{
+	if(this.leagueFormatElement.nativeElement.style.border === '3px solid blue'){
+		this.renderer.setStyle(this.leagueFormatElement.nativeElement, 'border', '3px solid red');
+	}
+	this.renderer.setStyle(this.pvpFormatElement.nativeElement, 'border', '3px solid blue');
+	//this.pvpFormatElement.nativeElement.style.border = '3px solid blue;';
+	this.tournamentFormat = TournamentFormat.PvP;
+	this.tournamentFormatString = TournamentFormat[this.tournamentFormat];	 
+   }
 
   //dropdownOnSubmit(): void{
     //if (this.txtCountry.valid){
@@ -65,5 +101,4 @@ export class TournamentCreationPageComponent implements OnInit {
     //}
     //this.isSubmittedDropDownContent = false;
   //}
-
 }
