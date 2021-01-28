@@ -136,7 +136,7 @@ export class ProfileRegistrationPageComponent implements OnInit {
   }
 
   private toRealName(): string {
-    return `${this.txtFirstName.value} + ' ' + ${this.txtBirthName.value}`;
+    return this.txtFirstName.value + ' ' + this.txtBirthName.value;
   }
 
 }

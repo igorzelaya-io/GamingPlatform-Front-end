@@ -1,0 +1,150 @@
+<app-navbar-style-one></app-navbar-style-one>
+
+<section class="page-title-area page-title-bg1">
+    <div class="container">
+        <div class="page-title-content">
+            <h1 title="Create Tournament">Create Tournament</h1>
+        </div>
+    </div>
+</section>
+<section class="profile-authentication-area ptb-100">
+    <div *ngIf="!isSuccessfulTournamentCreation" class="container">
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+                <div class="register-form">
+                    <h2>Tournament Information</h2>
+                    <form>
+                        <div class="form-group">
+                            <label>TournamentName</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                required
+                                maxlength="40"
+                                placeholder="Tournament Name"
+                                [formControl]="txtName"
+                            >
+                        </div>
+                        <div class="alert alert-danger" *ngIf="txtName.invalid && (txtName.dirty || txtName.touched)">
+                            <div *ngIf="txtName.errors.required">
+                               Tournament Name is required
+                            </div>
+                        </div>
+                        <div class="form-group">
+                        	<label>Tournament Description</label>
+                        	<input
+                        		[formControl]="txtDescription"
+                        		class="form-control"
+                        		required
+                        		maxlength="120"
+                        		placeholder="Tournament Description"
+                        	>
+                        </div>
+                        <div  class="alert alert-danger" *ngIf="txtDescription.invalid && (txtDescription.dirty || txtDescription.touched)">
+                        	<div *ngIf="txtDescription.errors.required">
+                        		Tournament Description is a required field
+                        	</div>
+                        </div>
+		                  	<div class="form-group" >
+		                   	<label>Tournament Type</label>
+		                    	<div class="row" style="margin-top:30px;">
+		                    		<label>League Play</label>		                    		
+			                    	<div class="col-lg-5 col-md-10">
+			                    		<img src="assets/d1images/Cup.png" 
+			                    			#leagueFormatElement 
+			                    			(click)="selectLeagueTournamentFormat()" 
+			                    			style="border: 3px solid red"
+			                    		>
+			                    	</div>
+		                  			<label>PvP</label>
+		                    		<div class="col-lg-5 col-md-10">
+	                    				<img #pvpFormatElement (click)="selectPvPTournamentFormat()"
+	                    					 src="assets/d1images/VS.png" 
+	                    					 style="border: 3px solid red"
+	                    				>
+		                    		</div>
+		                    	</div>
+		                  	</div>	                    	
+                    	
+	                    <div class="row" style="margin-top: 50px;">	
+	                        <div class="form-group" class="col-lg-5 col-md-10">
+							    <label>Cash prize</label>
+	                            <ejs-numerictextbox format='c2' min='0' step='25'
+	                            					placeholder="Enter cash value for price" value="0" [formControl]="tournamentCashPrice">
+	                            </ejs-numerictextbox>
+                        	</div>
+                        	<div class="alert alert-danger" *ngIf="tournamentCashPrice.invalid && (tournamentCashPrice.dirty || tournamentCashPrice.touched)">
+								Please enter a valid Cash prize.                        	
+                        	</div>
+	                        <div class="form-group" class="col-lg-6 col-md-12">
+	                        	<label>Player entry fee.</label>
+	                        	<ejs-numerictextbox min='100' value='100' step='50' 
+	                        						[formControl]="tournamentEntryFee">
+	                        	</ejs-numerictextbox>
+	                        </div>
+	                        <div class="alert alert-danger" *ngIf="tournamentEntryFee.invalid && (tournamentEntryFee.dirty || tournamentEntryFee.touched)">
+	                        	Please enter a valid entry fee value. 
+	                        </div>
+	                    </div>
+                        <!-- <div class="alert alert-danger" *ngIf="txtEmail.invalid && (txtEmail.dirty || txtEmail.touched)">
+                            <div *ngIf="txtEmail.errors.required">
+                                Please enter a valid email.
+                            </div>
+                        </div> -->
+                        
+                        <!-- <form [formControl]="txtCountry" (ngSubmit)="dropdownOnSubmit()">
+                            <div class="form-group">
+                                <label>Country</label>
+                                <select class="form-control">
+                                    <option disabled>Select Country</option>
+                                    <option *ngFor="let country of countryInfo; let i = index" value="{{i}}">{{country.CountryName}}</option>
+                                </select>    
+                            </div>
+                        </form> -->
+                    </form>
+                </div>
+            </div>
+            <div class="col-lg-12 col-md-12">
+                <div class="register-form">
+                    <form>
+                        <!-- <div class="form-group">
+                            <label>Search for Players</label>
+                            <app-user-search-bar (selectedOption)="onSelectedFilter($event)"></app-user-search-bar>
+                        </div>                        
+                        <label>Available Players</label> -->
+                       <!--  <div *ngFor="let user of allUsers">
+                            <p><b>Username: </b> {{user.userName}}</p>
+                            <p><b>Email: </b> {{user.userEmail}}</p>
+                            <p><b>Country: </b> {{user.userCountry}}</p>
+                        </div> -->
+                        <!-- <app-image-selector></app-image-selector> -->
+                        <!-- <div class="form-group">
+                            <label>Team Image</label>
+                            <input
+                                type="file"
+                                (change)="onFileChanged($event)"
+                            >
+                            <app-app-image-cropper></app-app-image-cropper>
+                        </div>-->
+                        <!-- <div>
+                            <app-image-uploader></app-image-uploader>
+                        </div> -->
+                        <button type="submit" (click)="onSubmit();" 
+                            [disabled]="txtName.invalid" >
+                            Register
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="isSuccessfulTournamentCreation">
+        <h2>You've registered your tournament Successfully</h2>
+    </div>
+    <!-- <div class="alert alert-danger" *ngIf="isSignUpFailed">
+        <h2>
+            Registration failed.
+        </h2>
+        <h3>{{errorMessage}}</h3>
+    </div> -->
+</section>

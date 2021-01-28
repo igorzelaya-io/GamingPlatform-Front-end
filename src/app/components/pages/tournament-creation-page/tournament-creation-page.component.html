@@ -30,6 +30,21 @@
                                Tournament Name is required
                             </div>
                         </div>
+                        <div class="form-group">
+                        	<label>Tournament Description</label>
+                        	<input
+                        		[formControl]="txtDescription"
+                        		class="form-control"
+                        		required
+                        		maxlength="120"
+                        		placeholder="Tournament Description"
+                        	>
+                        </div>
+                        <div  class="alert alert-danger" *ngIf="txtDescription.invalid && (txtDescription.dirty || txtDescription.touched)">
+                        	<div *ngIf="txtDescription.errors.required">
+                        		Tournament Description is a required field
+                        	</div>
+                        </div>
 		                  	<div class="form-group" >
 		                   	<label>Tournament Type</label>
 		                    	<div class="row" style="margin-top:30px;">
@@ -50,27 +65,28 @@
 		                    		</div>
 		                    	</div>
 		                  	</div>	                    	
-		                    		<p>{{tournamentFormatString}}</p>
                     	
 	                    <div class="row" style="margin-top: 50px;">	
-	                        <div class="form-group" class="col-lg-6 col-md-12">
-							    <label>Cash prize</label>
-	                            <ejs-numerictextbox format='c2' min='0' step='25'
-	                            					placeholder="Enter cash value for price" value="0" [formControl]="tournamentCashPrice">
-	                            </ejs-numerictextbox>
-                        	</div>
-                        	<div class="alert alert-danger" *ngIf="tournamentCashPrice.invalid && (tournamentCashPrice.dirty || tournamentCashPrice.touched)">
-								Please enter a valid Cash prize.                        	
-                        	</div>
-	                        <div class="form-group" class="col-lg-6 col-md-12">
-	                        	<label>Player entry fee.</label>
-	                        	<ejs-numerictextbox min='100' value='100' step='50' 
-	                        						[formControl]="tournamentEntryFee">
-	                        	</ejs-numerictextbox>
-	                        </div>
-	                        <div class="alert alert-danger" *ngIf="tournamentEntryFee.invalid && (tournamentEntryFee.dirty || tournamentEntryFee.touched)">
-	                        	Please enter a valid entry fee value. 
-	                        </div>
+	                    	<form class="">
+		                        <div class="form-group" class="col-lg-5 col-md-10">
+								    <label>Cash prize</label>
+		                            <ejs-numerictextbox format='c2' min='0' step='25'
+		                            					placeholder="Enter cash value for price" value="0" formControlName="cashPrize">
+		                            </ejs-numerictextbox>
+	                        	</div>
+	                        	<!-- <div class="alert alert-danger" *ngIf="entryAndPriceForm.cashPrize.invalid && (tournamentCashPrice.dirty || tournamentCashPrice.touched)">
+									Please enter a valid Cash prize.                        	
+	                        	</div> -->
+		                        <div class="form-group" class="col-lg-6 col-md-12">
+		                        	<label>Player entry fee.</label>
+		                        	<ejs-numerictextbox min='100' value='100' step='50' 
+		                        						formControlName="tournamentEntryFee">
+		                        	</ejs-numerictextbox>
+		                        </div>
+		                        <!-- <div class="alert alert-danger" *ngIf="tournamentEntryFee.invalid && (tournamentEntryFee.dirty || tournamentEntryFee.touched)">
+		                        	Please enter a valid entry fee value. 
+		                        </div>	 -->                    
+	                    	</form>    
 	                    </div>
                         <!-- <div class="alert alert-danger" *ngIf="txtEmail.invalid && (txtEmail.dirty || txtEmail.touched)">
                             <div *ngIf="txtEmail.errors.required">
@@ -115,9 +131,9 @@
                         <!-- <div>
                             <app-image-uploader></app-image-uploader>
                         </div> -->
-                        <button type="submit" (click)="onSubmit();" 
-                            [disabled]="txtName.invalid" >
-                            Register
+                        <button type="submit" (click)="onSubmit(); clickedButton();" 
+                            [disabled]="txtName.invalid || txtDescription.invalid || isClicked" >
+                            Next
                         </button>
                     </form>
                 </div>

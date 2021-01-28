@@ -71,6 +71,8 @@ import { ImageCropperComponent } from './components/common/image-cropper/image-c
 import { ImageUploaderComponent } from './components/common/image-uploader/image-uploader.component';
 import { TournamentCreationPageComponent } from './components/pages/tournament-creation-page/tournament-creation-page';
 import { NumericTextBoxModule } from '@syncfusion/ej2-angular-inputs';
+import { MatStepperModule } from '@angular/material/stepper';
+import { TournamentCreationConfigPageComponent } from './components/pages/tournament-creation-config-page/tournament-creation-config-page';
 
 @NgModule({
   declarations: [
@@ -135,8 +137,7 @@ import { NumericTextBoxModule } from '@syncfusion/ej2-angular-inputs';
     ImageCropperComponent,
     ImageUploaderComponent,
 	TournamentCreationPageComponent,
-	
-	
+	TournamentCreationConfigPageComponent,	
   ],
   imports: [
     BrowserModule,
@@ -151,6 +152,7 @@ import { NumericTextBoxModule } from '@syncfusion/ej2-angular-inputs';
     MatChipsModule,
     MatFormFieldModule,
     NumericTextBoxModule,
+    MatStepperModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

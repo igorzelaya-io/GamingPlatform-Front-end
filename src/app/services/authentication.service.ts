@@ -26,6 +26,6 @@ export class AuthenticationService {
   }
 
   public signup(userAuthRequest: UserAuthRequest): Observable<MessageResponse>{
-    return this.httpClient.post<MessageResponse>(AUTH_API_ENDPOINT + '/signup', userAuthRequest, httpOptions);
+    return this.httpClient.post<MessageResponse>(AUTH_API_ENDPOINT + '/register', userAuthRequest, httpOptions);
   }
 }

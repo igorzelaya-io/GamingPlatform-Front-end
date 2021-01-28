@@ -1,0 +1,77 @@
+button {
+    margin-top: 22px;
+    border: none;
+    display: block;
+    text-align: center;
+    overflow: hidden;
+    color: var(--whiteColor);
+    background-color: var(--mainColor);
+    transition: var(--transition);
+    width: 100%;
+    border-radius: 5px;
+    text-transform: uppercase;
+    padding: 16px 30px 12px;
+    letter-spacing: 1px;
+    font: {
+        weight: 600;
+        size: 20px;
+    };
+    &:hover {
+        background-color: var(--whiteColor);
+        color: var(--blackColor)
+    }
+}
+
+#container {
+    visibility: hidden;
+}
+
+#loader {
+ 
+  height: 40px;
+  left: 45%;
+  position: absolute;
+  top: 45%;
+  width: 30%;
+}
+
+.wrap {
+  margin: 35px auto;
+  width: 240px;
+  padding-top: 25px;
+}
+
+.e-input-group.e-control-wrapper:not(.e-success):not(.e-warning):not(.e-error):not(.e-float-icon-left), .e-float-input.e-control-wrapper:hover:not(.e-success):not(.e-warning):not(.e-error):not(.e-disabled):not(.e-float-icon-left) {
+  border-color: #cc0000;
+  color: #cc0000;
+}
+  
+  .e-control-wrapper.e-numeric.e-float-input.e-style .e-float-line::before {
+    background: #cc0000;
+  }
+  .e-control-wrapper.e-numeric.e-float-input.e-style .e-float-line::after {
+    background-color: #cc0000;
+	color: #cc0000;
+    background: #cc0000 ;
+   }
+  .e-numeric .e-input-group-icon.e-spin-up:before {
+    content: "\e823";
+    color:#cc0000;
+  }
+  .e-numeric .e-input-group-icon.e-spin-down:before {
+    content: "\e934";
+    color: #cc0000;
+  }
+  .e-control-wrapper.e-numeric.e-float-input.e-style .e-float-text.e-label-top {
+    color: #cc0000 ;
+    font-size: medium ;
+  }
+
+.reactive-div .div:focus{
+	background-color: blue;
+}
+label{
+	font-size: 30px;
+	margin-top: 30px;  
+}
+

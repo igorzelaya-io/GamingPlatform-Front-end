@@ -22,6 +22,8 @@ import { MyTeamsPageComponent } from './components/pages/my-teams/my-teams-page'
 import { TeamCreationPageComponent } from './components/pages/team-creation-page/team-creation-page.component';
 import { TeamInvitesPageComponent } from './components/pages/team-invites/team-invites-page';
 import { TournamentCreationPageComponent } from './components/pages/tournament-creation-page/tournament-creation-page';
+import { TournamentCreationConfigPageComponent } from './components/pages/tournament-creation-config-page/tournament-creation-config-page';
+
 
 const routes: Routes = [
     {path: '', component: MainHomeComponent},
@@ -46,6 +48,7 @@ const routes: Routes = [
     {path: 'login', component: ProfileAuthenticationPageComponent},
     {path: 'register', component: ProfileRegistrationPageComponent},
 	{path: 'tournament-creation', component: TournamentCreationPageComponent},
+	{path: 'tournament-creation-config', component: TournamentCreationConfigPageComponent },
     {path: '**', component: ErrorPageComponent}
 ];
 
