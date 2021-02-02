@@ -8,7 +8,7 @@
     </div>
 </section>
 <section class="profile-authentication-area ptb-100">
-    <div *ngIf="!isSuccessfulTournamentCreation" class="container">
+    <div *ngIf="!isSuccessfulTournamentInformationSubmission" class="container">
         <div class="row">
             <div class="col-lg-12 col-md-12">
                 <div class="register-form">
@@ -44,93 +44,56 @@
                         	<div *ngIf="txtDescription.errors.required">
                         		Tournament Description is a required field
                         	</div>
-                        </div>
-		                  	<div class="form-group" >
-		                   	<label>Tournament Type</label>
-		                    	<div class="row" style="margin-top:30px;">
-		                    		<label>League Play</label>		                    		
-			                    	<div class="col-lg-5 col-md-10">
-			                    		<img src="assets/d1images/Cup.png" 
-			                    			#leagueFormatElement 
-			                    			(click)="selectLeagueTournamentFormat()" 
-			                    			style="border: 3px solid red"
-			                    		>
-			                    	</div>
-		                  			<label>PvP</label>
-		                    		<div class="col-lg-5 col-md-10">
-	                    				<img #pvpFormatElement (click)="selectPvPTournamentFormat()"
-	                    					 src="assets/d1images/VS.png" 
-	                    					 style="border: 3px solid red"
-	                    				>
-		                    		</div>
-		                    	</div>
-		                  	</div>	                    	
-                    	
-	                    <div class="row" style="margin-top: 50px;">	
-	                    	<form class="">
-		                        <div class="form-group" class="col-lg-5 col-md-10">
-								    <label>Cash prize</label>
-		                            <ejs-numerictextbox format='c2' min='0' step='25'
-		                            					placeholder="Enter cash value for price" value="0" formControlName="cashPrize">
-		                            </ejs-numerictextbox>
-	                        	</div>
-	                        	<!-- <div class="alert alert-danger" *ngIf="entryAndPriceForm.cashPrize.invalid && (tournamentCashPrice.dirty || tournamentCashPrice.touched)">
-									Please enter a valid Cash prize.                        	
-	                        	</div> -->
-		                        <div class="form-group" class="col-lg-6 col-md-12">
-		                        	<label>Player entry fee.</label>
-		                        	<ejs-numerictextbox min='100' value='100' step='50' 
-		                        						formControlName="tournamentEntryFee">
-		                        	</ejs-numerictextbox>
-		                        </div>
-		                        <!-- <div class="alert alert-danger" *ngIf="tournamentEntryFee.invalid && (tournamentEntryFee.dirty || tournamentEntryFee.touched)">
-		                        	Please enter a valid entry fee value. 
-		                        </div>	 -->                    
-	                    	</form>    
-	                    </div>
-                        <!-- <div class="alert alert-danger" *ngIf="txtEmail.invalid && (txtEmail.dirty || txtEmail.touched)">
-                            <div *ngIf="txtEmail.errors.required">
-                                Please enter a valid email.
-                            </div>
-                        </div> -->
-                        
-                        <!-- <form [formControl]="txtCountry" (ngSubmit)="dropdownOnSubmit()">
-                            <div class="form-group">
-                                <label>Country</label>
-                                <select class="form-control">
-                                    <option disabled>Select Country</option>
-                                    <option *ngFor="let country of countryInfo; let i = index" value="{{i}}">{{country.CountryName}}</option>
-                                </select>    
-                            </div>
-                        </form> -->
+                        </div>               	
+                    	<div class="container">
+		                    <div class="row" style="margin-top: 50px;">	
+		                    	<form [formGroup]="entryAndPriceForm">
+			                        <div class="col-lg-5 col-md-10" class="form-group">
+									    <label>Cash prize</label>
+			                            <ejs-numerictextbox format='c2' min='0' step='25'
+			                            					placeholder="Enter cash value for price" value="0" 
+			                            					formControlName="cashPrize">
+			                            </ejs-numerictextbox>
+		                        	</div>		                   
+			                    </form>
+		                        <form style="margin-left: 50px;">
+			                        <div class="col-lg-5 col-md-10" class="form-group">
+			                        	<label>Player entry fee</label>
+			                        	<ejs-numerictextbox min='100' value='100' step='50' 
+			                        						formControlName="entryFee">
+			                        	</ejs-numerictextbox>
+			                        </div>
+		                        </form>
+		                    </div>
+                    	</div>
+		                <form>    
+		                    <div class="container">
+		                    	<div class="row">
+			                    	<label>Tournament date</label>
+				                    <div class="form-group" class="col-lg-5 col-md-10">      	
+				                        <mat-form-field>
+				                        	<input matInput [ngxMatDatetimePicker]="tournamentDateTimeElement" 
+				                        		placeholder="Choose a date"		                        		
+				                        	>
+				                        	<mat-datepicker-toggle matSuffix [for]="tournamentDateTimeElement">				      
+				                        		
+				                        	</mat-datepicker-toggle>
+				                        	
+				                        	<ngx-mat-datetime-picker #tournamentDateTimeElement [showSpinners]="true" [showSeconds]="false"
+				                        		[stepHour]="1" [stepMinute]="10"
+				                        	>				      		                        	
+				                        	</ngx-mat-datetime-picker>
+				                        </mat-form-field>                    
+				                    </div>
+			                    </div>		              
+                    		</div>
+                    	</form>    
                     </form>
                 </div>
             </div>
             <div class="col-lg-12 col-md-12">
                 <div class="register-form">
                     <form>
-                        <!-- <div class="form-group">
-                            <label>Search for Players</label>
-                            <app-user-search-bar (selectedOption)="onSelectedFilter($event)"></app-user-search-bar>
-                        </div>                        
-                        <label>Available Players</label> -->
-                       <!--  <div *ngFor="let user of allUsers">
-                            <p><b>Username: </b> {{user.userName}}</p>
-                            <p><b>Email: </b> {{user.userEmail}}</p>
-                            <p><b>Country: </b> {{user.userCountry}}</p>
-                        </div> -->
-                        <!-- <app-image-selector></app-image-selector> -->
-                        <!-- <div class="form-group">
-                            <label>Team Image</label>
-                            <input
-                                type="file"
-                                (change)="onFileChanged($event)"
-                            >
-                            <app-app-image-cropper></app-app-image-cropper>
-                        </div>-->
-                        <!-- <div>
-                            <app-image-uploader></app-image-uploader>
-                        </div> -->
                         <button type="submit" (click)="onSubmit(); clickedButton();" 
                             [disabled]="txtName.invalid || txtDescription.invalid || isClicked" >
                             Next
@@ -140,13 +103,7 @@
             </div>
         </div>
     </div>
-    <div *ngIf="isSuccessfulTournamentCreation">
+    <div *ngIf="isSuccessfulTournamentInformationSubmission">
         <h2>You've registered your tournament Successfully</h2>
     </div>
-    <!-- <div class="alert alert-danger" *ngIf="isSignUpFailed">
-        <h2>
-            Registration failed.
-        </h2>
-        <h3>{{errorMessage}}</h3>
-    </div> -->
 </section>

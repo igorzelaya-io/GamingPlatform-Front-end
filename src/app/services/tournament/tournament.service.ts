@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Tournament } from '../../models/tournament/tournament';
 import {retry, catchError } from 'rxjs/operators';
 import { Team } from '../../models/team';
+import { User } from '../../models/user/user';
 
 const TOURNAMENTS_API = 'http://localhost:8081/tournamentsapi/tournaments';
 
@@ -52,8 +53,8 @@ export class TournamentService {
     .pipe(retry(1), catchError(this.handleError('getAllTeamsOnTournament', [])));
   }
 
-  public postTournament(userId: string, tournament: Tournament):Observable<string>{
-    return this.httpClient.post<string>(TOURNAMENTS_API + '/save?userId=' + userId, tournament)
+  public postTournament(user: User, tournament: Tournament):Observable<string>{
+    return this.httpClient.post<string>(TOURNAMENTS_API + '/save', {user, tournament})
     .pipe(catchError(this.handleError('postTournament', {} as string)));
   }
 

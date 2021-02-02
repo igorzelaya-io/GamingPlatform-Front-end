@@ -1,14 +1,13 @@
 import { Component, OnInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Team } from '../../../models/team';
-import { User } from '../../../models/user/user';
 import { TournamentTeamSize } from '../../../models/tournament/tournament-team-size.enum';
 import { Tournament } from '../../../models/tournament/tournament';
 import { TournamentMode } from '../../../models/tournament/tournament-mode.enum';
 import { TournamentFormat } from '../../../models/tournament/tournament-format.enum';
-import { TournamentService } from '../../../services/tournament/tournament.service';
 import { SharedService } from '../../../services/helpers/shared-service';
-import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import { TournamentService } from '../../../services/tournament/tournament.service';
 
 @Component({
   selector: 'app-tournament-creation-config-page',
@@ -17,53 +16,41 @@ import { Router } from '@angular/router';
 })
 
 export class TournamentCreationConfigPageComponent implements OnInit {
-  txtName: FormControl;   
-  txtDescription: FormControl;
   txtLimitNumberOfTeams: number;
-  txtPlatforms: FormControl;
   tournamentTeamSize: TournamentTeamSize;
   tournamentFormat: TournamentFormat;
-  tournamentModerator: User;
-  tournamentDate: Date;
-  tournamentCashPrice: FormControl;
-  tournamentEntryFee: FormControl;
   tournamentRegion: FormControl;
   tournamentTeams: Array<Team>;
-  
-  tournamentFormatString: string;
-  
+  tournamentGameMode: TournamentMode;
 
   @ViewChild('leagueFormatElement')
   leagueFormatElement: ElementRef;
 
   @ViewChild('pvpFormatElement')
   pvpFormatElement: ElementRef;
-
-  tournamentGameMode: TournamentMode;
-
+  
   message = ' ';
   errorMessage = ' ';
  
   isSuccessfulTournamentCreation = false;
-  isSubmittedDropDownContent = true;
+  isSignUpFailed = false;
   isClicked = false;
   tournament: Tournament = new Tournament();
 
-  constructor(private router: Router,
+  constructor(private router: ActivatedRoute,
 			  private renderer: Renderer2,
-	          private sharedService: SharedService) {
-    this.txtName = new FormControl();
-    this.txtPlatforms = new FormControl();
-	this.tournamentCashPrice = new FormControl();
-	this.tournamentEntryFee = new FormControl();
-	this.tournamentRegion = new FormControl();
-	this.txtDescription = new FormControl();
-    this.leagueFormatElement = this.sharedService.get();
+	          private sharedService: SharedService,
+			  private tournamentService: TournamentService) {
+    this.tournamentRegion = new FormControl();
+	this.leagueFormatElement = this.sharedService.get();
 	this.pvpFormatElement = this.sharedService.get();
   }
 
   ngOnInit(): void {
-  	
+	this.router.queryParams
+	.subscribe(params => {
+		this.tournament = params['tournament'];
+	});
   }
 
   clickedButton(): void{
@@ -77,9 +64,9 @@ export class TournamentCreationConfigPageComponent implements OnInit {
 	else if(this.leagueFormatElement.nativeElement.style.border === '3px solid blue'){
 		this.renderer.setStyle(this.leagueFormatElement.nativeElement, 'border', '3px solid red');
 		this.tournamentFormat = undefined;
+		return;
 	}
 	this.renderer.setStyle(this.leagueFormatElement.nativeElement, 'border','3px solid blue');
-	//this.leagueFormatElement.nativeElement.style.border = '3px solid blue;';
 	this.tournamentFormat = TournamentFormat.League;
   }
 
@@ -90,14 +77,24 @@ export class TournamentCreationConfigPageComponent implements OnInit {
 	else if(this.pvpFormatElement.nativeElement.style.border === '3px solid blue'){
 		this.renderer.setStyle(this.pvpFormatElement.nativeElement, 'border', '3px solid red');
 		this.tournamentFormat = undefined;
+		return;
 	}
 	this.renderer.setStyle(this.pvpFormatElement.nativeElement, 'border', '3px solid blue');
-	//this.pvpFormatElement.nativeElement.style.border = '3px solid blue;';
 	this.tournamentFormat = TournamentFormat.PvP;
    }
 
-   public onSubmit(){
-   	this.router.navigate(['/tournament-creation-config'], {queryParams: {tournamentName: this.txtName.value}});
-   }
-
+	public onSubmit(){
+		this.tournamentService.postTournament(this.tournament.tournamentModerator, this.tournament)
+		.subscribe((data: string) => {
+			this.message = data;
+			console.log(data);
+			this.isSuccessfulTournamentCreation = true;
+		},
+		(err: string) => {
+			console.error(err);
+			this.errorMessage = err;
+			this.isSuccessfulTournamentCreation = false;
+			this.isSignUpFailed = true;
+		});
+	}
 }

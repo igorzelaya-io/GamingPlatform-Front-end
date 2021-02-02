@@ -75,3 +75,51 @@ label{
 	margin-top: 30px;  
 }
 
+::ng-deep .mat-focused .mat-form-field-label {
+  color: #cc0000 !important;
+ }
+
+ ::ng-deep.mat-form-field-underline {
+  background-color:#cc0000 !important;
+} 
+
+::ng-deep.mat-form-field-ripple {
+ background-color:#cc0000 !important;;
+}
+
+::ng-deep .mat-form-field-placeholder{
+
+  color:red;
+}
+
+::ng-deep .mat-focused .mat-form-field-placeholder{
+
+  color:red;
+}
+
+::ng-deep .mat-form-field-label{
+    color:#cc0000 !important;
+	font-size: 15px !important;
+}
+
+::ng-deep .mat-focused .mat-form-field-label {
+ color: #cc0000 !important;
+}
+
+::ng-deep.mat-form-field-underline {
+ background-color: #cc0000 !important;
+} 
+
+::ng-deep.mat-form-field-ripple {
+ background-color:red !important;;
+}
+
+::ng-deep .mat-form-field-label {
+ color: red !important;
+}
+
+mat-datepicker-toggle {
+ color: blue !important;
+}
+
+

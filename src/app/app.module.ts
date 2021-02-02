@@ -71,8 +71,10 @@ import { ImageCropperComponent } from './components/common/image-cropper/image-c
 import { ImageUploaderComponent } from './components/common/image-uploader/image-uploader.component';
 import { TournamentCreationPageComponent } from './components/pages/tournament-creation-page/tournament-creation-page';
 import { NumericTextBoxModule } from '@syncfusion/ej2-angular-inputs';
-import { MatStepperModule } from '@angular/material/stepper';
 import { TournamentCreationConfigPageComponent } from './components/pages/tournament-creation-config-page/tournament-creation-config-page';
+import { NgxMatDatetimePickerModule, NgxMatTimepickerModule } from '@angular-material-components/datetime-picker';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { NgxMatNativeDateModule } from '@angular-material-components/datetime-picker';
 
 @NgModule({
   declarations: [
@@ -152,7 +154,10 @@ import { TournamentCreationConfigPageComponent } from './components/pages/tourna
     MatChipsModule,
     MatFormFieldModule,
     NumericTextBoxModule,
-    MatStepperModule,
+	NgxMatDatetimePickerModule,
+	NgxMatTimepickerModule,
+	MatDatepickerModule,
+	NgxMatNativeDateModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

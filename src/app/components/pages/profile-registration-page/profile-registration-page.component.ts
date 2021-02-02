@@ -53,16 +53,15 @@ export class ProfileRegistrationPageComponent implements OnInit {
   
   onSubmit(){
     this.validatePasswords();
-    this.dropdownOnSubmit();
     this.validateYearInput();
-    if (this.areEqualPasswords && this.isSubmittedDropDownContent && this.isValidYear){
+    if (this.areEqualPasswords && this.isValidYear){
       this.submitForm();
       this.clickedButton();
       return
     }
   }
 
-  submitForm(){
+  public submitForm(){
     this.user.userRealName = this.toRealName();
     this.user.userName = this.txtUserName.value;
     this.user.userPassword = this.txtPassword.value;
@@ -93,14 +92,6 @@ export class ProfileRegistrationPageComponent implements OnInit {
     this.isClicked = true;
   }
 
-  dropdownOnSubmit(): void{
-    if (this.txtMonth.valid){
-      this.isSubmittedDropDownContent = true;
-      return
-    }
-    this.isSubmittedDropDownContent = false;
-  }
-
   getCountries(){
     this.allCountries().subscribe(
       data => {
@@ -114,6 +105,14 @@ export class ProfileRegistrationPageComponent implements OnInit {
 
   allCountries(): Observable<any>{
     return this.httpClient.get<any>(this.countriesUrl);
+  }
+
+  public updateCountry(event: any){
+	this.txtCountry = event.target.value;
+  }
+
+  public updateUserMonth(event: any){
+	this.txtMonth = event.target.value; 	
   }
 
   validateYearInput():void{
