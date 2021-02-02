@@ -116,15 +116,13 @@
                                 </div>
                             </div>
                         </div>
-                        <form>
-                            <div class="form-group">
-                                <label>Country</label>
-                                <select class="form-control" [formControl]="txtCountry" (change)="updateCountry($event)">
-                                    <option value="" disabled>Select Country</option>
-                                    <option *ngFor="let country of countryInfo" value="{{country.CountryName}}">{{country.CountryName}}</option>
-                                </select>    
-                            </div>
-                        </form>
+                        <div class="form-group">
+                            <label>Country</label>
+                            <select class="form-control" [formControl]="txtCountry" (change)="updateCountry($event)">
+                                <option value="" disabled>Select Country</option>
+                                <option *ngFor="let country of countryInfo" value="{{country.CountryName}}">{{country.CountryName}}</option>
+                            </select>    
+                        </div>
                     </form>
                 </div>
             </div>
