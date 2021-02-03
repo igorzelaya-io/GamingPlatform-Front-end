@@ -13,7 +13,7 @@
 	        <div class="col-lg-12 col-md-12">
 	          <div class="register-form">
 	              <form>
-  	        	      <h2 style="text-align: center;">Tournament Format</h2>
+  	        	    <h2 style="text-align: center;">Tournament Format</h2>
 	              	<div class="form-group">
 	                	<div class="row" style="margin-top: 30px;">
 		                  	<div class="col-sm">
@@ -64,8 +64,45 @@
 				</div>	    		
 	    	</div>
 	    	<div class="row" style="margin-top: 30px;">
-	    		
-	    	
+	    		<div class="col-lg-12 col-md-12">
+	    			<div class="register-form">
+	    				<form>
+	    					<h2 style="text-align: center">Tournament Team Size</h2>
+	    					<div class="form-group">
+	    						<div class="row" style="margin-top: 30px">
+    								<div class="col-lg-3 col-md-12">
+    									<img src="assets/d1images/Solos.png"
+    										#solosTeamSizeElement
+    										(click)="selectSolosTournamentTeamSize()"
+    										style="border: 3px solid white"
+    									>
+    								</div>
+    								<div class="col-lg-3 col-md-12">
+    									<img (click)="selectDuosTournamentTeamSize()"
+    										src="assets/d1images/Duos.png"
+    										#duosTeamSizeElement
+    										style="border: 3px solid white"
+    									>
+    								</div>
+    								<div class="col-lg-3 col-md-12">
+    									<img src="assets/d1images/Trios.png" 
+    										(click)="selectTriosTournamentTeamSize()"
+    										#triosTeamSizeElement 
+    										style="border: 3px solid white"
+    									>
+    								</div>
+    								<div class="col-lg-3 col-md-12">
+    									<img src="assets/d1images/Quads.png"
+    										(click)="selectSquadTournamentTeamSize()"
+    										#squadsTeamSizeElement
+    										style="border: 3px solid white"
+    									>
+    								</div>
+	    						</div>
+	    					</div>
+	    				</form>
+	    			</div>
+	    		</div>
 	    	</div>
 	    </div>
 	    <div>     

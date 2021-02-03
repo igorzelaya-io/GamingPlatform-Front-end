@@ -133,7 +133,7 @@ export class TournamentCreationConfigPageComponent implements OnInit {
 	this.tournamentGameMode = TournamentMode.Survival;
    }
 
-   selectSoloTournamentTeamSize(){
+   selectSolosTournamentTeamSize(){
 	 if(this.isRedBorder(this.duosTeamSizeElement)){
 		this.changeToWhiteBorder(this.duosTeamSizeElement);
      }
