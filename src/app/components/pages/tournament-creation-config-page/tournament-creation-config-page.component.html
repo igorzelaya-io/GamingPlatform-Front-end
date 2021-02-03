@@ -3,47 +3,77 @@
 <section class="page-title-area page-title-bg1">
     <div class="container">
         <div class="page-title-content">
-            <h1 title="Create Tournament">Create Tournament</h1>
+            <h1 title="Tournament Creation">Tournament Creation</h1>
         </div>
     </div>
 </section>
 <section class="profile-authentication-area ptb-100">
-    <div *ngIf="!isSuccessfulTournamentCreation" class="container">
-        <div class="row">
-            <div class="col-lg-12 col-md-12">
-                <div class="register-form">
-                    <h2>Tournament Configuration</h2>
-                    <form>
-	                  	<div class="form-group" >
-	                   	<label>Tournament Type</label>
-	                    	<div class="row" style="margin-top:30px;">
-	                    		<label>League Play</label>		                    		
-		                    	<div class="col-lg-5 col-md-10">
-		                    		<img src="assets/d1images/Cup.png" 
-		                    			#leagueFormatElement 
-		                    			(click)="selectLeagueTournamentFormat()" 
-		                    			style="border: 3px solid red"
-		                    		>
-		                    	</div>
-	                  			<label>PvP</label>
-	                    		<div class="col-lg-5 col-md-10">
-                    				<img #pvpFormatElement (click)="selectPvPTournamentFormat()"
-                    					 src="assets/d1images/VS.png" 
-                    					 style="border: 3px solid red"
-                    				>
-	                    		</div>
-	                    	</div>
-		            	</div>	                    	
-                    </form>
-                </div>
-            </div>
-            <div>     
-                <button type="submit" (click)="onSubmit();" 
-                    [disabled]="" >
-                    Register
-                </button>
-            </div>
-        </div>
+    <div *ngIf="!isSuccessfulTournamentCreation && !isSignUpFailed" class="container">
+        <div class="row" style="margin-top: 30px;">
+	        <div class="col-lg-12 col-md-12">
+	          <div class="register-form">
+	              <form>
+  	        	      <h2 style="text-align: center;">Tournament Format</h2>
+	              	<div class="form-group">
+	                	<div class="row" style="margin-top: 30px;">
+		                  	<div class="col-sm">
+		                	 
+		                		<img src="assets/d1images/Cup.png" 
+		                  			#leagueFormatElement 
+		                  			(click)="selectLeagueTournamentFormat()" 
+		                  			style="border: 3px solid white"
+		                  		>
+		                  	</div>
+	                		<div class="col-sm">
+	              				
+	              				<img #pvpFormatElement (click)="selectPvPTournamentFormat()"
+	              					 src="assets/d1images/VS.png" 
+	              					 style="border: 3px solid white"
+	              				>
+	                		</div>
+	                	</div>
+	          		 </div>
+	              </form>
+           		</div>
+           </div>
+	    </div>
+	    <div *ngIf="!isSuccessfulTournamentCreation && !isSignUpFailed" class="container">
+	    	<div class="row" style="margin-top: 30px;">
+				<div class="col-lg-12 col-md-12">
+		    		<div class="register-form">
+		    			<form>
+							<h2 style="text-align: center">Tournament Game Mode</h2>
+		    				<div class="form-group">
+			    				<div class="row" style="margin-top: 30px;">		
+			    					<div class="col-sm">
+			    						<img src="/assets/d1images/KillRace.png"
+			            					#killRaceModeElement (click)="selectKillRaceTournamentGameMode()"
+			            					style="border: 3px solid white"
+			            				>
+			    					</div>
+			    					<div class="col-sm">
+			    						<img src="assets/d1images/Survival.png"
+		            						#survivalModeElement (click)="selectSurvivalTournamentGameMode()"
+		            						style="border: 3px solid white"
+		            					>
+			    					</div>
+			    				</div>
+		    				</div>    			
+		    			</form>
+		    		</div>
+				</div>	    		
+	    	</div>
+	    	<div class="row" style="margin-top: 30px;">
+	    		
+	    	
+	    	</div>
+	    </div>
+	    <div>     
+	        <button type="submit" (click)="onSubmit();" 
+	            [disabled]="" >
+	            Register
+	        </button>
+	    </div>
     </div>
     <div *ngIf="isSuccessfulTournamentCreation">
         <h2>You've registered your tournament Successfully</h2>

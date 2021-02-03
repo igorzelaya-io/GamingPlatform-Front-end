@@ -19,8 +19,9 @@ export class TournamentCreationConfigPageComponent implements OnInit {
   txtLimitNumberOfTeams: number;
   tournamentTeamSize: TournamentTeamSize;
   tournamentFormat: TournamentFormat;
-  tournamentRegion: FormControl;
   tournamentTeams: Array<Team>;
+  
+
   tournamentGameMode: TournamentMode;
 
   @ViewChild('leagueFormatElement')
@@ -28,7 +29,25 @@ export class TournamentCreationConfigPageComponent implements OnInit {
 
   @ViewChild('pvpFormatElement')
   pvpFormatElement: ElementRef;
-  
+
+  @ViewChild('killRaceModeElement')
+  killRaceModeElement: ElementRef;
+
+  @ViewChild('survivalModeElement')
+  survivalModeElement: ElementRef;
+
+  @ViewChild('solosTeamSizeElement')
+  solosTeamSizeElement: ElementRef;
+
+  @ViewChild('duosTeamSizeElement')
+  duosTeamSizeElement: ElementRef;
+
+  @ViewChild('triosTeamSizeElement')
+  triosTeamSizeElement: ElementRef;
+
+  @ViewChild('squadsTeamSizeElement')
+  squadsTeamSizeElement: ElementRef;
+    
   message = ' ';
   errorMessage = ' ';
  
@@ -41,9 +60,14 @@ export class TournamentCreationConfigPageComponent implements OnInit {
 			  private renderer: Renderer2,
 	          private sharedService: SharedService,
 			  private tournamentService: TournamentService) {
-    this.tournamentRegion = new FormControl();
-	this.leagueFormatElement = this.sharedService.get();
+    this.leagueFormatElement = this.sharedService.get();
 	this.pvpFormatElement = this.sharedService.get();
+	this.killRaceModeElement = this.sharedService.get();
+	this.survivalModeElement = this.sharedService.get();
+  	this.solosTeamSizeElement = this.sharedService.get();
+	this.duosTeamSizeElement = this.sharedService.get();
+	this.triosTeamSizeElement = this.sharedService.get();
+	this.squadsTeamSizeElement = this.sharedService.get();
   }
 
   ngOnInit(): void {
@@ -58,30 +82,147 @@ export class TournamentCreationConfigPageComponent implements OnInit {
   }
 
   selectLeagueTournamentFormat(): void{	
-	if(this.pvpFormatElement.nativeElement.style.border === '3px solid blue'){
-		this.renderer.setStyle(this.pvpFormatElement.nativeElement, 'border', '3px solid red');
+	if(this.isRedBorder(this.pvpFormatElement)){
+		this.changeToWhiteBorder(this.pvpFormatElement);
 	}
-	else if(this.leagueFormatElement.nativeElement.style.border === '3px solid blue'){
-		this.renderer.setStyle(this.leagueFormatElement.nativeElement, 'border', '3px solid red');
+	else if(this.isRedBorder(this.leagueFormatElement)){
+		this.changeToWhiteBorder(this.leagueFormatElement);
 		this.tournamentFormat = undefined;
 		return;
 	}
-	this.renderer.setStyle(this.leagueFormatElement.nativeElement, 'border','3px solid blue');
+	this.changeToRedBorder(this.leagueFormatElement);
 	this.tournamentFormat = TournamentFormat.League;
   }
 
   selectPvPTournamentFormat(): void{
-	if(this.leagueFormatElement.nativeElement.style.border === '3px solid blue'){
-		this.renderer.setStyle(this.leagueFormatElement.nativeElement, 'border', '3px solid red');
+	if(this.isRedBorder(this.leagueFormatElement)){
+		this.changeToWhiteBorder(this.leagueFormatElement);
 	}
-	else if(this.pvpFormatElement.nativeElement.style.border === '3px solid blue'){
-		this.renderer.setStyle(this.pvpFormatElement.nativeElement, 'border', '3px solid red');
+	else if(this.isRedBorder(this.pvpFormatElement)){
+		this.changeToWhiteBorder(this.pvpFormatElement);
 		this.tournamentFormat = undefined;
 		return;
 	}
-	this.renderer.setStyle(this.pvpFormatElement.nativeElement, 'border', '3px solid blue');
+	this.changeToRedBorder(this.pvpFormatElement);
 	this.tournamentFormat = TournamentFormat.PvP;
    }
+
+   selectKillRaceTournamentGameMode(): void{
+    if(this.isRedBorder(this.survivalModeElement)){
+		this.changeToWhiteBorder(this.survivalModeElement);
+	}
+	else if(this.isRedBorder(this.killRaceModeElement)){
+		this.changeToWhiteBorder(this.killRaceModeElement);
+		this.tournamentGameMode = undefined;
+		return;
+	}
+	this.changeToRedBorder(this.killRaceModeElement);
+	this.tournamentGameMode = TournamentMode.KillRace;
+   }
+   
+   selectSurvivalTournamentGameMode(){
+	if(this.isRedBorder(this.killRaceModeElement)){
+		this.changeToWhiteBorder(this.killRaceModeElement);
+	}
+	else if(this.isRedBorder(this.survivalModeElement)){
+		this.changeToWhiteBorder(this.survivalModeElement);
+		this.tournamentGameMode = undefined;
+		return;
+	}
+	this.changeToRedBorder(this.survivalModeElement);
+	this.tournamentGameMode = TournamentMode.Survival;
+   }
+
+   selectSoloTournamentTeamSize(){
+	 if(this.isRedBorder(this.duosTeamSizeElement)){
+		this.changeToWhiteBorder(this.duosTeamSizeElement);
+     }
+	 else if(this.isRedBorder(this.solosTeamSizeElement)){
+	 	this.changeToWhiteBorder(this.solosTeamSizeElement);
+     	this.tournamentTeamSize = undefined;
+		return;
+	 }
+	 else if(this.isRedBorder(this.triosTeamSizeElement)){
+		this.changeToWhiteBorder(this.triosTeamSizeElement);
+	 }
+	 else if(this.isRedBorder(this.squadsTeamSizeElement)){
+		this.changeToWhiteBorder(this.squadsTeamSizeElement);
+	 }
+	 this.changeToRedBorder(this.solosTeamSizeElement);
+   	 this.tournamentTeamSize = TournamentTeamSize.Solos;
+   }
+
+   selectDuosTournamentTeamSize(){
+	if(this.isRedBorder(this.solosTeamSizeElement)){
+		this.changeToWhiteBorder(this.solosTeamSizeElement);
+	}
+	else if(this.isRedBorder(this.duosTeamSizeElement)){
+		this.changeToWhiteBorder(this.duosTeamSizeElement);
+		this.tournamentTeamSize = undefined;
+		return;
+	}
+	else if(this.isRedBorder(this.triosTeamSizeElement)){
+		this.changeToWhiteBorder(this.triosTeamSizeElement)
+	}
+	else if(this.isRedBorder(this.squadsTeamSizeElement)){
+		this.changeToWhiteBorder(this.squadsTeamSizeElement);
+	}
+	this.changeToRedBorder(this.duosTeamSizeElement);
+	this.tournamentTeamSize = TournamentTeamSize.Duos;   
+   }
+
+   selectTriosTournamentTeamSize(){
+   	if(this.isRedBorder(this.solosTeamSizeElement)){
+		this.changeToWhiteBorder(this.solosTeamSizeElement);
+	}
+	else if(this.isRedBorder(this.triosTeamSizeElement)){
+		this.changeToWhiteBorder(this.triosTeamSizeElement);
+		this.tournamentTeamSize = undefined;
+		return;
+	}
+	else if(this.isRedBorder(this.squadsTeamSizeElement)){
+		this.changeToWhiteBorder(this.squadsTeamSizeElement);
+	}
+	else if(this.isRedBorder(this.duosTeamSizeElement)){
+		this.changeToWhiteBorder(this.duosTeamSizeElement);
+	}
+	this.changeToRedBorder(this.triosTeamSizeElement);
+	this.tournamentTeamSize = TournamentTeamSize.Trios;
+   }
+
+   selectSquadTournamentTeamSize(){
+	 if(this.isRedBorder(this.solosTeamSizeElement)){
+		this.changeToWhiteBorder(this.solosTeamSizeElement);
+	 }
+	 else if(this.isRedBorder(this.duosTeamSizeElement)){
+		this.changeToWhiteBorder(this.duosTeamSizeElement);
+	 }
+	 else if(this.isRedBorder(this.triosTeamSizeElement)){
+		this.changeToWhiteBorder(this.triosTeamSizeElement);
+	 }
+	 else if(this.isRedBorder(this.squadsTeamSizeElement)){
+		this.changeToWhiteBorder(this.squadsTeamSizeElement);
+		this.tournamentTeamSize = undefined;
+		return;
+	 }
+	 this.changeToRedBorder(this.squadsTeamSizeElement);
+     this.tournamentTeamSize = TournamentTeamSize.Squads;
+   }
+
+	private isRedBorder(elementToEvaluate: ElementRef): boolean{
+		if(elementToEvaluate.nativeElement.style.border === '3px solid red'){
+			return true; 
+		}
+		return false;
+	}
+
+	private changeToRedBorder(elementToChange: ElementRef): void{
+		this.renderer.setStyle(elementToChange.nativeElement, 'border', '3px solid red');
+	}
+	
+	private changeToWhiteBorder(elementToChange: ElementRef): void{
+		this.renderer.setStyle(elementToChange.nativeElement, 'border', '3px solid white');
+	}
 
 	public onSubmit(){
 		this.tournamentService.postTournament(this.tournament.tournamentModerator, this.tournament)
@@ -95,6 +236,8 @@ export class TournamentCreationConfigPageComponent implements OnInit {
 			this.errorMessage = err;
 			this.isSuccessfulTournamentCreation = false;
 			this.isSignUpFailed = true;
+		},() => {
+			console.log('complete');
 		});
 	}
 }
