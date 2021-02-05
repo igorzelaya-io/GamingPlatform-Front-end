@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ServiceServiceService } from '../../../services/service-service.service';
+import { D1Service } from '../../../models/d1service';
 
 @Component({
   selector: 'app-shop-style-one',
@@ -7,9 +9,26 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ShopStyleOneComponent implements OnInit {
 
-  constructor() { }
+  d1services: D1Service[];
 
+  constructor(private serviceService: ServiceServiceService) {
+	this.d1services = [];	
+  }
+
+  
   ngOnInit(): void {
+  	this.getAllServices();
+  }
+
+  public getAllServices(): void{
+	this.serviceService.getAllServices()
+	.subscribe((data: D1Service[]) => {
+		console.log(data);
+		this.d1services = data;		
+	},
+	(err) => {
+		console.error(err);	
+	});
   }
 
 }
