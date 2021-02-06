@@ -19,6 +19,7 @@ export class TournamentCreationConfigPageComponent implements OnInit {
   txtLimitNumberOfTeams: number;
   tournamentTeamSize: TournamentTeamSize;
   tournamentFormat: TournamentFormat;
+  tournamentFormatString: string;
   tournamentTeams: Array<Team>;
   
 
@@ -29,6 +30,15 @@ export class TournamentCreationConfigPageComponent implements OnInit {
 
   @ViewChild('pvpFormatElement')
   pvpFormatElement: ElementRef;
+
+  @ViewChild('bestOfOneElement')
+  bestOfOneElement: ElementRef;
+
+  @ViewChild('bestOfThreeElement')
+  bestOfThreeElement: ElementRef;
+
+  @ViewChild('bestOfFiveElement')
+  bestOfFiveElement: ElementRef;
 
   @ViewChild('killRaceModeElement')
   killRaceModeElement: ElementRef;
@@ -92,6 +102,7 @@ export class TournamentCreationConfigPageComponent implements OnInit {
 	}
 	this.changeToRedBorder(this.leagueFormatElement);
 	this.tournamentFormat = TournamentFormat.League;
+	this.tournamentFormatString = TournamentFormat[this.tournamentFormat];
   }
 
   selectPvPTournamentFormat(): void{
@@ -105,6 +116,7 @@ export class TournamentCreationConfigPageComponent implements OnInit {
 	}
 	this.changeToRedBorder(this.pvpFormatElement);
 	this.tournamentFormat = TournamentFormat.PvP;
+	this.tournamentFormatString = TournamentFormat[this.tournamentFormat];
    }
 
    selectKillRaceTournamentGameMode(): void{
@@ -207,6 +219,18 @@ export class TournamentCreationConfigPageComponent implements OnInit {
 	 }
 	 this.changeToRedBorder(this.squadsTeamSizeElement);
      this.tournamentTeamSize = TournamentTeamSize.Squads;
+   }
+
+   selectBestOfOneTournamentMatchesNumber(){
+	
+   }
+
+   selectBestOfThreeTournamentMatchesNumber(){
+	
+   }
+
+   selectBestOfFiveTournamentMatchesNumber(){
+	
    }
 
 	private isRedBorder(elementToEvaluate: ElementRef): boolean{

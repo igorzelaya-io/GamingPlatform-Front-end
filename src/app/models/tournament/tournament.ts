@@ -12,7 +12,7 @@ export class Tournament {
     tournamentTeams: Array<Team>;
     tournamentLimitNumberOfTeams: number;
     tournamentNumberOfTeams: number;
-    tournamentPlatforms: Array<string>;
+    tournamentPlatforms: string;
     tournamentStatus: TournamentStatus;
 	tournamentTeamSize: TournamentTeamSize;
 	tournamentGameMode: TournamentMode;
@@ -23,6 +23,8 @@ export class Tournament {
     tournamentEntryFee: number;
     tournamentRegion: string;
     tournamentDescription: string;
+	tournamentGame: string;
+	tournamentCodGameMode: string;
 
     constructor(tournamentName?: string, tournamentStatus?: TournamentStatus, tournamentModerator?: User,
                 tournamentDate?: Date, tournamentTeams?: Array<Team>){

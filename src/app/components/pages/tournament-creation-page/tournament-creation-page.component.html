@@ -98,15 +98,74 @@
 	                    	</div>    
                   	    </div>  
                   	</div>
-                  	<div class="container">
-                  		<div>
-                  			
-                  		</div>
+                  	<div class="container" style="margin-top: 30px">
+                  		<h2 style="text-align: center">Tournament Game</h2>
                   		<div class="row">
                   			<div class="col-sm">
-                  			
+                  				<img
+                  					src="assets/d1images/fifa.png"
+                  					style="border: 3px solid white"
+                  					(click)="selectFifaTournamentGameElement()"
+                  					#tournamentFifaGameElement
+                  				>
                   			</div>
                   			<div class="col-sm">
+                  				<img
+                  					src="assets/d1images/cod.png"
+                  					style="border: 3px solid white"
+                  					(click)="selectCodTournamentGameElement()"
+                  					#tournamentCodGameElement
+                  				>
+                  			</div>
+                  		</div>
+                  	</div>
+                  	<div class="container" *ngIf="this.tournamentGame === 'Call Of Duty'" style="margin-top: 30px;">
+                  		<h2 style="text-align: center"> Cod Game Mode</h2>
+                  		<div class="row">
+                  			<div class="col-sm">
+                  				<img 
+                  					src="assets/d1images/cdl.png"
+                  					style="border: 3px solid white"
+                  					#tournamentCodCdlElement
+                  					(click)="selectCdlCodTournamentGameMode()"
+                  				>	
+                  			</div>
+                  			<div class="col-sm">
+                  				<img
+                  					src="assets/d1images/warzone.png"
+                  					style="border: 3px solid white"
+                  					#tournamentCodWarzoneElement
+                  					(click)="selectWarzoneCodTournamentGameMode()"
+                  				>
+                  			</div>
+                  		</div>
+                  	</div>
+                  	<div class="container" style="margin-top: 30px;">
+                  	<h2 style="text-align: center">Tournament Platforms</h2>
+                  		<div class="row">
+                  			<div class="col-sm">
+                  				<img
+                  					src="/assets/d1images/allPlatforms.png"
+                  					#tournamentAllPlatformsElement
+                  					style="border: 3px solid white"
+                  					(click)="selectAllPlatformsTournamentPlatformElement()"
+                  				>
+                  			</div>
+                  			<div class="col-sm">
+                  				<img
+                  					src="/assets/d1images/PC.png"
+                  					#tournamentPcElement
+                  					style="border: 3px solid white"
+                  					(click)="selectPcTournamentPlatformElement()"
+                  				>
+                  			</div>
+                  			<div class="col-sm">
+                  				<img
+                  					src="/assets/d1images/Control.png"
+                  					#tournamentConsoleElement
+                  					style="border: 3px solid white"
+                  					(click)="selectConsoleTournamentPlatformElement()"
+                  				>
                   			</div>
                   		</div>
                   	</div> 

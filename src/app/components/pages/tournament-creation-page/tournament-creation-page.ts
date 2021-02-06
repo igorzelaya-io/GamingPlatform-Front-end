@@ -5,6 +5,8 @@ import { Tournament } from '../../../models/tournament/tournament';
 import { Router, ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { SharedService } from '../../../services/helpers/shared-service';
+import { Renderer2 } from '@angular/core';
 
 @Component({
   selector: 'app-tournament-creation-page',
@@ -20,12 +22,35 @@ export class TournamentCreationPageComponent implements OnInit {
   tournamentTimeZone: FormControl;
   //tournamentTeamSize: TournamentTeamSize;
   tournamentModerator: User;
-  
+  tournamentPlatform: string;
   tournamentDate: Date;
   tournamentCountry: FormControl;
+  tournamentGame: string;
+  tournamentCodGameMode: string;
   
   @ViewChild('tournamentDateTimeElement')
   tournamentDateElement: ElementRef;
+
+  @ViewChild('tournamentAllPlatformsElement')
+  tournamentAllPlatformsElement: ElementRef;
+
+  @ViewChild('tournamentConsoleElement')
+  tournamentConsoleElement: ElementRef;
+
+  @ViewChild('tournamentPcElement')
+  tournamentPcElement: ElementRef;
+
+  @ViewChild('tournamentFifaGameElement')
+  tournamentFifaGameElement: ElementRef;
+
+  @ViewChild('tournamentCodGameElement')
+  tournamentCodGameElement: ElementRef;
+
+  @ViewChild('tournamentCodCdlElement')
+  tournamentCodCdlElement: ElementRef;
+
+  @ViewChild('tournamentCodWarzoneElement')
+  tournamentCodWarzoneElement: ElementRef;
 
   entryAndPriceForm: FormGroup;
 
@@ -39,6 +64,8 @@ export class TournamentCreationPageComponent implements OnInit {
   constructor(private router: Router,
 			  private httpClient: HttpClient,
 			  private route: ActivatedRoute,
+			  private renderer: Renderer2,
+			  private sharedService: SharedService,
 			  @Inject(FormBuilder) private builder: FormBuilder) {
     this.txtName = new FormControl();
     this.txtPlatforms = new FormControl();
@@ -51,6 +78,10 @@ export class TournamentCreationPageComponent implements OnInit {
 		cashPrize: new FormControl(),	
 		entryFee: new FormControl()
 	});
+	this.tournamentDateElement = this.sharedService.get();
+	this.tournamentAllPlatformsElement = this.sharedService.get();
+	this.tournamentPcElement = this.sharedService.get();
+	this.tournamentConsoleElement = this.sharedService.get();
   }
 
   get entryFee(){
@@ -87,6 +118,121 @@ export class TournamentCreationPageComponent implements OnInit {
 	});
   }
 
+  public selectPcTournamentPlatformElement(){
+	if(this.isRedBorder(this.tournamentAllPlatformsElement)){
+		this.toWhiteBorder(this.tournamentAllPlatformsElement);
+	}
+	else if(this.isRedBorder(this.tournamentPcElement)){
+		this.toWhiteBorder(this.tournamentPcElement);
+		this.tournamentPlatform = undefined;
+		return;
+	}
+	else if(this.isRedBorder(this.tournamentConsoleElement)){
+		this.toWhiteBorder(this.tournamentConsoleElement);
+	}
+	this.toRedBorder(this.tournamentPcElement);
+  	this.tournamentPlatform = 'PC';
+  }
+  
+  public selectConsoleTournamentPlatformElement(){
+	if(this.isRedBorder(this.tournamentPcElement)){
+		this.toWhiteBorder(this.tournamentPcElement);
+	}
+  	else if(this.isRedBorder(this.tournamentConsoleElement)){
+		this.toWhiteBorder(this.tournamentConsoleElement);
+		this.tournamentPlatform = undefined;
+		return;
+	}
+	else if(this.isRedBorder(this.tournamentAllPlatformsElement)){
+		this.toWhiteBorder(this.tournamentAllPlatformsElement);
+	}
+  	this.toRedBorder(this.tournamentConsoleElement);
+  	this.tournamentPlatform = 'Console';
+  }
+  
+  public selectAllPlatformsTournamentPlatformElement(){
+	if(this.isRedBorder(this.tournamentAllPlatformsElement)){
+		this.toWhiteBorder(this.tournamentAllPlatformsElement);
+		this.tournamentPlatform = undefined;
+		return;
+	}
+	else if(this.isRedBorder(this.tournamentPcElement)){
+		this.toWhiteBorder(this.tournamentPcElement);
+	}
+	else if(this.isRedBorder(this.tournamentConsoleElement)){
+		this.toWhiteBorder(this.tournamentConsoleElement);
+	}
+  	this.toRedBorder(this.tournamentAllPlatformsElement);
+  	this.tournamentPlatform = 'All Platforms';
+  }
+
+  public selectFifaTournamentGameElement(){
+	if(this.isRedBorder(this.tournamentCodGameElement)){
+		this.toWhiteBorder(this.tournamentCodGameElement);
+	}
+	else if(this.isRedBorder(this.tournamentFifaGameElement)){
+		this.toWhiteBorder(this.tournamentFifaGameElement);
+		this.tournamentGame = undefined;
+		return;
+	}
+	this.toRedBorder(this.tournamentFifaGameElement);
+  	this.tournamentGame = 'Fifa';
+  }
+
+  public selectCodTournamentGameElement(){
+	if(this.isRedBorder(this.tournamentCodGameElement)){
+		this.toWhiteBorder(this.tournamentCodGameElement);
+		this.tournamentGame = undefined;
+		return;
+	}
+	else if(this.isRedBorder(this.tournamentFifaGameElement)){
+		this.toWhiteBorder(this.tournamentFifaGameElement);
+	}
+	this.toRedBorder(this.tournamentCodGameElement);
+  	this.tournamentGame = 'Call Of Duty';
+  }
+
+  selectCdlCodTournamentGameMode(){
+	if(this.isRedBorder(this.tournamentCodCdlElement)){
+		this.toWhiteBorder(this.tournamentCodCdlElement);
+		this.tournamentCodGameMode = undefined;
+		return;
+	}
+	else if(this.isRedBorder(this.tournamentCodWarzoneElement)){
+		this.toWhiteBorder(this.tournamentCodWarzoneElement);
+	}
+  	this.toRedBorder(this.tournamentCodCdlElement);
+  	this.tournamentCodGameMode = 'CDL';
+  }
+
+  selectWarzoneCodTournamentGameMode(){
+	if(this.isRedBorder(this.tournamentCodWarzoneElement)){
+		this.toWhiteBorder(this.tournamentCodWarzoneElement);
+		this.tournamentCodGameMode = undefined;
+		return;
+	}
+	else if(this.isRedBorder(this.tournamentCodCdlElement)){
+		this.toWhiteBorder(this.tournamentCodCdlElement);
+	}
+	this.toRedBorder(this.tournamentCodWarzoneElement);
+  	this.tournamentCodGameMode = 'Warzone';
+  }
+  
+  private toRedBorder(elementToChange: ElementRef): void{
+	this.renderer.setStyle(elementToChange.nativeElement, 'border', '3px solid red');
+  }
+
+  private toWhiteBorder(elementToChange: ElementRef){
+	this.renderer.setStyle(elementToChange.nativeElement, 'border', '3px solid white');	
+  }
+
+  private isRedBorder(elementToEvaluate: ElementRef): boolean{
+	if(elementToEvaluate.nativeElement.style.border === '3px solid red'){
+		return true;
+	}
+	return false;
+  }
+
   updateCountry(event: any){
 	this.tournamentCountry = event.target.value;
   }  
@@ -101,6 +247,7 @@ export class TournamentCreationPageComponent implements OnInit {
 	this.tournament.tournamentCashPrice = this.cashPrice.value;
 	this.tournament.tournamentEntryFee = this.entryFee.value;
 	this.tournament.tournamentRegion = this.tournamentCountry.value;
+	this.tournament.tournamentPlatforms = this.tournamentPlatform.valueOf();
 	//this.tournament.tournamentDate = this.tournamentDate.value;
 	this.tournament.tournamentModerator = this.tournamentModerator;
 	this.router.navigate(['/tournament-creation-config'], {queryParams: { tournament: this.tournament}}); 
