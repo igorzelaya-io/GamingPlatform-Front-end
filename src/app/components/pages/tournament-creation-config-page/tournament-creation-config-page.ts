@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
-import { FormControl } from '@angular/forms';
 import { Team } from '../../../models/team';
 import { TournamentTeamSize } from '../../../models/tournament/tournament-team-size.enum';
 import { Tournament } from '../../../models/tournament/tournament';
@@ -21,6 +20,7 @@ export class TournamentCreationConfigPageComponent implements OnInit {
   tournamentFormat: TournamentFormat;
   tournamentFormatString: string;
   tournamentTeams: Array<Team>;
+  tournamentMatchesNumber: string;
   
 
   tournamentGameMode: TournamentMode;
@@ -98,6 +98,7 @@ export class TournamentCreationConfigPageComponent implements OnInit {
 	else if(this.isRedBorder(this.leagueFormatElement)){
 		this.changeToWhiteBorder(this.leagueFormatElement);
 		this.tournamentFormat = undefined;
+		this.tournamentFormatString = '';
 		return;
 	}
 	this.changeToRedBorder(this.leagueFormatElement);
@@ -112,6 +113,7 @@ export class TournamentCreationConfigPageComponent implements OnInit {
 	else if(this.isRedBorder(this.pvpFormatElement)){
 		this.changeToWhiteBorder(this.pvpFormatElement);
 		this.tournamentFormat = undefined;
+		this.tournamentFormatString = '';
 		return;
 	}
 	this.changeToRedBorder(this.pvpFormatElement);
@@ -222,15 +224,51 @@ export class TournamentCreationConfigPageComponent implements OnInit {
    }
 
    selectBestOfOneTournamentMatchesNumber(){
-	
-   }
+	if(this.isRedBorder(this.bestOfOneElement)){
+		this.changeToWhiteBorder(this.bestOfOneElement);
+		this.tournamentMatchesNumber = undefined;
+		return;
+	}
+	else if(this.isRedBorder(this.bestOfThreeElement)){
+		this.changeToWhiteBorder(this.bestOfThreeElement);
+	}
+	else if(this.isRedBorder(this.bestOfFiveElement)){
+		this.changeToWhiteBorder(this.bestOfFiveElement);
+	}
+  	this.changeToRedBorder(this.bestOfOneElement); 
+  	this.tournamentMatchesNumber = 'Best of 1';
+   }	
 
    selectBestOfThreeTournamentMatchesNumber(){
-	
+	if(this.isRedBorder(this.bestOfThreeElement)){
+		this.changeToWhiteBorder(this.bestOfThreeElement);
+		this.tournamentMatchesNumber = undefined;
+		return;
+	}
+	else if(this.isRedBorder(this.bestOfFiveElement)){
+		this.changeToWhiteBorder(this.bestOfFiveElement);
+	}
+	else if(this.isRedBorder(this.bestOfOneElement)){
+		this.changeToWhiteBorder(this.bestOfOneElement);
+	}
+	this.changeToRedBorder(this.bestOfThreeElement);
+   	this.tournamentMatchesNumber = 'Best of 3';
    }
 
    selectBestOfFiveTournamentMatchesNumber(){
-	
+	if(this.isRedBorder(this.bestOfThreeElement)){
+		this.changeToWhiteBorder(this.bestOfThreeElement);
+	}
+	else if(this.isRedBorder(this.bestOfFiveElement)){
+		this.changeToWhiteBorder(this.bestOfFiveElement);
+		this.tournamentMatchesNumber = undefined;
+		return;
+	}
+	else if(this.isRedBorder(this.bestOfOneElement)){
+		this.changeToWhiteBorder(this.bestOfOneElement);
+	}
+	this.changeToRedBorder(this.bestOfFiveElement);
+   	this.tournamentMatchesNumber = 'Best of 5'; 
    }
 
 	private isRedBorder(elementToEvaluate: ElementRef): boolean{

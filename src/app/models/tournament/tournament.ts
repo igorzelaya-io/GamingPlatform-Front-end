@@ -25,6 +25,7 @@ export class Tournament {
     tournamentDescription: string;
 	tournamentGame: string;
 	tournamentCodGameMode: string;
+	tournamentMatchesNumber: string;
 
     constructor(tournamentName?: string, tournamentStatus?: TournamentStatus, tournamentModerator?: User,
                 tournamentDate?: Date, tournamentTeams?: Array<Team>){
