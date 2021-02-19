@@ -9,7 +9,7 @@
 </section>
 
 <section class="profile-authentication-area ptb-100">
-    <div class="container">
+    <div class="container" *ngIf="!isLoginFailed">
         <div class="row">
             <div class="col-lg-6 col-md-12">
                 <div class="register-form">
@@ -46,11 +46,18 @@
                                 Password is a required field. 
                             </div>
                         </div>
-                        <button type="submit">Login</button>
+                        <button (click)="onSubmit()" type="submit" [disabled]="isClicked || txtUserName.errors.required || txtPassword.errors.required">Login</button>
                     </form>
                 </div>
             </div>
         </div>
+    </div>
+    <div>
+    	<div style="text-align: center" *ngIf="isLoginFailed">
+    		<h1 style="text-align: center">Error, please try again later.</h1>
+    		<p>{{errorMessage}}</p>
+    		<button (click)="onRetryClick()">Retry</button>
+    	</div>
     </div>
 </section>
 

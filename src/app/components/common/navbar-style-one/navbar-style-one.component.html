@@ -88,9 +88,9 @@
                                 <li class="nav-item"><a routerLink="/my-account" class="nav-link" routerLinkActive="active"[routerLinkActiveOptions]="{exact: true}">My Account</a></li>
                             </ul> -->
                        
-                        <!-- *ngIf="isAuthenticated" -->
+                        <!--  -->
                         
-                        <li class="nav-item"><a href="javascript:void(0)" class="nav-link">Profile<i class="flaticon-down-arrow"></i></a>
+                        <li *ngIf="isAuthenticated" class="nav-item"><a href="javascript:void(0)" class="nav-link">Profile<i class="flaticon-down-arrow"></i></a>
                             <ul class="dropdown-menu">
                                 
                                 <li class="nav-item"><a class="nav-link" routerLink="/account-details" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">My Account</a></li>

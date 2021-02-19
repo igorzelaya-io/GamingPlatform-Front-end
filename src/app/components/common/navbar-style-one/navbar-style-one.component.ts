@@ -47,10 +47,15 @@ export class NavbarStyleOneComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.isAuthenticated = !!this.tokenService.getToken();
-        if(this.isAuthenticated){
-            this.user = this.tokenService.getUser();
-        }
+        if(this.tokenService.loggedIn()){
+           if(this.tokenService.isTokenExpired()){
+				localStorage.clear;
+		   		this.isAuthenticated = false;
+				return;
+			}
+			this.isAuthenticated = true;		
+			this.user = this.tokenService.getUser();
+		}
     }
     
 }

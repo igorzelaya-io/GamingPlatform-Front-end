@@ -6,6 +6,7 @@ import { TokenStorageService } from '../../../services/token-storage.service';
 import { User } from 'src/app/models/user/user';
 import { UserService } from '../../../services/user.service';
 import { JwtResponse } from 'src/app/models/jwtresponse';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-profile-authentication-page',
   templateUrl: './profile-authentication-page.component.html',
@@ -19,10 +20,13 @@ export class ProfileAuthenticationPageComponent implements OnInit {
   isLoggedIn = false;
   isLoginFailed = false;
   errorMessage = '';
+
+  isClicked = false;
   
   constructor(private authenticationService: AuthenticationService,
               private tokenService: TokenStorageService,
-              private userService: UserService) {
+              private userService: UserService,
+			  private router: Router) {
     this.txtUserName = new FormControl();
     this.txtPassword = new FormControl();
   }
@@ -31,20 +35,24 @@ export class ProfileAuthenticationPageComponent implements OnInit {
   userToSave: User = new User();
   
   
-  onSubmit(){
-    this.authenticationService.login(this.userToLogin).subscribe(
+  public onSubmit(){
+    this.userToLogin.userName = this.txtUserName.value;
+	this.userToLogin.userPassword = this.txtPassword.value;
+	this.authenticationService.login(this.userToLogin).subscribe(
       (data: JwtResponse) => {
         if (data != null){
-          this.tokenService.saveToken(data.accessToken);
-          this.getUserById(data.userId);
+		  this.tokenService.saveToken(data.token);
+          this.getUserById(data.id);
           this.tokenService.saveUser(this.userToSave);
           this.isLoggedIn = true;
+		  this.router.navigate(['/']);
         }
         this.isLoginFailed = true;
       },
       err => {
-        console.log(err);
+        console.error(err.error.errorMessage);
         this.isLoginFailed = false;
+		this.isClicked = false;
         this.errorMessage = err.error.errorMessage;
       }
     );
@@ -53,9 +61,19 @@ export class ProfileAuthenticationPageComponent implements OnInit {
   getUserById(userId: string): void{
     this.userService.getUserById(userId).subscribe(
       (data: User) => {
+		console.log(data);
         this.userToSave = data;
       },
-      err => console.log(err)); 
+      err => console.error(err)); 
+  }
+ 
+  click(){
+	this.isClicked = true;
+  }
+
+  onRetryClick(){
+	window.location.reload();
+	this.isClicked = false;
   }
 
   ngOnInit(): void {

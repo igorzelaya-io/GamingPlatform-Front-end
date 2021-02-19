@@ -1,12 +1,11 @@
 export class JwtResponse {
     
-    accessToken: string;
-    tokenType:string;
-    userId: string;
+    token: string;
+    id: string;
     
     constructor(accessToken?: string, userId?: string){
-        this.accessToken = accessToken;
-        this.userId = userId;
+        this.token = accessToken;
+        this.id = userId;
     }
 
 }

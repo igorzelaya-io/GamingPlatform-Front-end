@@ -13,25 +13,34 @@ export class TokenStorageService {
 
   }
 
-  public signOut(){
-    window.sessionStorage.clear();
+  public signOut(): void{
+    localStorage.clear();
   }
 
   public saveToken(token: string): void{
-    window.sessionStorage.removeItem(TOKEN_KEY);
-    window.sessionStorage.setItem(TOKEN_KEY, token);
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.setItem(TOKEN_KEY, token);
   }
 
   public getToken():string{
-    return sessionStorage.getItem(TOKEN_KEY);
+    return localStorage.getItem(TOKEN_KEY);
   }
 
   public saveUser(user: User){
-    window.sessionStorage.removeItem(USER_KEY);
-    window.sessionStorage.setItem(USER_KEY, JSON.stringify(user));
+    localStorage.removeItem(USER_KEY);
+    localStorage.setItem(USER_KEY, JSON.stringify(user));
+  }
+
+  public loggedIn(): boolean{
+	return localStorage.getItem(USER_KEY) !== null && localStorage.getItem(TOKEN_KEY) !== null;
   }
 
   public getUser(){
-    return JSON.parse(sessionStorage.getItem(USER_KEY));
+    return JSON.parse(localStorage.getItem(USER_KEY));
+  }
+
+  public isTokenExpired(){
+     const expiry = (JSON.parse(atob(localStorage.getItem(TOKEN_KEY).split('.')[1]))).exp;	
+  	 return (Math.floor((new Date).getTime() / 1000)) >= expiry;
   }
 }
