@@ -50,10 +50,16 @@ export class ProfileAuthenticationPageComponent implements OnInit {
         this.isLoginFailed = true;
       },
       err => {
-        console.error(err.error.errorMessage);
-        this.isLoginFailed = false;
+        console.error(err.error.error);
+		if(err.error.status === 401){
+			this.isLoginFailed = true;
+			this.isClicked = false;
+			this.errorMessage = 'Username or password is incorrect.';
+			return;
+		}
+        this.isLoginFailed = true;
 		this.isClicked = false;
-        this.errorMessage = err.error.errorMessage;
+        this.errorMessage = err.error.error;
       }
     );
   }
