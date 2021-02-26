@@ -92,18 +92,15 @@
                         <!--  -->
                         
                         <li *ngIf="isAuthenticated" class="nav-item"><a href="javascript:void(0)" class="nav-link">Profile<i class="flaticon-down-arrow"></i></a>
-                            <ul class="dropdown-menu">
-                                
+                            <ul class="dropdown-menu">             
                                 <li class="nav-item"><a class="nav-link" (click)="passUserToDetails()">My Account</a></li>
-                                <li class="nav-item"><a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">My Tournaments</a></li>                                
+                                <li class="nav-item"><a class="nav-link" routerLink="/my-tournaments" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">My Tournaments</a></li>                                
                                 <li class="nav-item"><a class="nav-link" routerLink="/team-invites" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Team Invites</a></li>
                                 <li class="nav-item"><a class="nav-link" routerLink="/my-teams" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">My Teams</a></li>                                
-
-
                                 <li class="nav-item"><a class="nav-link" (click)="logOut()">Log Out</a></li>
                             </ul>
                         </li>  
-                        <!-- <li class="nav-item"><a href="javascript:void(0)" class="nav-link">Blog <i class="flaticon-down-arrow"></i></a>
+                        <li class="nav-item"><a href="javascript:void(0)" class="nav-link">Blog <i class="flaticon-down-arrow"></i></a>
                             <ul class="dropdown-menu">
                                 <li class="nav-item"><a routerLink="/blog-1" class="nav-link" routerLinkActive="active"[routerLinkActiveOptions]="{exact: true}">Grid (2 in Row)</a></li>
 
@@ -117,7 +114,7 @@
 
                                 <li class="nav-item"><a routerLink="/single-blog" class="nav-link" routerLinkActive="active"[routerLinkActiveOptions]="{exact: true}">Blog Details</a></li>
                             </ul>
-                        </li> -->
+                        </li>
                         
                          
                     </ul>
@@ -140,7 +137,7 @@
         </div>
     </div>
 
-    <div class="others-option-for-responsive">
+    <!-- <div class="others-option-for-responsive">
         <div class="container">
             <div class="dot-menu">
                 <div class="inner">
@@ -168,8 +165,8 @@
                 </div>
             </div>
         </div>
-    </div>
-</div>
+    </div> -->
+</div> 
 
 <!-- <div class="sidebarModal modal right fade" id="sidebarModal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">

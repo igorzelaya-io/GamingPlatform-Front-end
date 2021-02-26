@@ -7,17 +7,17 @@ export class User {
 	userPassword: string;
 	userEmail: string;
 	userTeam: Team;
-	userBilling: Map<string, object>
+	userBilling: string
 	userCountry: string;
 	userTokens: number;
 	userCash: number;
-	userBirthDate: Map<string, object>
+	userBirthDate: any
 	userRoles: Array<string>;
 	userImage: FormData;
 	userGetImage: ImageModel;
 
 	constructor(userRealName?: string, userName?: string, userPassword?: string,
-		userEmail?: string, userCountry?: string, userBirthDate?: Map<string, object>,
+		userEmail?: string, userCountry?: string, userBirthDate?: any,
 		userRoles?: Array<string>) {
 
 		this.userRealName = userRealName;
@@ -28,4 +28,5 @@ export class User {
 		this.userBirthDate = userBirthDate;
 		this.userRoles = userRoles;
 	}
+	
 }

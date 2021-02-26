@@ -23,6 +23,7 @@ import { TeamInvitesPageComponent } from './components/pages/team-invites/team-i
 import { TournamentCreationPageComponent } from './components/pages/tournament-creation-page/tournament-creation-page';
 import { TournamentCreationConfigPageComponent } from './components/pages/tournament-creation-config-page/tournament-creation-config-page';
 import { MyTournamentsComponent } from './components/pages/my-tournaments/my-tournaments.component';
+import { AccountDetailsComponent } from './components/pages/account-details/account-details'; 
 
 const routes: Routes = [
     {path: '', component: MainHomeComponent},
@@ -40,6 +41,7 @@ const routes: Routes = [
     {path: 'stream-schedule', component: StreamSchedulePageComponent},
     {path: 'single-match', component: MatchDetailsPageComponent},
     {path: 'player-details', component: PlayerDetailsPageComponent},
+	{path: 'my-account', component: AccountDetailsComponent},
     {path: 'shop', component: ProductsListPageTwoComponent},
     {path: 'cart', component: CartPageComponent},
     {path: 'checkout', component: CheckoutPageComponent},

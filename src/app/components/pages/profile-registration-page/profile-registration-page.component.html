@@ -186,9 +186,8 @@
                         </div>
                         <p class="description">The password should be at least eight characters long. To make it stronger, use upper and lower case letters, numbers, and symbols like ! " ? $ % ^ & )</p>
                         
-                        <button type="submit" (click)="onSubmit(); clickedButton();" 
-                            [disabled]="txtFirstName.invalid || txtBirthName.invalid || txtEmail.invalid || !isSubmittedDropDownContent || isClicked || txtUserName.invalid 
-                            || txtPassword.invalid || txtPasswordRepeat.invalid || !areEqualPasswords "
+                        <button type="submit" (click)="onSubmit()" 
+                            [disabled]="txtFirstName.invalid || txtBirthName.invalid || txtEmail.invalid || isClicked || txtUserName.invalid"
                         >
                             Register
                         </button>

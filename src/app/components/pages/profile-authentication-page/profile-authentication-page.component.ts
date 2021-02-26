@@ -42,8 +42,7 @@ export class ProfileAuthenticationPageComponent implements OnInit {
       (data: JwtResponse) => {
         if (data != null){
 		  this.tokenService.saveToken(data.token);
-          this.getUserById(data.id);
-          this.tokenService.saveUser(this.userToSave);
+          this.tokenService.saveUserId(data.id);
           this.isLoggedIn = true;
 		  this.router.navigate(['/']);
         }

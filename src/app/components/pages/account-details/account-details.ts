@@ -18,10 +18,7 @@ export class AccountDetailsComponent implements OnInit {
   user: User = new User();
 
   ngOnInit(): void {
-    this.user = this.tokenService.getUser();
-    if (this.user.userRoles.includes('ROLE_ADMIN') || this.tokenService.getToken()){
-      this.isAdmin = true;
-    }
+  
   }
 
   updateUser(){

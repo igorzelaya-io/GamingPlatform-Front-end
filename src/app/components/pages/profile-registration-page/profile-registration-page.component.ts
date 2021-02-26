@@ -40,7 +40,6 @@ export class ProfileRegistrationPageComponent implements OnInit {
   isSignUpFailed = false;
   areEqualPasswords = true;
   isClicked = false;
-  isSubmittedDropDownContent = true;
   isValidYear = true;
   
   constructor(private authService: AuthenticationService,
@@ -89,8 +88,8 @@ export class ProfileRegistrationPageComponent implements OnInit {
     this.validatePasswords();
     this.validateYearInput();
     if (this.areEqualPasswords && this.isValidYear){
-      this.submitForm();
-      this.clickedButton();
+	  this.clickedButton();
+	  this.submitForm();
       return
     }
   }
@@ -127,22 +126,10 @@ export class ProfileRegistrationPageComponent implements OnInit {
 	.subscribe((data: JwtResponse) => {
 		console.log(data);
 		this.tokenService.saveToken(data.token);
-		this.getUserById(data.id);
-		this.tokenService.saveUser(this.userToSaveOnStorage);
+		this.tokenService.saveUserId(data.id);
 	},
 	err => {
 		console.error(err.error.error.message);	
-	});
-  }
-
-  public getUserById(userId: string){
-	this.userService.getUserById(userId)
-	.subscribe((data: User) => {
-		console.log(data);
-		this.userToSaveOnStorage = data;
-	},
-	err => {
-		console.error(err.error.error.message);
 	});
   }
 
