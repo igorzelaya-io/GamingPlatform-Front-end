@@ -6,7 +6,7 @@ import {retry, catchError } from 'rxjs/operators';
 import { ImageModel } from '../models/imagemodel';
 
 
-const USER_API = 'http://localhost:8080/usersapi/users';
+const USER_API = 'http://localhost:8080/userapi/users';
 
 @Injectable({
   providedIn: 'root'

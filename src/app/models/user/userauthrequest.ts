@@ -4,7 +4,7 @@ export class UserAuthRequest {
     userPassword: string;
     userCountry: string;
     userEmail: string;
-    userBirthDate: Map<string, object>;
+    userBirthDate: any;
     userRoles: Array<string>;
 
     constructor(userRealName?: string, userName?: string, userPassword?: string, userCountry?: string,

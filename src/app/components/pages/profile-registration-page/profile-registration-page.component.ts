@@ -4,6 +4,13 @@ import { UserAuthRequest } from '../../../models/user/userauthrequest';
 import { AuthenticationService } from '../../../services/authentication.service'; 
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { UserLoginRequest } from '../../../models/user/userloginrequest';
+import { JwtResponse } from '../../../models/jwtresponse';
+import { TokenStorageService } from '../../../services/token-storage.service';
+import { UserService } from '../../../services/user.service';
+import { User } from '../../../models/user/user'; 
+import { Router} from '@angular/router';
+
 @Component({
   selector: 'app-profile-registration-page',
   templateUrl: './profile-registration-page.component.html',
@@ -16,12 +23,12 @@ export class ProfileRegistrationPageComponent implements OnInit {
   txtPassword: FormControl;
   txtPasswordRepeat: FormControl;
   txtEmail: FormControl;
-  txtCountry: FormControl;
-  txtDay: FormControl;
-  txtMonth: FormControl;
-  txtYear: FormControl;
-  user: UserAuthRequest;
-   
+
+  userToRegister: UserAuthRequest;
+  userToLogin: UserLoginRequest;  
+  userToSaveOnStorage: User;
+ 
+
   countryBirthDateForm: FormGroup;
 
   errorMessage = ' ';
@@ -38,6 +45,9 @@ export class ProfileRegistrationPageComponent implements OnInit {
   
   constructor(private authService: AuthenticationService,
 			  private formBuilder: FormBuilder,
+			  private tokenService: TokenStorageService,
+			  private router: Router,
+		      private userService: UserService,
               private httpClient: HttpClient) {
     this.txtFirstName = new FormControl();
     this.txtBirthName = new FormControl();
@@ -45,20 +55,18 @@ export class ProfileRegistrationPageComponent implements OnInit {
     this.txtPassword = new FormControl();
     this.txtPasswordRepeat = new FormControl();
     this.txtEmail = new FormControl();
-    this.txtCountry = new FormControl();
-    this.txtDay = new FormControl();
-    this.txtMonth = new FormControl();
-    this.txtYear = new FormControl();
+    this.userToRegister = new UserAuthRequest();
+	this.userToLogin = new UserLoginRequest();
+	this.userToSaveOnStorage = new User();
+
 
     this.countryBirthDateForm = formBuilder.group({
-		day: ['', [Validators.required]],
+		day: ['', Validators.required],
 		month: ['', [Validators.required]],
 		year: ['', [Validators.required]],
 		country: ['', [Validators.required]]
 	});
 	
-	
-    this.user = new UserAuthRequest();
   }
 
   get day(){
@@ -76,8 +84,6 @@ export class ProfileRegistrationPageComponent implements OnInit {
   get country(){
 	return this.countryBirthDateForm.get('country') as FormControl;	
   } 
-
-  userBirthDate: Map<string, object> = new Map();
   
   onSubmit(){
     this.validatePasswords();
@@ -90,22 +96,54 @@ export class ProfileRegistrationPageComponent implements OnInit {
   }
 
   public submitForm(){
-    this.user.userRealName = this.toRealName();
-    this.user.userName = this.txtUserName.value;
-    this.user.userPassword = this.txtPassword.value;
-    this.user.userCountry = this.country.value;
-    this.user.userEmail = this.txtEmail.value;
-    this.userBirthDate = this.toBirthDate();
-    this.authService.signup(this.user).subscribe(
+    this.userToRegister.userRealName = this.toRealName();
+    this.userToRegister.userName = this.txtUserName.value;
+    this.userToRegister.userPassword = this.txtPassword.value;
+    this.userToRegister.userCountry = this.country.value;
+    this.userToRegister.userEmail = this.txtEmail.value;
+	this.userToRegister.userBirthDate = this.toBirthDate();
+    this.authService.signup(this.userToRegister).subscribe(
       data => {
         console.log(data);
         this.isSuccessfulRegister = true;
         this.isSignUpFailed = false;
-      },
+	  },
       err => {
-        this.errorMessage = err.error.errorMessage;
+		console.error(err.error.message);
+        this.errorMessage = err.error.message;
         this.isSignUpFailed = true;
-      });
+	  },
+	  () => {
+		if(this.isSuccessfulRegister){
+			this.loginUser();
+		}	
+	});
+  }
+
+  public loginUser(){
+	this.userToLogin.userName = this.userToRegister.userName;
+	this.userToLogin.userPassword = this.userToRegister.userPassword;
+	this.authService.login(this.userToLogin)
+	.subscribe((data: JwtResponse) => {
+		console.log(data);
+		this.tokenService.saveToken(data.token);
+		this.getUserById(data.id);
+		this.tokenService.saveUser(this.userToSaveOnStorage);
+	},
+	err => {
+		console.error(err.error.error.message);	
+	});
+  }
+
+  public getUserById(userId: string){
+	this.userService.getUserById(userId)
+	.subscribe((data: User) => {
+		console.log(data);
+		this.userToSaveOnStorage = data;
+	},
+	err => {
+		console.error(err.error.error.message);
+	});
   }
 
   validatePasswords(): void{
@@ -135,6 +173,10 @@ export class ProfileRegistrationPageComponent implements OnInit {
     return this.httpClient.get<any>(this.countriesUrl);
   }
 
+  navigateToHome(){
+	this.router.navigate(['/']);
+  }
+
   public updateCountry(event: any){
 	this.country.setValue(event.target.value, {
 		onlySelf: true
@@ -148,7 +190,7 @@ export class ProfileRegistrationPageComponent implements OnInit {
   }
 
   validateYearInput():void{
-    if(this.txtYear.value > 2021 || this.txtYear.value < 1950){
+    if(this.year.value > 2021 || this.year.value < 1950){
       this.isValidYear = false;
     }
     this.isValidYear = true;
@@ -158,12 +200,16 @@ export class ProfileRegistrationPageComponent implements OnInit {
     this.getCountries();
   }
 
-  private toBirthDate(): Map<string, object> {
+  private toBirthDate(): any {
     let map: Map<string, object> = new Map();   
     map.set('day', this.day.value);      
     map.set('month', this.month.value);
     map.set('year', this.year.value);
-    return map;
+    const convertedMap = {};
+	map.forEach((val: object, key: string) => {
+		convertedMap[key] = val;
+	});
+	return convertedMap;
   }
 
   private toRealName(): string {

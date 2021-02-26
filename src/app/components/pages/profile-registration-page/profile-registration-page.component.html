@@ -86,11 +86,13 @@
                                     <div class="form-group">
                                         <select class="form-control" formControlName="month" (change)="updateUserMonth($event)">
                                             <option value="" disabled>Select Month</option>
-                                        <option *ngFor="let month of months" [ngValue]="month">{{month}}</option>
+                                        <option *ngFor="let month of months" value="{{month}}">{{month}}</option>
                                         </select>
                                     </div>
-                                    <div class="alert alert-danger" *ngIf="month.errors?.required">
-                                    	Month is a required field.
+                                    <div class="alert alert-danger" *ngIf="month.invalid && (month.dirty || month.touched)">
+	                                    <div *ngIf="month.errors?.required">
+	                                    	Month is a required field.
+	                                    </div>
                                     </div>
                                 </div>
                                 <div class="col-lg-3 col-md-12">
@@ -116,11 +118,11 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" [formGroup]="countryBirthDateForm">
                             <label>Country</label>
                             <select class="form-control" formControlName="country" (change)="updateCountry($event)">
                                 <option value="" disabled>Select Country</option>
-                                <option *ngFor="let country of countryInfo" [ngValue]="country.CountryName">{{country.CountryName}}</option>
+                                <option *ngFor="let country of countryInfo" value="{{country.CountryName}}">{{country.CountryName}}</option>
                             </select>    
                         </div>
                     </form>
@@ -179,10 +181,13 @@
                                 Password must be at least 8 characters long.
                             </div>
                         </div>
+                        <div class="alert alert-danger" *ngIf="!areEqualPasswords">
+                        	Passwords must be equal
+                        </div>
                         <p class="description">The password should be at least eight characters long. To make it stronger, use upper and lower case letters, numbers, and symbols like ! " ? $ % ^ & )</p>
                         
                         <button type="submit" (click)="onSubmit(); clickedButton();" 
-                            [disabled]="txtFirstName.invalid || txtBirthName.invalid || txtEmail.invalid || txtDay.invalid || !isSubmittedDropDownContent || isClicked || txtUserName.invalid 
+                            [disabled]="txtFirstName.invalid || txtBirthName.invalid || txtEmail.invalid || !isSubmittedDropDownContent || isClicked || txtUserName.invalid 
                             || txtPassword.invalid || txtPasswordRepeat.invalid || !areEqualPasswords "
                         >
                             Register
@@ -192,13 +197,16 @@
             </div>
         </div>
     </div>
-    <div *ngIf="isSuccessfulRegister">
-        <h2>You've registered Successfully</h2>
+    <div style="vertical-align: middle" *ngIf="isSuccessfulRegister">
+        <h2 style="text-align: center">Welcome, {{userToRegister.userName}}</h2>
+    	<button (click)="navigateToHome()">
+    		Home
+    	</button>
     </div>
-    <div class="alert alert-danger" *ngIf="isSignUpFailed">
-        <h2>
+    <div style="vertical-align: middle" *ngIf="isSignUpFailed">
+        <h2 style="text-align: center">
             Registration failed.
         </h2>
-        <h3>{{errorMessage}}</h3>
+        <h3 class="alert alert-danger" style="text-align: center">{{errorMessage}}</h3>
     </div>
 </section>
