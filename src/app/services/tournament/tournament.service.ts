@@ -73,14 +73,4 @@ export class TournamentService {
     return this.httpClient.put<string>(TOURNAMENTS_API + '/update', tournament)
     .pipe(catchError(this.handleError('updateTournament', {} as string)));
   }
-
-  public addTeamToTournament(team: Team, tournament: Tournament): Observable<string>{
-    return this.httpClient.post<string>(TOURNAMENTS_API + '/teams/add', {team, tournament})
-    .pipe(catchError(this.handleError('addTeamToTournament', {} as string)));
-  }
-
-  public removeTeamFromTournament(team: Team, tournament: Tournament): Observable<string> {
-     return this.httpClient.request<string>('DELETE', TOURNAMENTS_API + '/teams/remove', {body: {team, tournament}}) 
-    .pipe(catchError(this.handleError('removeTeamFromTournament', {} as string)));
-  }
 }

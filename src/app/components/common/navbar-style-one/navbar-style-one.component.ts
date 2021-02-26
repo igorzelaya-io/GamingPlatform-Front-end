@@ -46,6 +46,14 @@ export class NavbarStyleOneComponent implements OnInit {
         window.location.reload();
     }
 
+    passUserToDetails(){
+	 	this.router.navigate(['/player-details'], {queryParams: { user: this.user }});
+    }
+	
+	passUserToTeams(){
+		this.router.navigate(['/player-details'], {queryParams: { user: this.user }});
+	}
+
     ngOnInit(): void {
         if(this.tokenService.loggedIn()){
            if(this.tokenService.isTokenExpired()){

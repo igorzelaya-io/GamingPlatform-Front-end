@@ -75,6 +75,7 @@ import { TournamentCreationConfigPageComponent } from './components/pages/tourna
 import { NgxMatDatetimePickerModule, NgxMatTimepickerModule } from '@angular-material-components/datetime-picker';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { NgxMatNativeDateModule } from '@angular-material-components/datetime-picker';
+import { MyTournamentsComponent } from './components/pages/my-tournaments/my-tournaments.component';
 
 @NgModule({
   declarations: [
@@ -139,7 +140,8 @@ import { NgxMatNativeDateModule } from '@angular-material-components/datetime-pi
     ImageCropperComponent,
     ImageUploaderComponent,
 	TournamentCreationPageComponent,
-	TournamentCreationConfigPageComponent,	
+	TournamentCreationConfigPageComponent,
+	MyTournamentsComponent	
   ],
   imports: [
     BrowserModule,

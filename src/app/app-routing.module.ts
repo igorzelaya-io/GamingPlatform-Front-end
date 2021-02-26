@@ -17,13 +17,12 @@ import { TeamDetailsPageComponent } from './components/pages/team-details-page/t
 import { MatchDetailsPageComponent } from './components/pages/match-details-page/match-details-page.component';
 import { TournamentsDetailsPageComponent } from './components/pages/tournaments-details-page/tournaments-details-page.component';
 import { StreamSchedulePageComponent } from './components/pages/stream-schedule-page/stream-schedule-page.component';
-import { AccountDetailsComponent } from './components/pages/account-details/account-details';
 import { MyTeamsPageComponent } from './components/pages/my-teams/my-teams-page';
 import { TeamCreationPageComponent } from './components/pages/team-creation-page/team-creation-page.component';
 import { TeamInvitesPageComponent } from './components/pages/team-invites/team-invites-page';
 import { TournamentCreationPageComponent } from './components/pages/tournament-creation-page/tournament-creation-page';
 import { TournamentCreationConfigPageComponent } from './components/pages/tournament-creation-config-page/tournament-creation-config-page';
-
+import { MyTournamentsComponent } from './components/pages/my-tournaments/my-tournaments.component';
 
 const routes: Routes = [
     {path: '', component: MainHomeComponent},
@@ -31,6 +30,7 @@ const routes: Routes = [
     {path: 'tournament-details', component: TournamentsDetailsPageComponent},
     {path: 'streaming', component: StreamingHomeComponent},
     {path: 'our-team', component: TeamPageComponent},
+	{path: 'my-tournaments', component: MyTournamentsComponent},
     {path: 'my-teams', component: MyTeamsPageComponent},
     {path: 'team-invites', component: TeamInvitesPageComponent},
     {path: 'team-details', component: TeamDetailsPageComponent},
@@ -40,7 +40,6 @@ const routes: Routes = [
     {path: 'stream-schedule', component: StreamSchedulePageComponent},
     {path: 'single-match', component: MatchDetailsPageComponent},
     {path: 'player-details', component: PlayerDetailsPageComponent},
-    {path: 'account-details', component: AccountDetailsComponent},
     {path: 'shop', component: ProductsListPageTwoComponent},
     {path: 'cart', component: CartPageComponent},
     {path: 'checkout', component: CheckoutPageComponent},
