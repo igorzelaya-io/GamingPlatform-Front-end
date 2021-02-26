@@ -33,13 +33,13 @@ export class UserService {
   }
   
   public getUserByUserName(userName: string): Observable<User>{
-    return this.httpClient.get<User>(USER_API + '/search/userName=' + userName).pipe(
+    return this.httpClient.get<User>(USER_API + '/search?userName=' + userName).pipe(
         retry(1), catchError(this.handleError<User>('getUserByUserName', {} as User))
     );
   }
 
   public getUserById(userId: string): Observable<User>{
-     return this.httpClient.get<User>(USER_API + '/search/userId=' + userId).pipe(
+     return this.httpClient.get<User>(USER_API + '/search?userId=' + userId).pipe(
          retry(1), catchError(this.handleError<User>('getUserById', {} as User))
      );
   }
