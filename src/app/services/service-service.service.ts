@@ -46,4 +46,8 @@ export class ServiceServiceService {
      return service;
     }
 
+  public getAllServicesFromCart(): D1Service[]{
+	return this.userCart;
+  }
+
 }

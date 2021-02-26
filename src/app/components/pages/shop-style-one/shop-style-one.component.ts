@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ServiceServiceService } from '../../../services/service-service.service';
 import { D1Service } from '../../../models/d1service';
+import { Router } from '@angular/router';
+import { TokenStorageService } from '../../../services/token-storage.service';
 
 @Component({
   selector: 'app-shop-style-one',
@@ -11,13 +13,15 @@ export class ShopStyleOneComponent implements OnInit {
 
   d1services: D1Service[];
 
-  constructor(private serviceService: ServiceServiceService) {
+  constructor(private serviceService: ServiceServiceService,
+			  private tokenService: TokenStorageService, 
+			  private router: Router) {
 	this.d1services = [];	
   }
 
   
   ngOnInit(): void {
-  	this.getAllServices();
+	this.getAllServices();
   }
 
   public getAllServices(): void{
@@ -29,6 +33,14 @@ export class ShopStyleOneComponent implements OnInit {
 	(err) => {
 		console.error(err);	
 	});
+  }
+
+  addServiceToCart(serviceToAdd: D1Service){
+	if(this.tokenService.loggedIn()){
+		this.serviceService.addServiceToUserCart(serviceToAdd);
+		this.router.navigate(['/cart']);
+	}
+	this.router.navigate(['/login']);
   }
 
 }

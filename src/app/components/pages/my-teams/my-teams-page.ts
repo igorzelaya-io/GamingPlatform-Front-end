@@ -23,7 +23,7 @@ export class MyTeamsPageComponent implements OnInit {
   teams: Team[] = [];
 
   ngOnInit(): void {
-    this.user = this.tokenService.getUser();
+    
     this.getAllUserTeams();
   }
 

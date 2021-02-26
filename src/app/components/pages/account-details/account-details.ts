@@ -3,6 +3,7 @@ import { TokenStorageService } from '../../../services/token-storage.service';
 import { User } from '../../../models/user/user';
 import { UserService } from 'src/app/services/user.service';
 import { ActivatedRoute } from '@angular/router';
+import { Team } from '../../../models/team';
 
 @Component({
   selector: 'app-account-details',
@@ -13,12 +14,16 @@ import { ActivatedRoute } from '@angular/router';
 export class AccountDetailsComponent implements OnInit {
 
   isAdmin = false;
+  user: User;
+  userTeams: Array<Team>;
 
   constructor(private tokenService: TokenStorageService,
               private userService: UserService,
 			  private route: ActivatedRoute) {
-  }
-  user: User = new User();
+  	this.user = new User();
+	this.userTeams = new Array<Team>();	
+	}
+  
 
   ngOnInit(): void {
   	this.route.queryParams
@@ -32,6 +37,9 @@ export class AccountDetailsComponent implements OnInit {
 			console.error(err.error.error)
 		});
 	});
+  	if(this.tokenService.getUserId() === this.user.userId){
+		this.isAdmin = true;
+	}
   }
   
   deleteUser(){

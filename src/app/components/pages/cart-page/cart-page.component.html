@@ -24,7 +24,7 @@
                     </thead>
 
                     <tbody>
-                        <tr>
+                        <tr *ngFor="let service of servicesOnCart">
                             <td class="product-thumbnail">
                                 <a routerLink="/single-products">
                                     <img src="assets/img/products-img1.jpg" alt="item">
@@ -32,7 +32,7 @@
                             </td>
 
                             <td class="product-name">
-                                <a routerLink="/single-products">GAMING HEADPHONE</a>
+                                <a routerLink="/single-products">{{service.serviceName}}</a>
                             </td>
 
                             <td class="product-price">
@@ -49,93 +49,6 @@
 
                             <td class="product-subtotal">
                                 <span class="subtotal-amount">$99.00</span>
-                                <a routerLink="/cart" class="remove"><i class='bx bx-trash'></i></a>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td class="product-thumbnail">
-                                <a routerLink="/single-products">
-                                    <img src="assets/img/products-img2.jpg" alt="item">
-                                </a>
-                            </td>
-
-                            <td class="product-name">
-                                <a routerLink="/single-products">GAMING CHAIR</a>
-                            </td>
-
-                            <td class="product-price">
-                                <span class="unit-amount">$199.00</span>
-                            </td>
-
-                            <td class="product-quantity">
-                                <div class="input-counter">
-                                    <span class="minus-btn"><i class='bx bx-minus'></i></span>
-                                    <input type="text" min="1" value="1">
-                                    <span class="plus-btn"><i class='bx bx-plus'></i></span>
-                                </div>
-                            </td>
-
-                            <td class="product-subtotal">
-                                <span class="subtotal-amount">$199.00</span>
-                                <a routerLink="/cart" class="remove"><i class='bx bx-trash'></i></a>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td class="product-thumbnail">
-                                <a routerLink="/single-products">
-                                    <img src="assets/img/products-img3.jpg" alt="item">
-                                </a>
-                            </td>
-
-                            <td class="product-name">
-                                <a routerLink="/single-products">GAMING MOUSE</a>
-                            </td>
-
-                            <td class="product-price">
-                                <span class="unit-amount">$69.00</span>
-                            </td>
-
-                            <td class="product-quantity">
-                                <div class="input-counter">
-                                    <span class="minus-btn"><i class='bx bx-minus'></i></span>
-                                    <input type="text" min="1" value="1">
-                                    <span class="plus-btn"><i class='bx bx-plus'></i></span>
-                                </div>
-                            </td>
-
-                            <td class="product-subtotal">
-                                <span class="subtotal-amount">$69.00</span>
-                                <a routerLink="/cart" class="remove"><i class='bx bx-trash'></i></a>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td class="product-thumbnail">
-                                <a routerLink="/single-products">
-                                    <img src="assets/img/products-img4.jpg" alt="item">
-                                </a>
-                            </td>
-
-                            <td class="product-name">
-                                <a routerLink="/single-products">GAMING PAD</a>
-                            </td>
-
-                            <td class="product-price">
-                                <span class="unit-amount">$299.00</span>
-                            </td>
-
-                            <td class="product-quantity">
-                                <div class="input-counter">
-                                    <span class="minus-btn"><i class='bx bx-minus'></i></span>
-                                    <input type="text" min="1" value="1">
-                                    <span class="plus-btn"><i class='bx bx-plus'></i></span>
-                                </div>
-                            </td>
-
-                            <td class="product-subtotal">
-                                <span class="subtotal-amount">$299.00</span>
                                 <a routerLink="/cart" class="remove"><i class='bx bx-trash'></i></a>
                             </td>
                         </tr>

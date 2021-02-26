@@ -31,7 +31,7 @@ export class TokenStorageService {
   }
 
   public loggedIn(): boolean{
-	return localStorage.getItem(USER_KEY) !== null && localStorage.getItem(TOKEN_KEY) !== null;
+	return localStorage.getItem(USER_KEY) !== null && localStorage.getItem(TOKEN_KEY) !== null && !this.isTokenExpired();
   }
 
   public getUserId(){

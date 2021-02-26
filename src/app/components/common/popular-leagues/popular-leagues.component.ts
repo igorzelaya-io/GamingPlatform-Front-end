@@ -22,14 +22,19 @@ export class PopularLeaguesComponent implements OnInit {
       this.router.navigate(['/tournament-creation'], {queryParams: { user: this.user}});
       return;
     }
-    this.router.navigate(['/register']);
+    this.router.navigate(['/login']);
   }
 
   ngOnInit(): void {
-    this.isAuthenticated = !!this.tokenService.getToken();
-    if(this.isAuthenticated){
-      this.user = this.tokenService.getUser();
-    }
+    if(this.tokenService.loggedIn()){
+		if(this.tokenService.isTokenExpired()){
+			this.isAuthenticated = false;
+			this.tokenService.signOut();
+			return;
+		}
+		this.isAuthenticated = true;
+		
+	}
   }
 
 }

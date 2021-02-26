@@ -5,6 +5,7 @@ import { Team } from '../../../models/team';
 import { TokenStorageService } from '../../../services/token-storage.service';
 import { TeamInviteRequest } from '../../../models/teamInviteRequest';
 import { Router } from '@angular/router';
+import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-team-invites-page',
@@ -15,6 +16,7 @@ export class TeamInvitesPageComponent implements OnInit {
 
   constructor(private userTeamService: UserTeamService,
               private tokenService: TokenStorageService,
+			  private userService: UserService,
               private router: Router
               ) {
 
@@ -26,7 +28,7 @@ export class TeamInvitesPageComponent implements OnInit {
   team: Team = new Team();
   
   ngOnInit(): void {
-    this.user = this.tokenService.getUser();
+    
     this.getAllUserTeamRequests();
   }
 
