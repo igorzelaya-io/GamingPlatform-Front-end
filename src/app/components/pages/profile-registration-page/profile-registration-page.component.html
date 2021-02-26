@@ -64,7 +64,7 @@
                             </div>
                         </div>
                         <label>BirthDate</label>
-                        <div class="container">
+                        <div class="container" [formGroup]="countryBirthDateForm">
                             <div class="row">
                                 <div class="col-lg-3 col-md-12">
                                     <div class="form-group">
@@ -73,39 +73,39 @@
                                                 required 
                                                 maxlength="2"
                                                 placeholder="Day" 
-                                                [formControl]="txtDay"					
+                                                formControlName="day"					
                                             >					  
                                     </div>
-                                    <div class="alert alert-danger" *ngIf="txtDay.invalid && (txtDay.dirty || txtDay.touched)">
-                                        <div *ngIf="txtDay.errors.required">
+                                    <div class="alert alert-danger" *ngIf="day.invalid && (day.dirty || day.touched)">
+                                        <div *ngIf="day.errors?.required">
                                             Day is required.
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-md-12">
-                                    <form>
-                                        <div class="form-group">
-                                            <select class="form-control" [formControl]="txtMonth" (change)="updateUserMonth($event)">
-                                                <option value="" disabled>Select Month</option>
-                                            <option *ngFor="let month of months" value="{{month}}">{{month}}</option>
-                                            </select>
-                                        </div>
-                                    </form>
+                                    <div class="form-group">
+                                        <select class="form-control" formControlName="month" (change)="updateUserMonth($event)">
+                                            <option value="" disabled>Select Month</option>
+                                        <option *ngFor="let month of months" [ngValue]="month">{{month}}</option>
+                                        </select>
+                                    </div>
+                                    <div class="alert alert-danger" *ngIf="month.errors?.required">
+                                    	Month is a required field.
+                                    </div>
                                 </div>
                                 <div class="col-lg-3 col-md-12">
                                     <div class="form-group">
                                         <input
                                             (ngSubmit)="validateYearInput()"
                                             type="text"
-                                            required
                                             class="form-control"
-                                            [formControl]="txtYear"
+                                            formControlName="year"
                                             placeholder="Year"
                                             maxlength="4"
                                         >
                                     </div>
-                                    <div class="alert alert-danger" *ngIf="txtYear.invalid && (txtYear.dirty || txtYear.touched)">
-                                        <div *ngIf="txtYear.errors.required">
+                                    <div class="alert alert-danger" *ngIf="year.invalid && (year.dirty || year.touched)">
+                                        <div *ngIf="year.errors?.required">
                                             Year is required.
                                         </div>
                                         <div *ngIf="!isValidYear">
@@ -118,9 +118,9 @@
                         </div>
                         <div class="form-group">
                             <label>Country</label>
-                            <select class="form-control" [formControl]="txtCountry" (change)="updateCountry($event)">
+                            <select class="form-control" formControlName="country" (change)="updateCountry($event)">
                                 <option value="" disabled>Select Country</option>
-                                <option *ngFor="let country of countryInfo" value="{{country.CountryName}}">{{country.CountryName}}</option>
+                                <option *ngFor="let country of countryInfo" [ngValue]="country.CountryName">{{country.CountryName}}</option>
                             </select>    
                         </div>
                     </form>

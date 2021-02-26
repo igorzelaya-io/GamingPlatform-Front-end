@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { UserAuthRequest } from '../../../models/user/userauthrequest';
 import { AuthenticationService } from '../../../services/authentication.service'; 
 import { HttpClient } from '@angular/common/http';
@@ -21,7 +21,9 @@ export class ProfileRegistrationPageComponent implements OnInit {
   txtMonth: FormControl;
   txtYear: FormControl;
   user: UserAuthRequest;
-  
+   
+  countryBirthDateForm: FormGroup;
+
   errorMessage = ' ';
   countryInfo: any[] = [];
   countriesUrl = 'https://raw.githubusercontent.com/sagarshirbhate/Country-State-City-Database/master/Contries.json';
@@ -35,6 +37,7 @@ export class ProfileRegistrationPageComponent implements OnInit {
   isValidYear = true;
   
   constructor(private authService: AuthenticationService,
+			  private formBuilder: FormBuilder,
               private httpClient: HttpClient) {
     this.txtFirstName = new FormControl();
     this.txtBirthName = new FormControl();
@@ -46,8 +49,33 @@ export class ProfileRegistrationPageComponent implements OnInit {
     this.txtDay = new FormControl();
     this.txtMonth = new FormControl();
     this.txtYear = new FormControl();
+
+    this.countryBirthDateForm = formBuilder.group({
+		day: ['', [Validators.required]],
+		month: ['', [Validators.required]],
+		year: ['', [Validators.required]],
+		country: ['', [Validators.required]]
+	});
+	
+	
     this.user = new UserAuthRequest();
   }
+
+  get day(){
+	return this.countryBirthDateForm.get('day') as FormControl;	
+  }
+
+  get month(){
+	return this.countryBirthDateForm.get('month') as FormControl;	
+  }
+
+  get year(){
+	return this.countryBirthDateForm.get('year') as FormControl;	
+  }
+
+  get country(){
+	return this.countryBirthDateForm.get('country') as FormControl;	
+  } 
 
   userBirthDate: Map<string, object> = new Map();
   
@@ -65,7 +93,7 @@ export class ProfileRegistrationPageComponent implements OnInit {
     this.user.userRealName = this.toRealName();
     this.user.userName = this.txtUserName.value;
     this.user.userPassword = this.txtPassword.value;
-    this.user.userCountry = this.txtCountry.value;
+    this.user.userCountry = this.country.value;
     this.user.userEmail = this.txtEmail.value;
     this.userBirthDate = this.toBirthDate();
     this.authService.signup(this.user).subscribe(
@@ -108,11 +136,15 @@ export class ProfileRegistrationPageComponent implements OnInit {
   }
 
   public updateCountry(event: any){
-	this.txtCountry = event.target.value;
+	this.country.setValue(event.target.value, {
+		onlySelf: true
+	});
   }
 
   public updateUserMonth(event: any){
-	this.txtMonth = event.target.value; 	
+	this.month.setValue(event.target.value, {
+		onlySelf: true
+	}); 	
   }
 
   validateYearInput():void{
@@ -128,9 +160,9 @@ export class ProfileRegistrationPageComponent implements OnInit {
 
   private toBirthDate(): Map<string, object> {
     let map: Map<string, object> = new Map();   
-    map.set('day', this.txtDay.value);      
-    map.set('month', this.txtMonth.value);
-    map.set('year', this.txtYear.value);
+    map.set('day', this.day.value);      
+    map.set('month', this.month.value);
+    map.set('year', this.year.value);
     return map;
   }
 
