@@ -39,6 +39,7 @@ export class ShopStyleOneComponent implements OnInit {
 	if(this.tokenService.loggedIn()){
 		this.serviceService.addServiceToUserCart(serviceToAdd);
 		this.router.navigate(['/cart']);
+		return;
 	}
 	this.router.navigate(['/login']);
   }

@@ -19,7 +19,7 @@ export class ServiceServiceService {
   constructor(private httpClient: HttpClient) {
   }
 
-  userCart: D1Service[];
+  userCart: D1Service[] = [];
 
   public getAllServices(): Observable<D1Service[]>{
     return this.httpClient.get<D1Service[]>(SERVICES_API + '/services', httpOptions);

@@ -9,17 +9,20 @@ import { D1Service } from '../../../models/d1service';
 })
 export class CartPageComponent implements OnInit {
 
-  servicesOnCart: D1Service[];  
+  servicesOnCart: D1Service[] = [];  
 
   constructor(private serviceService: ServiceServiceService) {
-		this.servicesOnCart = [];
   }
-
-  
-
 
   ngOnInit(): void {
- 	this.servicesOnCart = this.serviceService.getAllServicesFromCart();
+ 	this.getAllServicesFromCart();
   }
+	
+  getAllServicesFromCart(){
+	this.servicesOnCart = this.serviceService.getAllServicesFromCart();
+  }  
 
+  removeServiceFromCart(serviceToRemove: D1Service){
+	this.serviceService.removeItemFromCart(serviceToRemove.serviceName);	
+  }
 }

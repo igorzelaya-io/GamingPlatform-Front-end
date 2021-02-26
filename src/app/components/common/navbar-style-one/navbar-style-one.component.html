@@ -90,6 +90,7 @@
                             </ul> -->
                        
                         <!--  -->
+                        <li *ngIf="isAuthenticated" class="nav-item"><a class="nav-link" routerLink="/cart" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Cart</a></li>
                         
                         <li *ngIf="isAuthenticated" class="nav-item"><a href="javascript:void(0)" class="nav-link">Profile<i class="flaticon-down-arrow"></i></a>
                             <ul class="dropdown-menu">             
