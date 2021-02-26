@@ -49,7 +49,7 @@ export class NavbarStyleOneComponent implements OnInit {
     }
 
     passUserToDetails(){
-	 	this.router.navigate(['/my-account'], {queryParams: { user: this.user }});
+	 	this.router.navigate(['/my-account'], {queryParams: { userId: this.user.userId }});
     }
 	
 	getUserById(userId: string){

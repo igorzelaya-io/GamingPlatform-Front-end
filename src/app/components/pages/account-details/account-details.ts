@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { TokenStorageService } from '../../../services/token-storage.service';
 import { User } from '../../../models/user/user';
 import { UserService } from 'src/app/services/user.service';
+import { ActivatedRoute } from '@angular/router';
+
 @Component({
   selector: 'app-account-details',
   templateUrl: './account-details.html',
@@ -13,15 +15,23 @@ export class AccountDetailsComponent implements OnInit {
   isAdmin = false;
 
   constructor(private tokenService: TokenStorageService,
-              private userService: UserService) {
+              private userService: UserService,
+			  private route: ActivatedRoute) {
   }
   user: User = new User();
 
   ngOnInit(): void {
-  
-  }
-
-  updateUser(){
+  	this.route.queryParams
+	.subscribe(params => {
+		this.userService.getUserById(params.userId)
+		.subscribe((data: User) => {
+			console.log(data);
+			this.user = data;
+		},
+		err => {
+			console.error(err.error.error)
+		});
+	});
   }
   
   deleteUser(){
