@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { Team } from '../models/team';
 import { catchError } from 'rxjs/internal/operators';
@@ -52,20 +52,23 @@ export class UserTeamService {
     .pipe(catchError(this.handleError('getTeamByName', {} as Team)));
   }
 
-  public exitTeam(userId: string, teamId: string): Observable<string>{
+  public exitTeam(userId: string, teamId: string, jwtToken: string): Observable<string>{
     return this.httpClient.post<string>(USER_TEAMS_API + '/exit?userId=' + userId  +
                                                          '?teamId=' + teamId,
-                                                        {userId, teamId})
+                                                        {userId, teamId},
+	{headers: new HttpHeaders({'Authorization': 'Bearer ' + jwtToken})})
     .pipe(catchError(this.handleError('exitTeam', {} as string)));
   }
 
-  public acceptUserTeamRequest(userTeamRequest: TeamInviteRequest): Observable<string>{
-    return this.httpClient.post<string>(USER_TEAMS_REQUEST_API + '/accept', userTeamRequest)
+  public acceptUserTeamRequest(userTeamRequest: TeamInviteRequest, jwtToken: string ): Observable<string>{
+    return this.httpClient.post<string>(USER_TEAMS_REQUEST_API + '/accept', userTeamRequest,
+	{headers: new HttpHeaders({'Authorization': 'Bearer ' + jwtToken})})
     .pipe(catchError(this.handleError('acceptUserTeamRequest', {} as string)));
   }
 
-  public declineUserTeamRequest(userTeamRequest: TeamInviteRequest): Observable<string>{
-    return this.httpClient.post<string>(USER_TEAMS_REQUEST_API + '/decline', userTeamRequest)
+  public declineUserTeamRequest(userTeamRequest: TeamInviteRequest, jwtToken: string): Observable<string>{
+    return this.httpClient.post<string>(USER_TEAMS_REQUEST_API + '/decline', userTeamRequest,
+	{headers: new HttpHeaders({'Authorization': 'Bearer ' + jwtToken})})
     .pipe(catchError(this.handleError('declineUserTeamRequest', {} as string)));
   }
 }
