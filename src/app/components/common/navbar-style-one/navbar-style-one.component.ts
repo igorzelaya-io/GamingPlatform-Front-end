@@ -16,6 +16,7 @@ import { UserService } from '../../../services/user.service';
         }
     ]
 })
+
 export class NavbarStyleOneComponent implements OnInit {
 
     location: any;
@@ -36,7 +37,8 @@ export class NavbarStyleOneComponent implements OnInit {
                     if (this.location == '/bosting' || this.location == '/magazine' || this.location == '/tournaments' 
                         || this.location == '/streaming') {
                         this.containerClass = 'container';
-                    } else {
+                    } 
+					else {
                         this.containerClass = 'container-fluid';
                     }
                 }
@@ -55,18 +57,6 @@ export class NavbarStyleOneComponent implements OnInit {
     passUserIdToMyTeams(){
 		this.router.navigate(['/my-teams'], { queryParams: {userId: this.user.userId}});
 	}
-	
-	getUserById(userId: string){
-		this.userService.getUserById(userId)
-		.subscribe((data: User) => {
-			console.log(data);
-			this.user = data;
-		},
-		err => {
-			console.error(err.error.message);	
-		});	
-	}
-
     ngOnInit(): void {
         if(this.tokenService.loggedIn()){
            if(this.tokenService.isTokenExpired()){
@@ -74,11 +64,7 @@ export class NavbarStyleOneComponent implements OnInit {
 		   		this.isAuthenticated = false;				
 				return;
 			}
-			this.getUserById(this.tokenService.getUserId().trim());
-			if(this.user === null){
-				this.isAuthenticated = false;
-				return ;
-			}
+			this.user = this.tokenService.getUser();
 			this.isAuthenticated = true;		
 		}
     }

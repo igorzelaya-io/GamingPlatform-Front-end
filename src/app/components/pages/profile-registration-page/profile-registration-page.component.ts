@@ -10,6 +10,7 @@ import { TokenStorageService } from '../../../services/token-storage.service';
 import { UserService } from '../../../services/user.service';
 import { User } from '../../../models/user/user'; 
 import { Router} from '@angular/router';
+import { MessageResponse } from 'src/app/models/messageresponse';
 
 @Component({
   selector: 'app-profile-registration-page',
@@ -102,7 +103,7 @@ export class ProfileRegistrationPageComponent implements OnInit {
     this.userToRegister.userEmail = this.txtEmail.value;
 	this.userToRegister.userBirthDate = this.toBirthDate();
     this.authService.signup(this.userToRegister).subscribe(
-      data => {
+	(data: MessageResponse) => {
         console.log(data);
         this.isSuccessfulRegister = true;
         this.isSignUpFailed = false;
@@ -115,7 +116,6 @@ export class ProfileRegistrationPageComponent implements OnInit {
 	  () => {
 		if(this.isSuccessfulRegister){
 			this.loginUser();
-			this.getUserById();
 		}	
 	});
   }
@@ -128,14 +128,15 @@ export class ProfileRegistrationPageComponent implements OnInit {
 		console.log(data);
 		this.tokenService.saveToken(data.token);
 		this.tokenService.saveUserId(data.id);
+		this.getUserById(data.id);
 	},
 	err => {
 		console.error(err.error.error.message);	
 	});
   }
 
-  public getUserById(){
-	this.userService.getUserById(this.tokenService.getUserId())
+  public getUserById(userId: string){
+	this.userService.getUserById(userId)
 	.subscribe((data: User) => {
 		this.tokenService.saveUser(data);
 		console.log(data);

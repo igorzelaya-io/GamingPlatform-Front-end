@@ -24,11 +24,13 @@ import { TournamentCreationPageComponent } from './components/pages/tournament-c
 import { TournamentCreationConfigPageComponent } from './components/pages/tournament-creation-config-page/tournament-creation-config-page';
 import { MyTournamentsComponent } from './components/pages/my-tournaments/my-tournaments.component';
 import { AccountDetailsComponent } from './components/pages/account-details/account-details'; 
+import { ShopStyleTwoComponent } from './components/common/shop-style-two/shop-style-two.component';
 
 const routes: Routes = [
     {path: '', component: MainHomeComponent},
     {path: 'tournaments', component: TournamentsHomeComponent},
     {path: 'tournament-details', component: TournamentsDetailsPageComponent},
+	{path: 'shopstyletwo', component: ShopStyleTwoComponent},
     {path: 'streaming', component: StreamingHomeComponent},
     {path: 'our-team', component: TeamPageComponent},
 	{path: 'my-tournaments', component: MyTournamentsComponent},

@@ -3,6 +3,7 @@ import { ServiceServiceService } from '../../../services/service-service.service
 import { D1Service } from '../../../models/d1service';
 import { Router } from '@angular/router';
 import { TokenStorageService } from '../../../services/token-storage.service';
+import { CartService } from '../../../services/cart.service';
 
 @Component({
   selector: 'app-shop-style-one',
@@ -14,6 +15,7 @@ export class ShopStyleOneComponent implements OnInit {
   d1services: D1Service[];
 
   constructor(private serviceService: ServiceServiceService,
+			  private cartService: CartService, 
 			  private tokenService: TokenStorageService, 
 			  private router: Router) {
 	this.d1services = [];	
@@ -37,7 +39,13 @@ export class ShopStyleOneComponent implements OnInit {
 
   addServiceToCart(serviceToAdd: D1Service){
 	if(this.tokenService.loggedIn()){
-		this.serviceService.addServiceToUserCart(serviceToAdd);
+		if(this.cartService.isEmptyCart()){
+			this.cartService.addServicesToCart([]);
+			this.cartService.addServiceToCart(serviceToAdd);
+			this.router.navigate(['/cart']);
+			return;
+		}
+		this.cartService.addServiceToCart(serviceToAdd);
 		this.router.navigate(['/cart']);
 		return;
 	}

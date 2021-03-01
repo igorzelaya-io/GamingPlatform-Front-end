@@ -2,6 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { ServiceServiceService } from '../../../services/service-service.service';
 import { from } from 'rxjs';
 import { D1Service } from 'src/app/models/d1service';
+import { TokenStorageService } from 'src/app/services/token-storage.service';
+import { CartService } from 'src/app/services/cart.service';
+import { Router } from '@angular/router';
+
+
 @Component({
   selector: 'app-shop-style-two',
   templateUrl: './shop-style-two.component.html',
@@ -9,10 +14,14 @@ import { D1Service } from 'src/app/models/d1service';
 })
 export class ShopStyleTwoComponent implements OnInit {
 
-  constructor(private serviceServiceService: ServiceServiceService) {
+  allServices: D1Service[];
 
+  constructor(private serviceServiceService: ServiceServiceService,
+			  private tokenService: TokenStorageService,
+		      private cartService: CartService,
+			  private router: Router) {
+	this.allServices = [];
   }
-  services: D1Service[] = [];
 
   ngOnInit(): void {
     this.getAllServices();
@@ -22,7 +31,7 @@ export class ShopStyleTwoComponent implements OnInit {
     this.serviceServiceService.getAllServices().subscribe(
       (data: D1Service[]) => {
         console.log(data);
-        this.services = data;
+        this.allServices = data;
       },
       err => {
         console.error(err);
@@ -30,4 +39,18 @@ export class ShopStyleTwoComponent implements OnInit {
     );
   }
 
+  addServiceToCart(serviceToAdd: D1Service){
+	if(this.tokenService.loggedIn()){
+		if(this.cartService.isEmptyCart()){
+			this.cartService.addServicesToCart([]);
+			this.cartService.addServiceToCart(serviceToAdd);
+			this.router.navigate(['/cart']);
+			return;
+		}
+		this.cartService.addServiceToCart(serviceToAdd);
+		this.router.navigate(['/cart']);
+		return;
+	}
+	this.router.navigate(['/login']);
+  }
 }
