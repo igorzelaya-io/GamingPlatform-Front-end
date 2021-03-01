@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ServiceServiceService } from 'src/app/services/service-service.service';
 import { D1Service } from 'src/app/models/d1service';
+import { CartService } from 'src/app/services/cart.service';
+import { TokenStorageService } from 'src/app/services/token-storage.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-products-list-page-two',
@@ -9,13 +12,15 @@ import { D1Service } from 'src/app/models/d1service';
 })
 export class ProductsListPageTwoComponent implements OnInit {
 
-  constructor(private serviceServiceService: ServiceServiceService) {
+  allServices: D1Service[];
+
+  constructor(private serviceServiceService: ServiceServiceService,
+              private cartService: CartService,
+			  private tokenService: TokenStorageService,
+	          private router: Router) {
+	this.allServices = [];
 
   }
-
-  services: D1Service[] = [];
-  isSuccessful = false;
-  service: D1Service = new D1Service();
 
   ngOnInit(): void {
     this.getAllServices();
@@ -23,19 +28,28 @@ export class ProductsListPageTwoComponent implements OnInit {
 
   getAllServices(){
     this.serviceServiceService.getAllServices().subscribe(
-      data => {
+      (data: D1Service[]) => {
         console.log(data);
-        this.services = data;
-        this.isSuccessful = true;
+        this.allServices = data;
       },
       err => {
-        console.error(err);
-        this.isSuccessful = false;
+        console.error(err.error.message);
       }
     );
   }
-  onSubmit(){
-    
   
-  }
+  addServiceToCart(serviceToAdd: D1Service){
+	if(this.tokenService.loggedIn()){
+		if(this.cartService.isEmptyCart()){
+			this.cartService.addServicesToCart([]);
+			this.cartService.addServiceToCart(serviceToAdd);
+			this.router.navigate(['/cart']);
+			return;
+		}
+		this.cartService.addServiceToCart(serviceToAdd);
+		this.router.navigate(['/cart']);
+		return;
+	}
+	this.router.navigate(['/login']);
+   }
 }

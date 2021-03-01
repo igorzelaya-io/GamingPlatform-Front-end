@@ -11,7 +11,14 @@
 <section class="cart-area ptb-100">
     <div class="container">
         <form>
-            <div class="cart-table table-responsive">
+        	<div *ngIf="isEmptyCart">
+   				 <div style="vertical-align: middle">
+   				 	<h1 style="text-align: center">
+   				 		You currently have no items on cart.
+   				 	</h1>
+   				 </div>
+        	</div>
+            <div *ngIf="!isEmptyCart" class="cart-table table-responsive">
                 <table class="table table-bordered">
                     <thead>
                         <tr>
@@ -41,14 +48,14 @@
 
                             <td class="product-quantity">
                                 <div class="input-counter">
-                                    <span class="minus-btn"><i class='bx bx-minus'></i></span>
-                                    <input type="text" min="1" value="1">
-                                    <span class="plus-btn"><i class='bx bx-plus'></i></span>
+                                    <!-- <span class="minus-btn"><i class='bx bx-minus'></i></span> -->
+                                    1
+                                    <!-- <span class="plus-btn"><i class='bx bx-plus'></i></span> -->
                                 </div>
                             </td>
 
                             <td class="product-subtotal">
-                                <span class="subtotal-amount">$99.00</span>
+                                <span class="subtotal-amount">{{service.serviceChargeAmount | currency}}</span>
                                 <a routerLink="/cart" class="remove" (click)="removeServiceFromCart(service)"><i class='bx bx-trash'></i></a>
                             </td>
                         </tr>
@@ -66,7 +73,7 @@
                     </div>
 
                     <div class="col-lg-5 col-sm-5 col-md-5 text-right">
-                        <a routerLink="/cart" class="default-btn">Update Cart</a>
+                        <a (click)="updateCart()" class="default-btn">Update Cart</a>
                     </div>
                 </div>
             </div>
@@ -74,11 +81,11 @@
             <div class="cart-totals">
                 <h3>Cart Totals</h3>
                 <ul>
-                    <li>Subtotal <span>$800.00</span></li>
-                    <li>Shipping <span>$30.00</span></li>
-                    <li>Total <span>$830.00</span></li>
+                    <li>Subtotal <span>{{ subTotalAmountOnServices | currency}}</span></li>
+                    <li>Service Fee <span>{{ serviceFeeAmountOnServices | currency}}</span></li>
+                    <li>Total <span>{{ totalAmountOnServices | currency }}</span></li>
                 </ul>
-                <a routerLink="/checkout" class="default-btn">Proceed to Checkout</a>
+                <a class="default-btn">Pay with PayPal</a>
             </div>
         </form>
     </div>

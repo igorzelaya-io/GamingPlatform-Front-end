@@ -27,8 +27,7 @@ export class NavbarStyleOneComponent implements OnInit {
 
     constructor(private router: Router,
                 location: Location,
-                private tokenService: TokenStorageService,
-				private userService: UserService
+                private tokenService: TokenStorageService
                 ) {
         this.router.events
             .subscribe((event) => {
@@ -57,6 +56,7 @@ export class NavbarStyleOneComponent implements OnInit {
     passUserIdToMyTeams(){
 		this.router.navigate(['/my-teams'], { queryParams: {userId: this.user.userId}});
 	}
+   
     ngOnInit(): void {
         if(this.tokenService.loggedIn()){
            if(this.tokenService.isTokenExpired()){

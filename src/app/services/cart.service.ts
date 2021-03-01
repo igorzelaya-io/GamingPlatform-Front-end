@@ -37,9 +37,11 @@ export class CartService {
 	sessionStorage.clear();
   }
 
-  deleteServiceFromCart(service: D1Service): void{
+  deleteServiceFromCart(serviceToDelete: D1Service): void{
 	let currentServicesFromCart: D1Service[] = JSON.parse(sessionStorage.getItem(CART_KEY));
-  	sessionStorage.setItem(CART_KEY, JSON.stringify(currentServicesFromCart.filter(service => service.serviceId !== service.serviceId)));
+    let newServicesArrayWithoutServiceToDelete = currentServicesFromCart.filter(service => service.serviceId !== serviceToDelete.serviceId);
+  	sessionStorage.removeItem(CART_KEY);
+	sessionStorage.setItem(CART_KEY, JSON.stringify(newServicesArrayWithoutServiceToDelete));  
   }
 
   isEmptyCart(): boolean{
