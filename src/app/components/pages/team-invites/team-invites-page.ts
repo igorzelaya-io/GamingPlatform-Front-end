@@ -14,18 +14,20 @@ import { UserService } from '../../../services/user.service';
 })
 export class TeamInvitesPageComponent implements OnInit {
 
+  user: User;
+  teamInvites: TeamInviteRequest[];
+  team: Team;
+
   constructor(private userTeamService: UserTeamService,
               private tokenService: TokenStorageService,
 			  private userService: UserService,
               private router: Router
               ) {
-
+	this.user = new User();
+    this.teamInvites = [];
+    this.team = new Team();
   }
-  isEmpty = true;
-  message = 'No teams invites available';
-  user: User = new User();
-  teamInvites: TeamInviteRequest[] = [];
-  team: Team = new Team();
+  
   
   ngOnInit(): void {
     
@@ -37,10 +39,9 @@ export class TeamInvitesPageComponent implements OnInit {
     .subscribe((data: TeamInviteRequest[]) => {
       this.teamInvites = data;
       console.log(data);
-      this.isEmpty = false;
     },
     err => {
-      console.error(err);
+      console.error(err.error.message);
     });
   }
 
