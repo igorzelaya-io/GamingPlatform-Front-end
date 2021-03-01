@@ -115,6 +115,7 @@ export class ProfileRegistrationPageComponent implements OnInit {
 	  () => {
 		if(this.isSuccessfulRegister){
 			this.loginUser();
+			this.getUserById();
 		}	
 	});
   }
@@ -130,6 +131,17 @@ export class ProfileRegistrationPageComponent implements OnInit {
 	},
 	err => {
 		console.error(err.error.error.message);	
+	});
+  }
+
+  public getUserById(){
+	this.userService.getUserById(this.tokenService.getUserId())
+	.subscribe((data: User) => {
+		this.tokenService.saveUser(data);
+		console.log(data);
+	},
+	err => {
+		console.error(err.error.message)
 	});
   }
 

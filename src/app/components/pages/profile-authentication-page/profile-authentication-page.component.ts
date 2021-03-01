@@ -22,6 +22,9 @@ export class ProfileAuthenticationPageComponent implements OnInit {
   errorMessage = '';
 
   isClicked = false;
+
+  userToSave: User;
+
   
   constructor(private authenticationService: AuthenticationService,
               private tokenService: TokenStorageService,
@@ -29,10 +32,11 @@ export class ProfileAuthenticationPageComponent implements OnInit {
 			  private router: Router) {
     this.txtUserName = new FormControl();
     this.txtPassword = new FormControl();
-  }
+  	this.userToSave = new User();
+	}
   
   userToLogin: UserLoginRequest = new UserLoginRequest();
-  userToSave: User = new User();
+
   
   
   public onSubmit(){
@@ -41,11 +45,12 @@ export class ProfileAuthenticationPageComponent implements OnInit {
 	this.authenticationService.login(this.userToLogin).subscribe(
       (data: JwtResponse) => {
         if (data != null){
-		  this.tokenService.saveToken(data.token);
-          this.tokenService.saveUserId(data.id);
-          this.isLoggedIn = true;
-		  this.router.navigate(['/']);
-        }
+		  this.tokenService.saveToken(data.token);				
+		  this.tokenService.saveUserId(data.id);		            
+          console.log(data);
+		  this.isLoggedIn = true;
+		  return;
+		}
         this.isLoginFailed = true;
       },
       err => {
@@ -58,18 +63,31 @@ export class ProfileAuthenticationPageComponent implements OnInit {
 		}
         this.isLoginFailed = true;
 		this.isClicked = false;
-        this.errorMessage = err.error.error;
-      }
+        this.errorMessage = err.error.message;
+      },
+	 () => {
+		if(this.isLoggedIn){
+			this.addUserToStorage();			
+		}	
+	 }
     );
   }
 
-  getUserById(userId: string): void{
-    this.userService.getUserById(userId).subscribe(
-      (data: User) => {
-		console.log(data);
-        this.userToSave = data;
-      },
-      err => console.error(err)); 
+  public addUserToStorage(){
+	this.userService.getUserById(this.tokenService.getUserId())
+	.subscribe((data: User) => {
+		if(data != null){
+			this.tokenService.saveUser(data);
+			console.log(data);
+		}
+	},
+	err => console.error(err.error.message),
+	() => {
+		if(this.tokenService.loggedIn){
+			this.router.navigate(['/']);
+		}
+	});
+  	
   }
  
   click(){

@@ -51,6 +51,10 @@ export class NavbarStyleOneComponent implements OnInit {
     passUserToDetails(){
 	 	this.router.navigate(['/my-account'], {queryParams: { userId: this.user.userId }});
     }
+
+    passUserIdToMyTeams(){
+		this.router.navigate(['/my-teams'], { queryParams: {userId: this.user.userId}});
+	}
 	
 	getUserById(userId: string){
 		this.userService.getUserById(userId)

@@ -3,7 +3,7 @@ import { UserTeamService } from '../../../services/user-team.service';
 import { User } from 'src/app/models/user/user';
 import { Team } from '../../../models/team';
 import { TokenStorageService } from 'src/app/services/token-storage.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-my-teams-page',
@@ -14,7 +14,8 @@ export class MyTeamsPageComponent implements OnInit {
 
   constructor(private userTeamService: UserTeamService,
               private tokenService: TokenStorageService,
-              private router: Router) {
+              private route: ActivatedRoute,
+			  private router: Router) {
 
   }
   isEmpty = true;
@@ -23,7 +24,9 @@ export class MyTeamsPageComponent implements OnInit {
   teams: Team[] = [];
 
   ngOnInit(): void {
-    
+    this.route.queryParams.subscribe(params => {
+		
+	});
     this.getAllUserTeams();
   }
 

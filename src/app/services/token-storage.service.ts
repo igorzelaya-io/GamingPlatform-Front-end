@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
+import { User } from '../models/user/user';
 
 const TOKEN_KEY = 'auth-token';
-const USER_KEY = 'auth-user-id';
+const USER_KEY = 'auth-user';
+const USER_ID_KEY = 'auth-user-id';
 
 @Injectable({
   providedIn: 'root'
@@ -26,16 +28,25 @@ export class TokenStorageService {
   }
 
   public saveUserId(userId: string): void{
+	localStorage.removeItem(USER_ID_KEY);
+    localStorage.setItem(USER_ID_KEY, userId);
+  }
+
+  public saveUser(user: User): void{
 	localStorage.removeItem(USER_KEY);
-    localStorage.setItem(USER_KEY, userId);
+	localStorage.setItem(USER_KEY, JSON.stringify(user));
+  }
+
+  public getUser(): User{
+	return JSON.parse(localStorage.getItem(USER_KEY));
   }
 
   public loggedIn(): boolean{
-	return localStorage.getItem(USER_KEY) !== null && localStorage.getItem(TOKEN_KEY) !== null && !this.isTokenExpired();
+	return localStorage.getItem(USER_KEY) !== null && localStorage.getItem(TOKEN_KEY) !== null && !this.isTokenExpired() && localStorage.getItem(USER_KEY) !== null;
   }
 
   public getUserId(){
-    return localStorage.getItem(USER_KEY);
+    return localStorage.getItem(USER_ID_KEY);
   }
 
   public isTokenExpired(){
