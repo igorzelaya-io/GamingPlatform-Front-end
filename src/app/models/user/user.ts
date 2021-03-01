@@ -1,5 +1,7 @@
 import { Team } from '../team';
 import { ImageModel } from '../imagemodel';
+import { UserTournament } from '../user/user-tournament';
+
 export class User {
 	userId: string;
 	userRealName: string;
@@ -15,6 +17,7 @@ export class User {
 	userRoles: Array<string>;
 	userImage: FormData;
 	userGetImage: ImageModel;
+	userTournament: UserTournament;
 
 	constructor(userRealName?: string, userName?: string, userPassword?: string,
 		userEmail?: string, userCountry?: string, userBirthDate?: any,

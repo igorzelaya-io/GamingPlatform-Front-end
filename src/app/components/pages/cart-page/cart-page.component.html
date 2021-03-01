@@ -85,7 +85,9 @@
                     <li>Service Fee <span>{{ serviceFeeAmountOnServices | currency}}</span></li>
                     <li>Total <span>{{ totalAmountOnServices | currency }}</span></li>
                 </ul>
-                <a class="default-btn">Pay with PayPal</a>
+                <a (click)="makePayment()" class="default-btn">Pay with PayPal</a>
+                
+                <img style="margin-top: 50px" src="assets/d1images/paypal_image.png">
             </div>
         </form>
     </div>

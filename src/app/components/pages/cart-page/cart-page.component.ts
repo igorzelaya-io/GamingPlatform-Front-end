@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { D1Service } from '../../../models/d1service';
 import { CartService } from 'src/app/services/cart.service';
+import { BillingServiceService } from '../../../services/billing-service.service';
+import { TokenStorageService } from 'src/app/services/token-storage.service';
 
 @Component({
   selector: 'app-cart-page',
@@ -21,7 +23,9 @@ export class CartPageComponent implements OnInit {
 
   isEmptyCart: boolean = true;
 
-  constructor(private cartService: CartService) {
+  constructor(private cartService: CartService,
+			  private billingService: BillingServiceService,
+			  private tokenService: TokenStorageService) {
   	this.servicesOnCart = [];
 	this.subTotalAmountOnServices = 0;
 	this.serviceFeeAmountOnServices = 0;
@@ -57,13 +61,44 @@ export class CartPageComponent implements OnInit {
     userItemsOnCart.forEach(service => {
 		this.subTotalAmountOnServices += service.serviceChargeAmount;
 	});
-	
-	this.serviceFeeAmountOnServices = this.subTotalAmountOnServices * 0.06;
-	this.totalAmountOnServices = this.serviceFeeAmountOnServices + this.subTotalAmountOnServices;
+	if(this.subTotalAmountOnServices <= 15){
+		this.serviceFeeAmountOnServices = this.subTotalAmountOnServices * 0.03 + 0.20;
+		this.totalAmountOnServices = this.serviceFeeAmountOnServices + this.subTotalAmountOnServices;
+		return;
+	}
+	else if(this.subTotalAmountOnServices > 15 && this.subTotalAmountOnServices <= 30){
+		this.serviceFeeAmountOnServices = this.subTotalAmountOnServices * 0.04 + 0.20;
+		this.totalAmountOnServices = this.serviceFeeAmountOnServices + this.subTotalAmountOnServices;
+		return;
+	}
+	else if(this.subTotalAmountOnServices > 30 && this.subTotalAmountOnServices <= 50){
+		this.serviceFeeAmountOnServices = this.subTotalAmountOnServices * 0.05 + 0.20;
+		this.totalAmountOnServices = this.serviceFeeAmountOnServices + this.subTotalAmountOnServices;
+		return;
+	}
+	else if(this.subTotalAmountOnServices > 50 && this.subTotalAmountOnServices <= 100){
+		this.serviceFeeAmountOnServices = this.subTotalAmountOnServices * 0.06 + 0.20;
+		this.totalAmountOnServices = this.serviceFeeAmountOnServices + this.subTotalAmountOnServices;
+		return;
+	}
+	else if(this.subTotalAmountOnServices > 100 && this.subTotalAmountOnServices <= 200){
+		this.serviceFeeAmountOnServices = this.subTotalAmountOnServices * 0.07 + 0.20;
+		this.totalAmountOnServices = this.serviceFeeAmountOnServices + this.subTotalAmountOnServices;
+		return;
+	}
+	else{
+		this.serviceFeeAmountOnServices = this.subTotalAmountOnServices *0.08 + 0.20;
+		this.totalAmountOnServices = this.serviceFeeAmountOnServices + this.subTotalAmountOnServices;
+		return;
+	}
   }
 
   updateCart(){
 	window.location.reload();	
+  }
+
+  makePayment(){
+	this.billingService.makePayment(this.totalAmountOnServices.toString(), this.tokenService.getToken());	
   }
 		
 }

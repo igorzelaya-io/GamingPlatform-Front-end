@@ -49,12 +49,12 @@ export class TeamInvitesPageComponent implements OnInit {
   }
 
   acceptUserTeamInviteRequest(teamRequest: TeamInviteRequest){
-    this.userTeamService.acceptUserTeamRequest(teamRequest);
+    this.userTeamService.acceptUserTeamRequest(teamRequest, this.tokenService.getToken());
     window.location.reload();
   }
 
   declineUserTeamInviteRequests(teamRequest: TeamInviteRequest){
-    this.userTeamService.declineUserTeamRequest(teamRequest);
+    this.userTeamService.declineUserTeamRequest(teamRequest, this.tokenService.getToken());
     window.location.reload();
   }
 

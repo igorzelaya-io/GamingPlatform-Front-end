@@ -49,10 +49,6 @@ export class NavbarStyleOneComponent implements OnInit {
         window.location.reload();
     }
 
-    passUserToDetails(){
-	 	this.router.navigate(['/my-account'], {queryParams: { userId: this.user.userId }});
-    }
-
     passUserIdToMyTeams(){
 		this.router.navigate(['/my-teams'], { queryParams: {userId: this.user.userId}});
 	}

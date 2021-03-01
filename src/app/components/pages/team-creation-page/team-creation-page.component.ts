@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { Team } from '../../../models/team';
 import { User } from '../../../models/user/user';
 import { UserService } from 'src/app/services/user.service';
+import { TokenStorageService } from 'src/app/services/token-storage.service';
 
 
 @Component({
@@ -39,7 +40,8 @@ export class TeamCreationPageComponent implements OnInit {
 
   constructor(private teamService: TeamService,
               private userService: UserService,
-              private httpClient: HttpClient) {
+              private httpClient: HttpClient,
+			  private tokenService: TokenStorageService) {
     this.txtName = new FormControl();
     this.txtEmail = new FormControl();
     this.txtCountry = new FormControl();
@@ -59,7 +61,7 @@ export class TeamCreationPageComponent implements OnInit {
     if (this.selectedImageFile !== null){
       this.postTeamWithImage();
     }
-    this.teamService.postTeam(this.team).subscribe((response: string) => {
+    this.teamService.postTeam(this.team, this.tokenService.getToken()).subscribe((response: string) => {
       this.message = response;
       console.log(response);
     },
@@ -133,7 +135,7 @@ export class TeamCreationPageComponent implements OnInit {
     console.log(this.selectedImageFile);
     const uploadImageData = new FormData();
     uploadImageData.append('imageFile', this.selectedImageFile, this.selectedImageFile.name);
-    this.teamService.postTeamWithImage(this.team, uploadImageData)
+    this.teamService.postTeamWithImage(this.team, uploadImageData, this.tokenService.getToken())
     .subscribe((resp: string) => {
       console.log(resp);
       this.message = resp;
