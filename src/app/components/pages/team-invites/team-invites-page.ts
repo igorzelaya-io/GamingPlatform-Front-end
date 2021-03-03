@@ -17,27 +17,33 @@ export class TeamInvitesPageComponent implements OnInit {
   user: User;
   teamInvites: TeamInviteRequest[];
   team: Team;
+  isEmpty: boolean = true;
 
   constructor(private userTeamService: UserTeamService,
               private tokenService: TokenStorageService,
-			  private userService: UserService,
               private router: Router
               ) {
 	this.user = new User();
     this.teamInvites = [];
-    this.team = new Team();
+  	this.team = new Team();
   }
   
   
   ngOnInit(): void {
-    
-    this.getAllUserTeamRequests();
+    if(this.tokenService.loggedIn()){
+		this.user = this.tokenService.getUser();
+	    this.getAllUserTeamRequests();
+	}
   }
 
   getAllUserTeamRequests(){
     this.userTeamService.getAllUserTeamRequests(this.user.userId)
     .subscribe((data: TeamInviteRequest[]) => {
-      this.teamInvites = data;
+      if(data.length){
+		this.teamInvites = data;
+		this.isEmpty = false;
+	  }
+	  this.teamInvites = data;	
       console.log(data);
     },
     err => {

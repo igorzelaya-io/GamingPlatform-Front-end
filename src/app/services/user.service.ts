@@ -17,7 +17,8 @@ export class UserService {
 
   }
 
-  searchOption = [];
+  searchOption: User[] = [];
+
   public userData: User[];
   
   private handleError<T>(operation = 'operation', result ?: T){

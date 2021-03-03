@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { TeamService } from '../../../services/team/team-service.service';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -7,6 +7,7 @@ import { Team } from '../../../models/team';
 import { User } from '../../../models/user/user';
 import { UserService } from 'src/app/services/user.service';
 import { TokenStorageService } from 'src/app/services/token-storage.service';
+import { TeamInviteRequest } from 'src/app/models/teamInviteRequest';
 
 
 @Component({
@@ -16,71 +17,101 @@ import { TokenStorageService } from 'src/app/services/token-storage.service';
 })
 
 export class TeamCreationPageComponent implements OnInit {
-  txtName: FormControl;
-  txtCountry: FormControl;
-  txtEmail: FormControl;
-  txtPlayers: User[];
-  txtTeamModerator: FormControl;
 
-  allUsers: User[];
-  message = ' ';
 
-  errorMessage = ' ';
+  teamForm: FormGroup;
+
+  txtUserToSearch: FormControl;
+  userFound: User;  
+
+  usersToInvite: User[];
+  isUserFound: boolean = false;
+  
+  isClickedSearchButton = false;
+  isClickedInviteButton = false;
+
+  errorMessage: string = ' ';
+
   countryInfo: any[] = [];
   countriesUrl = 'https://raw.githubusercontent.com/sagarshirbhate/Country-State-City-Database/master/Contries.json';
 
   isSuccessfulRegister = false;
-  isSubmittedDropDownContent = true;
   isSignUpFailed = false;
   isClicked = false;
 
-  team: Team = new Team();
+  team: Team;
 
   selectedImageFile: File;
 
   constructor(private teamService: TeamService,
               private userService: UserService,
               private httpClient: HttpClient,
-			  private tokenService: TokenStorageService) {
-    this.txtName = new FormControl();
-    this.txtEmail = new FormControl();
-    this.txtCountry = new FormControl();
-    this.txtTeamModerator = new FormControl();
+			  private tokenService: TokenStorageService,
+			  private formBuilder: FormBuilder) {
+  	this.team = new Team();
+	this.txtUserToSearch = new FormControl();
+	this.userFound = new User();
+	this.usersToInvite = [];
+	
+	
+	this.teamForm = this.formBuilder.group({
+		txtName: ['', [Validators.required]],
+		txtEmail: ['',[Validators.required]],
+		txtCountry: ['', [Validators.required]]
+	});
+
+  }
+  
+  get txtName(){
+	return this.teamForm.get('txtName') as FormControl;	
+  }
+
+  get txtEmail(){
+	return this.teamForm.get('txtEmail') as FormControl;	
+  }
+
+  get txtCountry(){
+	return this.teamForm.get('txtCountry') as FormControl;	
   }
 
   ngOnInit(): void {
     this.getCountries();
-    this.getAllUsers();
   }
 
 
   onSubmit(){
     this.team.teamName = this.txtName.value;
     this.team.teamEmail = this.txtEmail.value;
-    this.team.teamCountry = this.txtCountry.value;
-    if (this.selectedImageFile !== null){
-      this.postTeamWithImage();
-    }
+   	this.team.teamCountry = this.txtCountry.value;
+	this.team.teamUsers = this.usersToInvite; 
+//   if (this.selectedImageFile !== null){
+   //   this.postTeamWithImage();
+   // }
     this.teamService.postTeam(this.team, this.tokenService.getToken()).subscribe((response: string) => {
-      this.message = response;
       console.log(response);
     },
     err => {
-      console.error(err);
-      this.errorMessage = err;
+	  this.errorMessage = err.error.message;
+      console.error(err.error);
     });
-  }
-
-
-  submitForm(){
-    this.team.teamName = this.txtName.value;
+	
+	this.usersToInvite.forEach(userToInvite => {
+		this.teamService.sendTeamInvite( new TeamInviteRequest(this.team, userToInvite, Date.now()),
+										this.tokenService.getToken())
+		.subscribe((data: string) => {
+			console.log(data);
+		},
+		err => {
+			console.error(err.error.message);	
+		});		
+	});
   }
 
   clickedButton(): void{
     this.isClicked = true;
   }
 
-  getCountries(){
+  public getCountries(){
     this.allCountries().subscribe(
       data => {
         this.countryInfo = data.Countries;
@@ -91,44 +122,46 @@ export class TeamCreationPageComponent implements OnInit {
       () => console.log('complete'));
   }
 
-  getAllUsers(){
-    this.userService.getAllUsers().subscribe((data: User[]) => {
-      this.allUsers = data;
-      this.userService.userData = data;
-      console.log(data);
-    },
-    err => {
-      console.error(err); 
-    });
-  }
-
-  dropdownOnSubmit(): void{
-    if (this.txtCountry.valid){
-      this.isSubmittedDropDownContent = true;
-      return
-    }
-    this.isSubmittedDropDownContent = false;
+  changeCountry(event: any){
+	this.txtCountry.setValue(event.target.value, {
+		onlySelf: true
+	});
   }
 
   allCountries(): Observable<any> {
     return this.httpClient.get<any>(this.countriesUrl);
   }
 
-  onSelectedFilter(e){
-    this.getFilteredExpenseList();
-  }
-
-  getFilteredExpenseList(){
-    if (this.userService.searchOption.length > 0){
-      this.allUsers = this.userService.filteredListOptions();
-    }
-    else{
-      this.allUsers = this.userService.userData;
-    }
-  }
-
   public onFileChanged(event){
     this.selectedImageFile = event.target.files[0];
+  }
+
+  public getUserByUserName(){
+	this.userService.getUserByUserName(this.txtUserToSearch.value)
+	.subscribe((data: User) => {
+		if(data !== null){			
+			this.userFound = data;
+			console.log(data);
+			this.isUserFound = true;
+			this.isClickedSearchButton = true;
+			return;
+		}
+		this.isClickedSearchButton = false;
+		this.isUserFound = false;
+	},
+	err => {
+		console.error(err.error.message);	
+	});
+  }
+
+  public addUserToPendingInvites(){
+	this.usersToInvite.push(this.userFound);
+	this.isClickedInviteButton = true;
+  }
+
+  public removeUserFromPendingInvites(){
+	this.usersToInvite = this.usersToInvite.filter(user => user.userName !== this.userFound.userName);	
+  	this.isClickedInviteButton = false;
   }
 
   public postTeamWithImage(){
@@ -138,11 +171,9 @@ export class TeamCreationPageComponent implements OnInit {
     this.teamService.postTeamWithImage(this.team, uploadImageData, this.tokenService.getToken())
     .subscribe((resp: string) => {
       console.log(resp);
-      this.message = resp;
     },
     err => {
       console.error(err);
-      this.errorMessage = err;
     });
   }
 

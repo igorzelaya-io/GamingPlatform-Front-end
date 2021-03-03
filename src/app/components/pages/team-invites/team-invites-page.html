@@ -10,55 +10,34 @@
 
 <section class="blog-area ptb-100">     
     <div class="container">
-        <div *ngIf="!teamInvites" style="vertical-align: middle">
+        <div *ngIf="isEmpty" style="vertical-align: middle">
             <h1 style="text-align: center"> You currently have no team invites.</h1>
         </div>  
-        <div *ngIf="teamInvites" class="row">
+        <div *ngIf="!isEmpty" class="row">
+            
             <div *ngFor="let invite of teamInvites" class="col-lg-6 col-md-6">
                 <div class="single-blog-post-box">
                     <div class="post-image">
                         <a routerLink="/single-blog">
-                            <img src="assets/img/main-blog-img2.jpg" alt="image">
+                            <img src="assets/img/main-blog-img2.jpg" alt="image"> 
                         </a>
                     </div>
 
                     <div class="post-content">
                         <ul class="post-meta">
-                        <li>By <a routerLink="/blog-1">{{invite.teamRequest}}</a></li>
-                        <li>{{team.teamCountry}}</li>
+                        <li>By <a routerLink="/blog-1">{{invite.teamRequest.teamModerator}}</a></li>
+                        <li>{{invite.teamRequest.teamName}}</li>
+                        <li>{{invite.teamRequest.teamCountry}}</li>
                         </ul>
                         <a (click)="passTeam(invite.teamRequest)" class="read-more-btn">View Team<i class="flaticon-null"></i></a>
                     </div>
-                    <button>
-                        Accept
-                    </button>
-                </div>
-            </div>
-            <div class="col-lg-6 col-md-6">
-                <div class="single-blog-post-box">
-                    <div class="post-image">
-                        <a routerLink="/single-blog">
-                            <img src="assets/img/main-blog-img2.jpg" alt="image">
-                        </a>
-                    </div>
-
-                    <div class="post-content">
-                        <ul class="post-meta">
-                        <li>By <a routerLink="/blog-1">Ethan Carter</a></li>
-                        <li>USA</li>
-                        
-                        </ul>
-                        <a class="read-more-btn">View Team<i class="flaticon-null"></i></a>
-                    </div>
-                    <div class="container">
-                        <div class="col-lg-6 col-md-3">
-                            <button>
-                                Accept
-                            </button>
-                            <button>
-                                Decline
-                            </button>
-                        </div>
+                    <div>
+	                    <button>
+	                        Accept
+	                    </button>
+	                    <button>
+	                    	Decline
+	                    </button>
                     </div>
                 </div>
             </div>

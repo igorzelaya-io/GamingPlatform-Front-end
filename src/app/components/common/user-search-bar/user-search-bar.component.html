@@ -3,6 +3,7 @@
         <mat-chip-list #chipList>
         
             <mat-chip *ngFor="let user of this.userService.searchOption" (removed)="removeOption(user)">
+                
                 <span>{{user.userName}}</span>
             
                 <mat-icon matChipRemove>
@@ -19,7 +20,7 @@
             >
             <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
                 <mat-option *ngFor="let user of autoCompleteList" [value]="user" 
-                    (onSelectionChange)="filterPostList($event)">
+                    (onSelectionChange)="filterUserList($event)">
                     {{user.userName}}
                 </mat-option>
             </mat-autocomplete>

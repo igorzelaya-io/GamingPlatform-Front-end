@@ -3,39 +3,41 @@ import { UserTeamService } from '../../../services/user-team.service';
 import { User } from 'src/app/models/user/user';
 import { Team } from '../../../models/team';
 import { TokenStorageService } from 'src/app/services/token-storage.service';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-my-teams-page',
   templateUrl: './my-teams-page.html',
   styleUrls: ['./my-teams-page.scss']
 })
+
 export class MyTeamsPageComponent implements OnInit {
 
+  user: User;
+  userTeams: Team[];
+  isEmpty = true;
+  
   constructor(private userTeamService: UserTeamService,
               private tokenService: TokenStorageService,
-              private route: ActivatedRoute,
 			  private router: Router) {
-
+	  this.user = new User();
+	  this.userTeams = [];
   }
-  isEmpty = true;
-  message = 'No teams available';
-  user: User = new User();
-  teams: Team[] = [];
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
-		
-	});
-    this.getAllUserTeams();
+    if(this.tokenService.loggedIn()){
+		this.user = this.tokenService.getUser();
+	    this.getAllUserTeams();
+    }
   }
 
   getAllUserTeams(){
     this.userTeamService.getAllUserTeams(this.user.userId)
     .subscribe((data: Team[]) => {
-      this.teams = data;
-      console.log(data);
-      this.isEmpty = false;
+      if(data.length){
+		this.isEmpty = false;
+	  	this.userTeams = data;
+	  }
     },
     err => {
       console.error(err);
@@ -43,10 +45,14 @@ export class MyTeamsPageComponent implements OnInit {
   }
 
   createButton(){
-    this.router.navigate(['/team-creation'], {queryParams: { user: this.user}});
+   	if(this.tokenService.loggedIn()){
+		this.router.navigate(['/team-creation']);
+	}
   }
 
   passTeam(team: Team){
-    this.router.navigate(['/team-details'], {queryParams: { teamId: team.teamId}});
+    if(this.tokenService.loggedIn()){
+		this.router.navigate(['/team-details'], {queryParams: { teamId: team.teamId}});
+	}
   }
 }
