@@ -8,7 +8,7 @@ import { User } from '../../../models/user/user';
 import { UserService } from 'src/app/services/user.service';
 import { TokenStorageService } from 'src/app/services/token-storage.service';
 import { TeamInviteRequest } from 'src/app/models/teamInviteRequest';
-
+import { TeamCreationRequest } from '../../../models/teamcreationrequest';
 
 @Component({
   selector: 'app-team-creation-page',
@@ -41,6 +41,9 @@ export class TeamCreationPageComponent implements OnInit {
 
   team: Team;
 
+  teamCreationRequest: TeamCreationRequest;
+
+
   selectedImageFile: File;
 
   constructor(private teamService: TeamService,
@@ -49,6 +52,7 @@ export class TeamCreationPageComponent implements OnInit {
 			  private tokenService: TokenStorageService,
 			  private formBuilder: FormBuilder) {
   	this.team = new Team();
+    this.teamCreationRequest = new TeamCreationRequest();
 	this.txtUserToSearch = new FormControl();
 	this.userFound = new User();
 	this.usersToInvite = [];
@@ -84,7 +88,7 @@ export class TeamCreationPageComponent implements OnInit {
     this.team.teamEmail = this.txtEmail.value;
    	this.team.teamCountry = this.txtCountry.value;
 	this.team.teamUsers = this.usersToInvite; 
-//   if (this.selectedImageFile !== null){
+   // if (this.selectedImageFile !== null){
    //   this.postTeamWithImage();
    // }
     this.teamService.postTeam(this.team, this.tokenService.getToken()).subscribe((response: string) => {
@@ -93,6 +97,7 @@ export class TeamCreationPageComponent implements OnInit {
     err => {
 	  this.errorMessage = err.error.message;
       console.error(err.error);
+	  this.isClicked = false;
     });
 	
 	this.usersToInvite.forEach(userToInvite => {
@@ -103,6 +108,7 @@ export class TeamCreationPageComponent implements OnInit {
 		},
 		err => {
 			console.error(err.error.message);	
+			this.isClicked = false;
 		});		
 	});
   }
