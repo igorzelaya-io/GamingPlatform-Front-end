@@ -5,8 +5,8 @@ import { Team } from '../models/team';
 import { catchError } from 'rxjs/internal/operators';
 import { TeamInviteRequest } from '../models/teamInviteRequest';
 
-const USER_TEAMS_API = '/userteamapi/userTeams';
-const USER_TEAMS_REQUEST_API = '/userteamapi/userTeamRequests';
+const USER_TEAMS_API = 'http://localhost:8080/userteamapi/userTeams';
+const USER_TEAMS_REQUEST_API = 'http://localhost:8080/userteamapi/userTeamRequests';
 
 @Injectable({
   providedIn: 'root'
@@ -31,12 +31,12 @@ export class UserTeamService {
   }
 
   public getAllUserTeams(userId: string): Observable<Team[]>{
-    return this.httpClient.get<Team[]>(USER_TEAMS_API + '/userId=' + userId)
+    return this.httpClient.get<Team[]>(USER_TEAMS_API + '?userId=' + userId)
     .pipe(catchError(this.handleError('getAllUserTeams', [])));
   }
 
   public getAllUserTeamRequests(userId: string): Observable<TeamInviteRequest[]>{
-    return this.httpClient.get<TeamInviteRequest[]>(USER_TEAMS_REQUEST_API + '/userId=' + userId)
+    return this.httpClient.get<TeamInviteRequest[]>(USER_TEAMS_REQUEST_API + '?userId=' + userId)
     .pipe(catchError(this.handleError('getAllUserTeams', [])));
   }
 

@@ -86,7 +86,6 @@ export class TeamCreationPageComponent implements OnInit {
     this.getCountries();
   }
 
-
   onSubmit(){
     this.team.teamName = this.txtName.value;
     this.team.teamEmail = this.txtEmail.value;
@@ -100,7 +99,8 @@ export class TeamCreationPageComponent implements OnInit {
    // if (this.selectedImageFile !== null){
    //   this.postTeamWithImage();
    // }
-    this.teamService.postTeam(this.teamCreationRequest, this.tokenService.getToken()).subscribe((response: string) => {
+    this.teamService.postTeam(this.teamCreationRequest, this.tokenService.getToken())
+	  .subscribe((response: string) => {
       console.log(response);
 	  this.isClicked = true;
       this.isSuccessfulRegister = true;
@@ -167,7 +167,7 @@ export class TeamCreationPageComponent implements OnInit {
   }
 
   public getUserByUserName(){
-	this.userService.getUserByUserName(this.txtUserToSearch.value)
+	this.userService.getUserByUserName(this.txtUserToSearch.value.trim())
 	.subscribe((data: User) => {
 		if(data !== null){			
 			this.userFound = data;

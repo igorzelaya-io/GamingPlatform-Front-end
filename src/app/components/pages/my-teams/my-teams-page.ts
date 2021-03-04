@@ -34,7 +34,7 @@ export class MyTeamsPageComponent implements OnInit {
   getAllUserTeams(){
     this.userTeamService.getAllUserTeams(this.user.userId)
     .subscribe((data: Team[]) => {
-      if(data.length){
+      if(data === null || data.length){
 		this.isEmpty = false;
 	  	this.userTeams = data;
 	  }
