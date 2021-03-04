@@ -6,6 +6,7 @@ import { catchError, retry } from 'rxjs/operators';
 import { TeamInviteRequest } from 'src/app/models/teamInviteRequest';
 import { ImageModel } from '../../models/imagemodel';
 import { User } from 'src/app/models/user/user';
+import { TeamCreationRequest } from 'src/app/models/teamcreationrequest';
 
 
 const TEAM_API = 'http://localhost:8081/teamsapi/teams';
@@ -51,14 +52,14 @@ export class TeamService {
 	.pipe(retry(1), catchError(this.handleError('getAllUsersInTeam', [])));
   }
 
-  public postTeam(team: Team, jwtToken: string): Observable<string>{
+  public postTeam(team: TeamCreationRequest, jwtToken: string): Observable<string>{
     return this.httpClient.post<string>(TEAM_API + '/create', team, 
 	{ headers: new HttpHeaders( {'Authorization' : 'Bearer ' + jwtToken} )})
     .pipe(catchError(this.handleError('postTeam', {} as string)));
   }
 
-  public postTeamWithImage(team: Team, fileData: FormData, jwtToken: string): Observable<string>{
-    return this.httpClient.post<string>(TEAM_API + '/create', {team, fileData},
+  public postTeamWithImage(team: TeamCreationRequest, jwtToken: string): Observable<string>{
+    return this.httpClient.post<string>(TEAM_API + '/create', team,
 	{headers: new HttpHeaders( {'Authorization': 'Bearer ' + jwtToken})})
     .pipe(catchError(this.handleError('postTeamWithImage', {} as string)));
   }

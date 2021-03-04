@@ -9,6 +9,7 @@ import { UserService } from 'src/app/services/user.service';
 import { TokenStorageService } from 'src/app/services/token-storage.service';
 import { TeamInviteRequest } from 'src/app/models/teamInviteRequest';
 import { TeamCreationRequest } from '../../../models/teamcreationrequest';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-team-creation-page',
@@ -25,6 +26,8 @@ export class TeamCreationPageComponent implements OnInit {
   userFound: User;  
 
   usersToInvite: User[];
+  teamInviteRequestUsersToInvite: TeamInviteRequest[];
+
   isUserFound: boolean = false;
   
   isClickedSearchButton = false;
@@ -43,16 +46,17 @@ export class TeamCreationPageComponent implements OnInit {
 
   teamCreationRequest: TeamCreationRequest;
 
-
   selectedImageFile: File;
 
   constructor(private teamService: TeamService,
               private userService: UserService,
               private httpClient: HttpClient,
 			  private tokenService: TokenStorageService,
-			  private formBuilder: FormBuilder) {
+			  private formBuilder: FormBuilder,
+	          private router: Router) {
   	this.team = new Team();
     this.teamCreationRequest = new TeamCreationRequest();
+	this.teamInviteRequestUsersToInvite = [];
 	this.txtUserToSearch = new FormControl();
 	this.userFound = new User();
 	this.usersToInvite = [];
@@ -87,28 +91,48 @@ export class TeamCreationPageComponent implements OnInit {
     this.team.teamName = this.txtName.value;
     this.team.teamEmail = this.txtEmail.value;
    	this.team.teamCountry = this.txtCountry.value;
-	this.team.teamUsers = this.usersToInvite; 
+	this.usersToInvite.forEach(userToInvite => {
+		this.teamInviteRequestUsersToInvite.push(new TeamInviteRequest(this.team, userToInvite, Date.now()))
+	});
+	this.team.teamRequests = this.teamInviteRequestUsersToInvite;
+	this.teamCreationRequest.teamToRegister = this.team; 
+	this.teamCreationRequest.teamModerator = this.tokenService.getUser();
    // if (this.selectedImageFile !== null){
    //   this.postTeamWithImage();
    // }
-    this.teamService.postTeam(this.team, this.tokenService.getToken()).subscribe((response: string) => {
+    this.teamService.postTeam(this.teamCreationRequest, this.tokenService.getToken()).subscribe((response: string) => {
       console.log(response);
-    },
+	  this.isClicked = true;
+      this.isSuccessfulRegister = true;
+	},
     err => {
 	  this.errorMessage = err.error.message;
+	  this.isSignUpFailed = true;
       console.error(err.error);
 	  this.isClicked = false;
-    });
+    },
+    () => {
+		if(this.isSuccessfulRegister || !this.isSignUpFailed){
+			this.sendInvitesToUsers();
+		}
+	});
 	
-	this.usersToInvite.forEach(userToInvite => {
-		this.teamService.sendTeamInvite( new TeamInviteRequest(this.team, userToInvite, Date.now()),
-										this.tokenService.getToken())
+	
+
+	
+  }
+
+  public sendInvitesToUsers(){
+	this.team.teamRequests.forEach(userToInvite => {
+		this.teamService.sendTeamInvite(userToInvite, this.tokenService.getToken())
 		.subscribe((data: string) => {
 			console.log(data);
 		},
 		err => {
-			console.error(err.error.message);	
+			console.error(err.error.message);
+			this.errorMessage = err.error.message;	
 			this.isClicked = false;
+			this.isSuccessfulRegister = false;
 		});		
 	});
   }
@@ -156,7 +180,8 @@ export class TeamCreationPageComponent implements OnInit {
 		this.isUserFound = false;
 	},
 	err => {
-		console.error(err.error.message);	
+		console.error(err.error.message);
+		this.isClickedSearchButton = false;	
 	});
   }
 
@@ -170,11 +195,15 @@ export class TeamCreationPageComponent implements OnInit {
   	this.isClickedInviteButton = false;
   }
 
+  public navigateToTeams(){
+	this.router.navigate(['/my-teams']);
+  }
+
   public postTeamWithImage(){
     console.log(this.selectedImageFile);
     const uploadImageData = new FormData();
     uploadImageData.append('imageFile', this.selectedImageFile, this.selectedImageFile.name);
-    this.teamService.postTeamWithImage(this.team, uploadImageData, this.tokenService.getToken())
+    this.teamService.postTeamWithImage(this.teamCreationRequest, this.tokenService.getToken())
     .subscribe((resp: string) => {
       console.log(resp);
     },

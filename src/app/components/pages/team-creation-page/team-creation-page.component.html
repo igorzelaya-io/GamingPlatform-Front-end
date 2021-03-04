@@ -8,7 +8,7 @@
     </div>
 </section>
 <section class="profile-authentication-area ptb-100">
-    <div *ngIf="!isSuccessfulRegister" class="container">
+    <div *ngIf="!isSuccessfulRegister && !isSignUpFailed" class="container">
         <div class="row">
             <div class="col-lg-6 col-md-12">
                 <div class="register-form">
@@ -97,7 +97,7 @@
 		                      	</div>                        	
 	                        </div>
                         </div>
-                        <button type="submit" (click)="onSubmit(); clickedButton();" 
+                        <button type="submit" (click)="onSubmit()" 
                             [disabled]="txtName.invalid || txtEmail.invalid || txtCountry.invalid || isClicked" >
                            Register
                         </button>
@@ -106,13 +106,16 @@
             </div>
         </div>
     </div>
-    <div *ngIf="isSuccessfulRegister">
-        <h2>You've registered Successfully</h2>
+    <div style="vertical-align: middle" *ngIf="isSuccessfulRegister">
+        <h2 style="text-align: center">Team, "{{team.teamName}} created."</h2>
+    	<button (click)="navigateToTeams()">
+    		My Teams
+    	</button>
     </div>
-    <div class="alert alert-danger" *ngIf="isSignUpFailed">
-        <h2>
+    <div style="vertical-align: middle" *ngIf="isSignUpFailed">
+        <h2 style="text-align: center">
             Registration failed.
         </h2>
-        <h3>{{errorMessage}}</h3>
+        <h3 class="alert alert-danger" style="text-align: center">{{errorMessage}}</h3>
     </div>
 </section>
