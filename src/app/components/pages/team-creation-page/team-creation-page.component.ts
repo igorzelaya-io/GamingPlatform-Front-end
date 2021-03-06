@@ -108,32 +108,32 @@ export class TeamCreationPageComponent implements OnInit {
     err => {
 	  this.errorMessage = err.error.message;
 	  this.isSignUpFailed = true;
-      console.error(err.error);
+      console.error(err.error.message);
 	  this.isClicked = false;
     },
     () => {
 		if(this.isSuccessfulRegister || !this.isSignUpFailed){
-			this.sendInvitesToUsers();
+			this.sendTeamInviteToEachUser();
 		}
 	});
-	
-	
-
-	
   }
 
-  public sendInvitesToUsers(){
+  public sendTeamInviteToEachUser(){
 	this.team.teamRequests.forEach(userToInvite => {
-		this.teamService.sendTeamInvite(userToInvite, this.tokenService.getToken())
-		.subscribe((data: string) => {
-			console.log(data);
-		},
-		err => {
-			console.error(err.error.message);
-			this.errorMessage = err.error.message;	
-			this.isClicked = false;
-			this.isSuccessfulRegister = false;
-		});		
+		this.sendTeamInviteToUser(userToInvite);
+	});
+  }
+
+  public sendTeamInviteToUser(userToInvite: TeamInviteRequest){
+	this.teamService.sendTeamInvite(userToInvite, this.tokenService.getToken())
+	.subscribe((data: string) => {
+		console.log(data);
+	},
+	err => {
+		console.error(err.error.message);
+		this.errorMessage = err.error.message;
+		this.isClicked = false;
+		this.isSuccessfulRegister = false;		
 	});
   }
 
@@ -186,7 +186,7 @@ export class TeamCreationPageComponent implements OnInit {
   }
 
   public addUserToPendingInvites(){
-	this.usersToInvite.push(this.userFound);
+	this.usersToInvite.push();
 	this.isClickedInviteButton = true;
   }
 
