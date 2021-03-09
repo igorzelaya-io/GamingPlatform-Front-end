@@ -54,7 +54,8 @@ export class TeamService {
 
   public postTeam(team: TeamCreationRequest, jwtToken: string): Observable<string>{
     return this.httpClient.post<string>(TEAM_API + '/create', team, 
-	{ headers: new HttpHeaders( {'Authorization' : 'Bearer ' + jwtToken} )});
+	{ headers: new HttpHeaders( {'Authorization' : 'Bearer ' + jwtToken} )})
+	.pipe(catchError(this.handleError('postTeam', {} as string)));
   }
 
   public postTeamWithImage(team: TeamCreationRequest, jwtToken: string): Observable<string>{

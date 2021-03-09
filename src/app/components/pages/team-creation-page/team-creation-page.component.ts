@@ -30,8 +30,8 @@ export class TeamCreationPageComponent implements OnInit {
 
   isUserFound: boolean = false;
   
-  isClickedSearchButton = false;
-  isClickedInviteButton = false;
+  isClickedSearchButton: boolean = false;
+  isClickedInviteButton: boolean = false;
 
   errorMessage: string = ' ';
 
@@ -93,6 +93,7 @@ export class TeamCreationPageComponent implements OnInit {
 	this.usersToInvite.forEach(userToInvite => {
 		this.teamInviteRequestUsersToInvite.push(new TeamInviteRequest(this.team, userToInvite, Date.now()))
 	});
+	this.team.teamUsers = [ this.tokenService.getUser() ];
 	this.team.teamRequests = this.teamInviteRequestUsersToInvite;
 	this.teamCreationRequest.teamToRegister = this.team; 
 	this.teamCreationRequest.teamModerator = this.tokenService.getUser();
@@ -141,35 +142,17 @@ export class TeamCreationPageComponent implements OnInit {
     this.isClicked = true;
   }
 
-  public getCountries(){
-    this.allCountries().subscribe(
-      data => {
-        this.countryInfo = data.Countries;
-      },
-      err => {
-        console.log(err);
-      },
-      () => console.log('complete'));
-  }
-
-  changeCountry(event: any){
-	this.txtCountry.setValue(event.target.value, {
-		onlySelf: true
-	});
-  }
-
-  allCountries(): Observable<any> {
-    return this.httpClient.get<any>(this.countriesUrl);
-  }
-
   public onFileChanged(event){
     this.selectedImageFile = event.target.files[0];
   }
 
   public getUserByUserName(){
+	if(this.txtUserToSearch === null){
+		return;
+	}
 	this.userService.getUserByUserName(this.txtUserToSearch.value.trim())
-	.subscribe((data: User) => {
-		if(data !== null){			
+	.subscribe(data => {
+		if(data && Object.keys(data).length !== 0){			
 			this.userFound = data;
 			console.log(data);
 			this.isUserFound = true;
@@ -182,11 +165,12 @@ export class TeamCreationPageComponent implements OnInit {
 	err => {
 		console.error(err.error.message);
 		this.isClickedSearchButton = false;	
+		this.isUserFound = false;
 	});
   }
 
   public addUserToPendingInvites(){
-	this.usersToInvite.push();
+	this.usersToInvite.push(this.userFound);
 	this.isClickedInviteButton = true;
   }
 
@@ -210,6 +194,26 @@ export class TeamCreationPageComponent implements OnInit {
     err => {
       console.error(err);
     });
+  }
+
+  public getCountries(){
+    this.allCountries().subscribe(
+      data => {
+        this.countryInfo = data.Countries;
+      },
+      err => {
+        console.log(err);
+      });
+  }
+
+  changeCountry(event: any){
+	this.txtCountry.setValue(event.target.value, {
+		onlySelf: true
+	});
+  }
+
+  allCountries(): Observable<any> {
+    return this.httpClient.get<any>(this.countriesUrl);
   }
 
 

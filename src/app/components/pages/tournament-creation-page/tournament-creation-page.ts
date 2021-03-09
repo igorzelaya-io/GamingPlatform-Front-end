@@ -7,6 +7,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { SharedService } from '../../../services/helpers/shared-service';
 import { Renderer2 } from '@angular/core';
+import { TokenStorageService } from 'src/app/services/token-storage.service';
 
 @Component({
   selector: 'app-tournament-creation-page',
@@ -24,7 +25,6 @@ export class TournamentCreationPageComponent implements OnInit {
   tournamentModerator: User;
   tournamentPlatform: string;
   tournamentDate: Date;
-  tournamentCountry: FormControl;
   tournamentGame: string;
   tournamentCodGameMode: string;
   
@@ -63,20 +63,20 @@ export class TournamentCreationPageComponent implements OnInit {
 
   constructor(private router: Router,
 			  private httpClient: HttpClient,
-			  private route: ActivatedRoute,
 			  private renderer: Renderer2,
 			  private sharedService: SharedService,
-			  @Inject(FormBuilder) private builder: FormBuilder) {
+			  @Inject(FormBuilder) private builder: FormBuilder,
+			  private tokenService: TokenStorageService) {
     this.txtName = new FormControl();
     this.txtPlatforms = new FormControl();
-	this.tournamentCountry = new FormControl();
 	this.txtDescription = new FormControl();
     this.tournament = new Tournament();
 	this.tournamentModerator = new User();
 	this.tournamentTimeZone = new FormControl();
     this.entryAndPriceForm = this.builder.group({
 		cashPrize: new FormControl(),	
-		entryFee: new FormControl()
+		entryFee: new FormControl(),
+		tournamentCountry: new FormControl()
 	});
 	this.tournamentDateElement = this.sharedService.get();
 	this.tournamentAllPlatformsElement = this.sharedService.get();
@@ -92,20 +92,31 @@ export class TournamentCreationPageComponent implements OnInit {
 	return this.entryAndPriceForm.get('cashPrize') as FormControl;	
   }
 
+  get tournamentCountry(){
+	return this.entryAndPriceForm.get('tournamentCountry') as FormControl;	
+  }
+
   ngOnInit(): void {
-  	this.route.queryParams
-	.subscribe((params: User) => {
-		this.tournamentModerator = params['user'];
-	},
-	(err: any) => {
-		console.error(err);
-	});
+	this.tournamentModerator = this.tokenService.getUser();
   	this.getCountries();
    }
 
   getAllCountries(): Observable<any>{
 	return this.httpClient.get<any>(this.countriesUrl);	
   }
+
+  public onSubmit(): void{
+   	this.tournament.tournamentName = this.txtName.value;
+	this.tournament.tournamentDescription = this.txtDescription.value;
+	this.tournament.tournamentCashPrice = this.cashPrice.value;
+	this.tournament.tournamentEntryFee = this.entryFee.value;
+	this.tournament.tournamentRegion = this.tournamentCountry.value;
+	this.tournament.tournamentPlatforms = this.tournamentPlatform.valueOf();
+	//this.tournament.tournamentDate = this.tournamentDate.value;
+	this.tournament.tournamentModerator = this.tournamentModerator;
+	this.router.navigate(['/tournament-creation-config'], {queryParams: { tournament: JSON.stringify(this.tournament)}}); 
+  }
+
 
   getCountries(){
 	this.getAllCountries()
@@ -234,23 +245,13 @@ export class TournamentCreationPageComponent implements OnInit {
   }
 
   updateCountry(event: any){
-	this.tournamentCountry = event.target.value;
+	this.tournamentCountry.setValue(event.target.value, {
+		onlySelf: true
+	});
   }  
 
   clickedButton(): void{
     this.isClicked = true;
-  }
-
-  public onSubmit(): void{
-   	this.tournament.tournamentName = this.txtName.value;
-	this.tournament.tournamentDescription = this.txtDescription.value;
-	this.tournament.tournamentCashPrice = this.cashPrice.value;
-	this.tournament.tournamentEntryFee = this.entryFee.value;
-	this.tournament.tournamentRegion = this.tournamentCountry.value;
-	this.tournament.tournamentPlatforms = this.tournamentPlatform.valueOf();
-	//this.tournament.tournamentDate = this.tournamentDate.value;
-	this.tournament.tournamentModerator = this.tournamentModerator;
-	this.router.navigate(['/tournament-creation-config'], {queryParams: { tournament: this.tournament}}); 
   }
 
 }

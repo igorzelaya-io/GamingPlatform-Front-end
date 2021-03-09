@@ -72,13 +72,13 @@
 		                    		<label>Tournament Date</label>
 			                        <mat-form-field style="margin-left: 40px;">
 			                        	<input matInput [ngxMatDatetimePicker]="tournamentDateTimeElement" 
-			                        		placeholder="Choose a date"		                        		
+			                        		placeholder="Choose a date"                       		
 			                        	>
 			                        	<mat-datepicker-toggle matSuffix [for]="tournamentDateTimeElement">				      
 			                        		
 			                        	</mat-datepicker-toggle>
 			                        	
-			                        	<ngx-mat-datetime-picker #tournamentDateTimeElement [showSpinners]="true" [showSeconds]="false"
+			                        	<ngx-mat-datetime-picker #tournamentDateTimeElement [showSpinners]="true" [showSeconds]="true"
 			                        		[stepHour]="1" [stepMinute]="10"
 			                        	>				      		                        	
 			                        	</ngx-mat-datetime-picker>
@@ -87,11 +87,10 @@
 		                    	</div>
 	                    	</div>
 	                    	<div class="col-lg-6 col-md-12">
-		                    	<div class="form-group">
+		                    	<div class="form-group" [formGroup]="entryAndPriceForm">
 	                    			<label>Tournament Country</label>
-	                    			<select class="form-control" [formControl]="tournamentCountry" 
-	                    				    (change)="updateCountry($event)">
-	                    				<option disabled>Choose a Country</option>
+	                    			<select class="form-control" formControlName="tournamentCountry" (change)="updateCountry($event)">
+	                    				<option value="" disabled>Choose a Country</option>
 	                    				<option *ngFor="let country of countryInfo" value="{{country.CountryName}}">{{country.CountryName}}</option>
 	                    			</select>
 	                    		</div>

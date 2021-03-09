@@ -70,14 +70,18 @@
 		                        	> 
 	                        	</div>
 	                        	<div class="col-sm">
-	                        		<button (click)="getUserByUserName()">Search</button>
+	                        		<button #searchButton (click)="getUserByUserName()" class="form-group">Search</button>
 	                        	</div>
 	                        	<br>
 	                        	
 	                        </div>
                         </div>
-                        <div style="margin-top: 100px" class="container">
+                        <div style="margin-top: 90px" class="container">
 	                        <div class="row">
+	                            <div class="col-sm" style="vertical-align: middle" *ngIf="!isUserFound && (txtUserToSearch.dirty || txtUserToSearch.touched)">
+		                      		<h3 style="text-align: center">User not found.</h3>
+		                      	</div>
+		                      	
 		                        <div class="col-sm" *ngIf="isUserFound">
 		                        	<img
 		                        		src="assets/d1images/anonymoususer-big.png"
@@ -94,7 +98,8 @@
 		                      	</div>
 		                      	<div class="col-sm" *ngIf="isClickedInviteButton">
 		                      		<button (click)="removeUserFromPendingInvites()">Cancel Invite</button>
-		                      	</div>                        	
+		                      	</div>
+		                      	                        	
 	                        </div>
                         </div>
                         <button type="submit" (click)="onSubmit()" 
@@ -107,7 +112,7 @@
         </div>
     </div>
     <div style="vertical-align: middle" *ngIf="isSuccessfulRegister">
-        <h2 style="text-align: center">Team, "{{team.teamName}} created."</h2>
+        <h2 style="text-align: center">Team, "{{team.teamName}}" created.</h2>
     	<button (click)="navigateToTeams()">
     		My Teams
     	</button>
