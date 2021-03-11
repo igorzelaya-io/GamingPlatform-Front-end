@@ -5,8 +5,10 @@ import { Tournament } from '../../../models/tournament/tournament';
 import { TournamentMode } from '../../../models/tournament/tournament-mode.enum';
 import { TournamentFormat } from '../../../models/tournament/tournament-format.enum';
 import { SharedService } from '../../../services/helpers/shared-service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TournamentService } from '../../../services/tournament/tournament.service';
+import { TournamentCreationRequest } from 'src/app/models/tournament/tournament-creation-request';
+import { TokenStorageService } from 'src/app/services/token-storage.service';
 
 @Component({
   selector: 'app-tournament-creation-config-page',
@@ -15,11 +17,10 @@ import { TournamentService } from '../../../services/tournament/tournament.servi
 })
 
 export class TournamentCreationConfigPageComponent implements OnInit {
-  txtLimitNumberOfTeams: number;
+  
   tournamentTeamSize: TournamentTeamSize;
   tournamentFormat: TournamentFormat;
   tournamentFormatString: string;
-  tournamentTeams: Array<Team>;
   tournamentMatchesNumber: string;
   
 
@@ -64,10 +65,13 @@ export class TournamentCreationConfigPageComponent implements OnInit {
   isSuccessfulTournamentCreation = false;
   isSignUpFailed = false;
   isClicked = false;
-  tournament: Tournament = new Tournament();
+  tournament: Tournament;
+  tournamentCreation: TournamentCreationRequest;
 
-  constructor(private router: ActivatedRoute,
+  constructor(private route: ActivatedRoute,
 			  private renderer: Renderer2,
+			  private router: Router, 
+			  private tokenService: TokenStorageService,
 	          private sharedService: SharedService,
 			  private tournamentService: TournamentService) {
     this.leagueFormatElement = this.sharedService.get();
@@ -78,17 +82,45 @@ export class TournamentCreationConfigPageComponent implements OnInit {
 	this.duosTeamSizeElement = this.sharedService.get();
 	this.triosTeamSizeElement = this.sharedService.get();
 	this.squadsTeamSizeElement = this.sharedService.get();
+	this.tournament = new Tournament();
+	this.tournamentCreation = new TournamentCreationRequest();
   }
 
   ngOnInit(): void {
-	this.router.queryParams
+	this.route.queryParams
 	.subscribe(params => {
-		this.tournament = params['tournament'];
+		this.tournament = JSON.parse(params['tournament']);
 	});
   }
 
   clickedButton(): void{
     this.isClicked = true;
+  }
+
+  public onSubmit(){
+		this.tournament.tournamentFormat = TournamentFormat[this.tournamentFormat];
+		this.tournament.tournamentMatchesNumber = this.tournamentMatchesNumber;
+		this.tournament.tournamentGameMode = TournamentMode[this.tournamentGameMode];
+		this.tournament.tournamentTeamSize = TournamentTeamSize[this.tournamentTeamSize];
+		this.tournamentCreation.tournamentDateInMilliseconds = this.tournament.tournamentDateInMilliseconds;
+		this.tournamentCreation.tournamentToBeCreated = this.tournament;
+		this.tournamentCreation.tournamentUserModerator = this.tournament.tournamentModerator;
+		this.tournamentService.postTournament(this.tournamentCreation, this.tokenService.getToken())
+		.subscribe((data: string) => {
+			this.message = data;
+			console.log(data);
+			this.isSuccessfulTournamentCreation = true;
+		},
+		(err: any) => {
+			console.error(err.error.message);
+			this.errorMessage = err.error.message;
+			this.isSuccessfulTournamentCreation = false;
+			this.isSignUpFailed = true;
+		});
+	}
+	
+  public navigateToTournaments(){
+	this.router.navigate(['/tournaments']);	
   }
 
   selectLeagueTournamentFormat(): void{	
@@ -220,7 +252,7 @@ export class TournamentCreationConfigPageComponent implements OnInit {
 		return;
 	 }
 	 this.changeToRedBorder(this.squadsTeamSizeElement);
-     this.tournamentTeamSize = TournamentTeamSize.Squads;
+     this.tournamentTeamSize = TournamentTeamSize.Quads;
    }
 
    selectBestOfOneTournamentMatchesNumber(){
@@ -284,22 +316,5 @@ export class TournamentCreationConfigPageComponent implements OnInit {
 	
 	private changeToWhiteBorder(elementToChange: ElementRef): void{
 		this.renderer.setStyle(elementToChange.nativeElement, 'border', '3px solid white');
-	}
-
-	public onSubmit(){
-		this.tournamentService.postTournament(this.tournament.tournamentModerator, this.tournament)
-		.subscribe((data: string) => {
-			this.message = data;
-			console.log(data);
-			this.isSuccessfulTournamentCreation = true;
-		},
-		(err: string) => {
-			console.error(err);
-			this.errorMessage = err;
-			this.isSuccessfulTournamentCreation = false;
-			this.isSignUpFailed = true;
-		},() => {
-			console.log('complete');
-		});
 	}
 }

@@ -39,6 +39,7 @@
 	                				<div class="col-sm">
 	                					<img
 	                						alt="image"
+	                						src="/assets/d1images/bestOfOne.png"
 	                						#bestOfOneElement
 	                						(click)="selectBestOfOneTournamentMatchesNumber()"
 	                						style="border: 3px solid white"
@@ -137,19 +138,22 @@
 	    	</div>
 	    </div>
 	    <div>     
-	        <button type="submit" (click)="onSubmit();" 
+	        <button type="sudbmit" (click)="onSubmit();" 
 	            [disabled]="" >
 	            Register
 	        </button>
 	    </div>
     </div>
-    <div *ngIf="isSuccessfulTournamentCreation">
-        <h2>You've registered your tournament Successfully</h2>
+    <div style="vertical-align: middle" *ngIf="isSuccessfulTournamentCreation">
+        <h2 style="text-align: center">You've registered your tournament Successfully</h2>
+    	<button (click)="navigateToTournaments()">
+    		Tournaments
+    	</button>
     </div>
-    <div class="alert alert-danger" *ngIf="isSignUpFailed">
-        <h2>
+    <div style="vertical-align: middle" *ngIf="isSignUpFailed">
+        <h2 style="text-align: center">
             Registration failed.
         </h2>
-        <h3>{{errorMessage}}</h3>
+        <h3 style="text-align: center" class="alert alert-danger">{{errorMessage}}</h3>
     </div>
 </section>

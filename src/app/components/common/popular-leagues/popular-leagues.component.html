@@ -10,15 +10,21 @@
 	</div>
 
 	<div class="container" *ngIf="allTournaments">
-	    <div *ngFor="let tournament of allTournaments" class="single-popular-leagues-box">
+	    <div *ngFor="let tournament of allTournaments; index as i" class="single-popular-leagues-box">
+	        
 	        <div class="popular-leagues-box">
 	            <div class="popular-leagues-image">
-	                <div *ngIf="tournament.tournamentGame === 'Call Of Duty'" class="image bg1">
+	                <div *ngIf="isWarzoneTournament(tournament)">
 	                    <img src="assets/d1images/tournamentwarzonebanner.png" alt="image">
 	                </div>
-	                <div *ngIf="tournament.tournamentGame === 'Fifa'" class="image bg1">
+	                <div *ngIf="isCDLTournament(tournament)" >
 	                	<img
-	                	
+	                		src="assets/d1images/tournamentCDLbanner" alt="image"
+	                	>
+	                </div>
+	                <div *ngIf="isFifaTournament(tournament)">
+	                	<img
+	                		src="assets/d1images/tournamentFifabanner" alt="image"
 	                	>
 	                </div>
 	            </div>
@@ -28,7 +34,7 @@
 	                    <h3><a routerLink="/single-tournament">{{tournament.tournamentName}}</a></h3>
 	                    <p>{{tournament.tournamentDescription}}</p>
 	                    <ul class="info">
-	                        <li><i class="flaticon-coin"></i>{{tournament.tournamentCashPrice}}</li>
+	                        <li><i class="flaticon-coin"></i>${{tournament.tournamentCashPrice}}</li>
 	                        <li><i class="flaticon-game"></i>{{tournament.tournamentFormat}}</li>
 	                        <li><i class="flaticon-game"></i>{{tournament.tournamentGameMode}}</li>
 	                        <li><i class="flaticon-game-1"></i>{{tournament.tournamentPlatforms}}</li>
@@ -43,14 +49,14 @@
 	                <div class="date">
 	                    <div class="d-table">
 	                        <div class="d-table-cell">
-	                            <span>2020</span>
+	                            <span>{{allTournamentYears[i]}}</span>
 	                            <h3>23 October</h3>
 	                            <p>14:30 PM</p>
 	                            <i class='bx bx-calendar'></i>
 	                        </div>
 	                    </div>
 	                </div>
-	            </div>
+	            </div>   
 	        </div>
 	    </div>
 	</div>
@@ -59,7 +65,7 @@
         <div class="popular-leagues-box">
             <div class="popular-leagues-image">
                 <div class="image bg2">
-                    <img src="assets/d1images/tournamentwarzonebanner.png" alt="image">
+                    <img src="assets/img/popular-leagues-img2.jpg" alt="image">
                 </div>
             </div>
 
@@ -72,8 +78,8 @@
                         <li><i class="flaticon-game"></i>PvP</li>
                         <li><i class="flaticon-game"></i>Kill Race</li>
                         <li><i class="flaticon-game-1"></i>PC</li>
-                        <li><i class="flaticon-teamwork"></i>Best of 5</li>
-                    	<li><i class="flaticon-teamwork"></i>50 teams</li>
+                        <li><i class="flaticon-teamwork"></i>Best of t </li>
+                    	<li><i class="flaticon-teamwork"></i>fsdsadf</li>
                     </ul>
                     <a routerLink="/single-tournament" class="join-now-btn">Join Now</a>
                 </div>

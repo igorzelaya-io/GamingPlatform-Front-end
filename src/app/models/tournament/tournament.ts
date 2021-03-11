@@ -1,9 +1,6 @@
 import { Team } from '../team';
 import { User } from '../user/user';
-import { TournamentStatus } from './tournament-status.enum';
-import { TournamentTeamSize } from './tournament-team-size.enum';
-import { TournamentFormat } from './tournament-format.enum';
-import { TournamentMode } from './tournament-mode.enum';
+
 
 export class Tournament {
 
@@ -13,12 +10,13 @@ export class Tournament {
     tournamentLimitNumberOfTeams: number;
     tournamentNumberOfTeams: number;
     tournamentPlatforms: string;
-    tournamentStatus: TournamentStatus;
-	tournamentTeamSize: TournamentTeamSize;
-	tournamentGameMode: TournamentMode;
-	tournamentFormat: TournamentFormat;
+    tournamentStatus: string;
+	tournamentTeamSize: string;
+	tournamentGameMode: string;
+	tournamentFormat: string;
     tournamentModerator: User;
     tournamentDate: Date;
+	tournamentDateInMilliseconds: number;
     tournamentCashPrice: number;
     tournamentEntryFee: number;
     tournamentRegion: string;
@@ -27,7 +25,7 @@ export class Tournament {
 	tournamentCodGameMode: string;
 	tournamentMatchesNumber: string;
 
-    constructor(tournamentName?: string, tournamentStatus?: TournamentStatus, tournamentModerator?: User,
+    constructor(tournamentName?: string, tournamentStatus?: string, tournamentModerator?: User,
                 tournamentDate?: Date, tournamentTeams?: Array<Team>){
         this.tournamentName = tournamentName;
         this.tournamentTeams = tournamentTeams;

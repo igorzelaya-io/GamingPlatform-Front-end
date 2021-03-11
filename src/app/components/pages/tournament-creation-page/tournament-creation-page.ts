@@ -2,12 +2,15 @@ import { Component, OnInit, ViewChild, ElementRef, Inject } from '@angular/core'
 import { FormControl, FormGroup, FormBuilder } from '@angular/forms';
 import { User } from '../../../models/user/user';
 import { Tournament } from '../../../models/tournament/tournament';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { SharedService } from '../../../services/helpers/shared-service';
 import { Renderer2 } from '@angular/core';
 import { TokenStorageService } from 'src/app/services/token-storage.service';
+import { NgxMatDatetimePicker } from '@angular-material-components/datetime-picker';
+
+
 
 @Component({
   selector: 'app-tournament-creation-page',
@@ -18,10 +21,7 @@ import { TokenStorageService } from 'src/app/services/token-storage.service';
 export class TournamentCreationPageComponent implements OnInit {
   txtName: FormControl;   
   txtDescription: FormControl;
-  //txtLimitNumberOfTeams: number;
   txtPlatforms: FormControl;
-  tournamentTimeZone: FormControl;
-  //tournamentTeamSize: TournamentTeamSize;
   tournamentModerator: User;
   tournamentPlatform: string;
   tournamentDate: Date;
@@ -29,7 +29,7 @@ export class TournamentCreationPageComponent implements OnInit {
   tournamentCodGameMode: string;
   
   @ViewChild('tournamentDateTimeElement')
-  tournamentDateElement: ElementRef;
+  tournamentDateElement: NgxMatDatetimePicker<Date>;
 
   @ViewChild('tournamentAllPlatformsElement')
   tournamentAllPlatformsElement: ElementRef;
@@ -72,10 +72,10 @@ export class TournamentCreationPageComponent implements OnInit {
 	this.txtDescription = new FormControl();
     this.tournament = new Tournament();
 	this.tournamentModerator = new User();
-	this.tournamentTimeZone = new FormControl();
     this.entryAndPriceForm = this.builder.group({
 		cashPrize: new FormControl(),	
 		entryFee: new FormControl(),
+		limitNumberOfTeams: new FormControl(),
 		tournamentCountry: new FormControl()
 	});
 	this.tournamentDateElement = this.sharedService.get();
@@ -96,6 +96,10 @@ export class TournamentCreationPageComponent implements OnInit {
 	return this.entryAndPriceForm.get('tournamentCountry') as FormControl;	
   }
 
+  get limitNumberOfTeams(){
+	return this.entryAndPriceForm.get('limitNumberOfTeams');	
+  }
+
   ngOnInit(): void {
 	this.tournamentModerator = this.tokenService.getUser();
   	this.getCountries();
@@ -112,8 +116,12 @@ export class TournamentCreationPageComponent implements OnInit {
 	this.tournament.tournamentEntryFee = this.entryFee.value;
 	this.tournament.tournamentRegion = this.tournamentCountry.value;
 	this.tournament.tournamentPlatforms = this.tournamentPlatform.valueOf();
-	//this.tournament.tournamentDate = this.tournamentDate.value;
+	this.tournament.tournamentDate = new Date(this.tournamentDateElement._selected.getTime());
+	//this.tournament.tournamentDateInMilliseconds = this.tournamentDateElement._selected.getTime();										
 	this.tournament.tournamentModerator = this.tournamentModerator;
+	this.tournament.tournamentLimitNumberOfTeams = this.limitNumberOfTeams.value;
+	this.tournament.tournamentGame = this.tournamentGame;
+	this.tournament.tournamentCodGameMode = this.tournamentCodGameMode;
 	this.router.navigate(['/tournament-creation-config'], {queryParams: { tournament: JSON.stringify(this.tournament)}}); 
   }
 
