@@ -20,7 +20,8 @@ export class PopularLeaguesComponent implements OnInit {
   isEmptyTournaments = true;
   allTournaments: Tournament[];
 
-  allTournamentYears:number[]; 
+  allTournamentYears:number[];
+  allTournamentMonths:number[]; 
 
 
   constructor(private tokenService: TokenStorageService, 
@@ -45,20 +46,18 @@ export class PopularLeaguesComponent implements OnInit {
 			this.isAuthenticated = false;
 			this.tokenService.signOut();
 			this.getAllTournamentsNow();
-			this.getAllTournamentYears();
 			return;
 		}
 		this.isAuthenticated = true;		
 	}
 	this.getAllTournamentsNow();
-	this.getAllTournamentYears();
-  
   }
 
   getAllTournamentsNow(): void{
 	this.tournamentService.getAllTournamentsNow()
 	.subscribe((data: Tournament[]) => {
 		this.allTournaments = data;
+		this.getAllTournamentYears(data);
 		this.isEmptyTournaments = false;
 	},
 	err => {
@@ -67,9 +66,9 @@ export class PopularLeaguesComponent implements OnInit {
 	});
   }
 
-  getAllTournamentYears(): void{
-	for(let i = 0 ; i < this.allTournaments.length; i++){
-		this.allTournamentYears.push(this.allTournaments[i].tournamentDate.getFullYear());
+  getAllTournamentYears(tournaments: Tournament[]): void{
+	for(let i = 0; i < tournaments.length; i++){
+		this.allTournamentYears.push(new Date(tournaments[i].tournamentDate).getFullYear());
 	}
 	
   }
