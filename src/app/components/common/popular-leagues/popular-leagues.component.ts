@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { TokenStorageService } from '../../../services/token-storage.service';
 import { Router } from '@angular/router';
-import { User } from 'src/app/models/user/user';
+
 import { TournamentService } from '../../../services/tournament/tournament.service';
 import { Tournament } from 'src/app/models/tournament/tournament';
 
+const monthNames = [ "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December" ];
 
 @Component({
   selector: 'app-popular-leagues',
@@ -15,21 +17,24 @@ import { Tournament } from 'src/app/models/tournament/tournament';
 export class PopularLeaguesComponent implements OnInit {
 
   isAuthenticated = false;
-  user: User;
 
   isEmptyTournaments = true;
   allTournaments: Tournament[];
 
   allTournamentYears:number[];
-  allTournamentMonths:number[]; 
+
+  allTournamentMonths:string[];
+
+  allTournamentTime:string[]; 
 
 
   constructor(private tokenService: TokenStorageService, 
               private router: Router,
 			  private tournamentService: TournamentService) {
-	this.user = new User();
 	this.allTournaments = [];
   	this.allTournamentYears = []; 
+	this.allTournamentMonths = [];
+	this.allTournamentTime = [];
   }
 
    isAuthenticatedButton(){
@@ -56,9 +61,15 @@ export class PopularLeaguesComponent implements OnInit {
   getAllTournamentsNow(): void{
 	this.tournamentService.getAllTournamentsNow()
 	.subscribe((data: Tournament[]) => {
-		this.allTournaments = data;
-		this.getAllTournamentYears(data);
-		this.isEmptyTournaments = false;
+		if(data && data.length !== 0){			
+			this.allTournaments = data;
+			this.getAllTournamentYears(data);
+			this.getAllTournamentMonths(data);
+			this.getAllTournamentTime(data);
+			this.isEmptyTournaments = false;
+			return;
+		}
+		this.isEmptyTournaments = true;
 	},
 	err => {
 		console.error(err.error.message);
@@ -70,7 +81,23 @@ export class PopularLeaguesComponent implements OnInit {
 	for(let i = 0; i < tournaments.length; i++){
 		this.allTournamentYears.push(new Date(tournaments[i].tournamentDate).getFullYear());
 	}
-	
+  }
+
+  getAllTournamentMonths(tournaments: Tournament[]){
+	for(let i = 0; i < tournaments.length; i++){
+		//this.allTournamentMonths.push(tournaments[i].tournamentDate.toString().slice(0, 10));
+		this.allTournamentMonths.push(monthNames[new Date(tournaments[i].tournamentDate).getMonth()] + ' ' + tournaments[i].tournamentDate.toString().slice(8, 10));
+	}
+  }
+
+  getAllTournamentTime(tournaments: Tournament[]){
+	for(let i = 0; i < tournaments.length; i++){
+		this.allTournamentTime.push(tournaments[i].tournamentDate.toString().slice(11, 19) + '  ' + new Date(tournaments[i].tournamentDate).toString().match(/([A-Z]+[\+-][0-9]+)/)[1]);
+	}
+  }
+
+  public viewTournament(tournament: Tournament){
+	this.router.navigate(['tournament-details'], {queryParams: {tournament: JSON.stringify(tournament)}});
   }
 
   public isWarzoneTournament(tournament: Tournament): boolean{
@@ -93,11 +120,11 @@ export class PopularLeaguesComponent implements OnInit {
 	}
 	return false;
   }
-
-  public getYearFromTournamentDate(tournament: Tournament): number{
-	return tournament.tournamentDate.getFullYear();	
-  }
-
   
-
+  public isPvPTournament(tournament: Tournament): boolean{
+	if(tournament.tournamentFormat === 'PVP'){
+		return true; 
+	}
+	return false; 
+  }
 }

@@ -38,10 +38,10 @@
 	                        <li><i class="flaticon-game"></i>{{tournament.tournamentFormat}}</li>
 	                        <li><i class="flaticon-game"></i>{{tournament.tournamentGameMode}}</li>
 	                        <li><i class="flaticon-game-1"></i>{{tournament.tournamentPlatforms}}</li>
-	                        <li><i class="flaticon-teamwork"></i>{{tournament.tournamentMatchesNumber}}</li>
-	                    	<li><i class="flaticon-teamwork"></i>{{tournament.tournamentLimitNumberOfTeams}}</li>
+	                        <li *ngIf="isPvPTournament(tournament)"><i class="flaticon-teamwork"></i>{{tournament.tournamentMatchesNumber}}</li>
+	                    	<li><i class="flaticon-teamwork"></i>{{tournament.tournamentNumberOfTeams}}/{{tournament.tournamentLimitNumberOfTeams}} Teams</li>
 	                    </ul>
-	                    <a routerLink="/tournament-details" class="join-now-btn">Join Now</a>
+	                    <a (click)="viewTournament(tournament)" class="join-now-btn">Join Now</a>
 	                </div>
 	            </div>
 	
@@ -49,9 +49,9 @@
 	                <div class="date">
 	                    <div class="d-table">
 	                        <div class="d-table-cell">
-	                            <span>{{this.allTournamentYears[i]}}</span>
-	                            <h3>23 October</h3>
-	                            <p>14:30 PM</p>
+	                            <span>{{allTournamentYears[i]}}</span>
+	                            <h3>{{allTournamentMonths[i]}}</h3>
+	                            <p>{{allTournamentTime[i]}}</p>
 	                            <i class='bx bx-calendar'></i>
 	                        </div>
 	                    </div>
@@ -60,43 +60,4 @@
 	        </div>
 	    </div>
 	</div>
-
-    <div class="single-popular-leagues-box">
-        <div class="popular-leagues-box">
-            <div class="popular-leagues-image">
-                <div class="image bg2">
-                    <img src="assets/img/popular-leagues-img2.jpg" alt="image">
-                </div>
-            </div>
-
-            <div class="popular-leagues-content">
-                <div class="content">
-                    <h3><a routerLink="/single-tournament">Call of Duty League</a></h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                    <ul class="info">
-                       <li><i class="flaticon-coin"></i>200k</li>
-                        <li><i class="flaticon-game"></i>PvP</li>
-                        <li><i class="flaticon-game"></i>Kill Race</li>
-                        <li><i class="flaticon-game-1"></i>PC</li>
-                        <li><i class="flaticon-teamwork"></i>Best of t </li>
-                    	<li><i class="flaticon-teamwork"></i>fsdsadf</li>
-                    </ul>
-                    <a routerLink="/single-tournament" class="join-now-btn">Join Now</a>
-                </div>
-            </div>
-
-            <div class="popular-leagues-date">
-                <div class="date">
-                    <div class="d-table">
-                        <div class="d-table-cell">
-                            <span>2020</span>
-                            <h3>25 June</h3>
-                            <p>10:00 PM</p>
-                            <i class='bx bx-calendar'></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>

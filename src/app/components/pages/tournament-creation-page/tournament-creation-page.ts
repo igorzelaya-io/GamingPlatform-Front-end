@@ -116,8 +116,7 @@ export class TournamentCreationPageComponent implements OnInit {
 	this.tournament.tournamentEntryFee = this.entryFee.value;
 	this.tournament.tournamentRegion = this.tournamentCountry.value;
 	this.tournament.tournamentPlatforms = this.tournamentPlatform.valueOf();
-	const tournamentSelectedDate = this.tournamentDateElement._selected;
-	this.tournament.tournamentDate = new Date(new Date(tournamentSelectedDate.getTime() - tournamentSelectedDate.getTimezoneOffset() * 60000).toISOString());
+	this.tournament.tournamentDate = this.tournamentDateElement._selected;
 	//this.tournament.tournamentDateInMilliseconds = this.tournamentDateElement._selected.getTime();										
 	this.tournament.tournamentModerator = this.tournamentModerator;
 	this.tournament.tournamentLimitNumberOfTeams = this.limitNumberOfTeams.value;
