@@ -3,7 +3,7 @@ s<app-navbar-style-one></app-navbar-style-one>
 <section class="page-title-area page-title-bg1">
     <div class="container">
         <div class="page-title-content">
-            <h1 title="Esports league">Esports league</h1>
+            <h1 title="{{tournament.tournamentName}}">{{tournament.tournamentName}}</h1>
         </div>
     </div>
 </section>
@@ -11,16 +11,16 @@ s<app-navbar-style-one></app-navbar-style-one>
 <section class="tournament-details-area ptb-100">
     <div class="container">
         <div class="tournament-details-desc">
-            <span class="sub-title">25TH AUGUST 2020 / 15:00 / MADRID</span>
+            <span class="sub-title">{{tournamentMonthDate}} {{tournamentMonth}} {{tournamentYear}} / {{tournamentTime}} / {{tournament.tournamentRegion}}</span>
             <h3>About the tournament</h3>
-            <p>Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget.</p>
+            <p>{{tournament.tournamentDescription}}</p>
 
             <ul class="tournament-meta">
                 <li>
                     <div class="icon">
                         <i class="flaticon-coin"></i>
                     </div>
-                    <span>100k</span>
+                    <span>${{tournament.tournamentCashPrice}}</span>
                     Prize Pool
                 </li>
 
@@ -28,24 +28,44 @@ s<app-navbar-style-one></app-navbar-style-one>
                     <div class="icon">
                         <i class="flaticon-game"></i>
                     </div>
-                    <span>1v1</span>
-                    Play Mood
+                    <span>{{tournament.tournamentFormat}}</span>
+                     Tournament Format
+                </li>
+                
+                <li>
+                    <div class="icon">
+                        <i class="flaticon-game"></i>
+                    </div>
+                    <span>{{tournament.tournamentGameMode}}</span>
+                    Tournament Game Mode
                 </li>
 
                 <li>
                     <div class="icon">
                         <i class="flaticon-game-1"></i>
                     </div>
-                    <span>Mobile</span>
-                    Platform
+                    <span>{{tournament.tournamentPlatforms}}</span>
+                    Tournament Platforms
                 </li>
 
+                <li *ngIf="isPvPTournament()">
+                    <div class="icon">
+                        <i class="flaticon-teamwork"></i>
+                    </div>
+                    <span>{{tournament.tournamentMatchesNumber}}</span>
+                    Tournament Matches Number
+                </li>
                 <li>
                     <div class="icon">
                         <i class="flaticon-teamwork"></i>
                     </div>
-                    <span>10 Groups</span>
-                    Players
+                    <span>{{tournament.tournamentNumberOfTeams}}/{{tournament.tournamentLimitNumberOfTeams}}</span>
+                    Tournament Limit Number of teams
+                </li>
+                <li>
+                	<button>
+                		Join Tournament
+                	</button>
                 </li>
             </ul>
         </div>
@@ -625,10 +645,6 @@ s<app-navbar-style-one></app-navbar-style-one>
 <section class="top-team-area pb-70">
     <app-top-ranking-team-style-two></app-top-ranking-team-style-two>
 </section>
-
-<div class="partner-area pb-70">
-    <app-partner></app-partner>
-</div>
 
 <footer class="footer-area bg-1b060a ptb-70">
     <app-footer-style-one></app-footer-style-one>

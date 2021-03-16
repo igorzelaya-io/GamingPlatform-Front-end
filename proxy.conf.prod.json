@@ -1,0 +1,7 @@
+{
+	"/billing":{
+		"target":"http://d1-gaming-user-backend-service.com",
+		"secure":"false",
+		"logLevel":"info"
+	}
+}
