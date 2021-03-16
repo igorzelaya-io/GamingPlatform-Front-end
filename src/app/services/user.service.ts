@@ -6,7 +6,7 @@ import {retry, catchError } from 'rxjs/operators';
 import { ImageModel } from '../models/imagemodel';
 
 
-const USER_API = 'http://localhost:8080/userapi/users';
+const USER_API = '/userapi';
 
 @Injectable({
   providedIn: 'root'
@@ -34,28 +34,28 @@ export class UserService {
   }
   
   public getUserByUserName(userName: string): Observable<User>{
-    return this.httpClient.get<User>(USER_API + '/search?userName=' + userName).pipe(
+    return this.httpClient.get<User>(USER_API + '/users/search?userName=' + userName).pipe(
         retry(1), catchError(this.handleError<User>('getUserByUserName', {} as User))
     );
   }
 
   public getUserById(userId: string): Observable<User>{
-     return this.httpClient.get<User>(USER_API + '/search?userId=' + userId).pipe(
+     return this.httpClient.get<User>(USER_API + '/users/search?userId=' + userId).pipe(
          retry(1), catchError(this.handleError<User>('getUserById', {} as User))
      );
   }
 
   public getAllUsers(): Observable<User[]>{
-    return this.httpClient.get<User[]>(USER_API)
+    return this.httpClient.get<User[]>(USER_API + '/users')
     .pipe(catchError(this.handleError('getAllUsers', [])));
   }
 
   public updateUser(user: User): Observable<string>{
-      return this.httpClient.put<string>(USER_API + '/update' + user, user);
+      return this.httpClient.put<string>(USER_API + '/users/update' + user, user);
   }
 
   public updateUserField(userId: string, userField: string, replaceValue:string ): Observable<string>{
-    return this.httpClient.put<string>(USER_API + 'update?userId=' + userId
+    return this.httpClient.put<string>(USER_API + '/users/update?userId=' + userId
                                         + '?userField='+ userField
                                         + '?replaceValue=' + replaceValue, replaceValue);
   }

@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { D1Service } from '../models/d1service';
 
 
-const SERVICES_API = 'http://localhost:8081/servicesapi';
+const SERVICES_API = '/servicesapi';
 
 const httpOptions = {
 	headers: new HttpHeaders({'Content-Type': 'application/json',

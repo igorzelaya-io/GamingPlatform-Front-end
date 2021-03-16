@@ -14,12 +14,17 @@
 		"secure":"false",
 		"logLevel":"debug"
 	},
-	"/userteamapi":{
+	"/userteamapi/userTeams":{
 		"target":"http://localhost:8080",
 		"secure":"false",
 		"logLevel":"debug"
 	},
-	"usertournamentsapi":{
+	"/userteamapi/userTeamRequests":{
+		"target":"http://localhost:8081",
+		"secure":"false",
+		"logLevel":"debug"
+	},
+	"usertournamentsapi/userTournaments":{
 		"target":"http://localhost:8080",
 		"secure":"false",
 		"logLevel":"debug"
@@ -35,22 +40,27 @@
 		"secure":"false",
 		"logLevel":"debug"
 	},
-	"/teamsapi":{
+	"/teamsapi/teams":{
 		"target":"http://localhost:8081",
 		"secure":"false",
 		"logLevel":"debug"
 	},
-	"/teamtournamentsapi":{
+	"/teamtournamentsapi/teamTournaments":{
 		"target":"http://localhost:8081",
 		"secure":"false",
 		"logLevel":"debug"
 	},
-	"/tournamentsapi":{
+	"/tournamentsapi/tournaments":{
 		"target":"http://localhost:8081",
 		"secure":"false",
 		"logLevel":"debug"
 	},
 	"/upcomingtournamentsapi":{
+		"target":"http://localhost:8081",
+		"secure":"false",
+		"logLevel":"debug"
+	},
+	"/eventimagesapi":{
 		"target":"http://localhost:8081",
 		"secure":"false",
 		"logLevel":"debug"

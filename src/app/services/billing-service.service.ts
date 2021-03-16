@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { D1Transaction } from '../models/d1transaction';
 
-const BILLING_API = 'http://localhost:8080/paypal';
+const BILLING_API = '/billing';
 
 @Injectable({
   providedIn: 'root'

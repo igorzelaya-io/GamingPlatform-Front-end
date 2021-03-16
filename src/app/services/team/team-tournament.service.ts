@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { Tournament } from '../../models/tournament/tournament';
 import { Team } from '../../models/team';
 
-const TEAM_TOURNAMENT_API = 'http://localhost:8081/teamtournamentsapi';
+const TEAM_TOURNAMENT_API = '/teamtournamentsapi/teamTournaments';
 
 
 @Injectable({
@@ -30,22 +30,22 @@ export class TeamTournamentService {
   }
 
   public getAllTournamentsFromTeam(teamId: string): Observable<Array<Tournament>>{
-	return this.httpClient.get<Array<Tournament>>(TEAM_TOURNAMENT_API + '/teamTournaments?teamId='+ teamId)
+	return this.httpClient.get<Array<Tournament>>(TEAM_TOURNAMENT_API + '?teamId='+ teamId)
 	.pipe(retry(1), catchError(this.handleError('getAllTournamentsFromTeam', [] as Array<Tournament>)));
   }
 
   public getTournamentFromTeamById(teamId: string , tournamentId: string){
-	return this.httpClient.get<Tournament>(TEAM_TOURNAMENT_API + '/teamTournaments/search?teamId=' + teamId +'?tournamenId='+ tournamentId)
+	return this.httpClient.get<Tournament>(TEAM_TOURNAMENT_API + '/search?teamId=' + teamId +'?tournamenId='+ tournamentId)
 	.pipe(retry(1), catchError(this.handleError('getTournamentFromTeamById', {} as Tournament)));
   }
 
   public addTeamToTournament(team: Team, tournament: Tournament): Observable<string>{
-    return this.httpClient.post<string>(TEAM_TOURNAMENT_API + '/teamTournaments/add', {team, tournament})
+    return this.httpClient.post<string>(TEAM_TOURNAMENT_API + '/add', {team, tournament})
     .pipe(catchError(this.handleError('addTeamToTournament', {} as string)));
   }
 
   public removeTeamFromTournament(team: Team, tournament: Tournament): Observable<string> {
-     return this.httpClient.request<string>('DELETE', TEAM_TOURNAMENT_API + '/teamTournaments/remove', {body: {team, tournament}}) 
+     return this.httpClient.request<string>('DELETE', TEAM_TOURNAMENT_API + '/remove', {body: {team, tournament}}) 
     .pipe(catchError(this.handleError('removeTeamFromTournament', {} as string)));
   }
 

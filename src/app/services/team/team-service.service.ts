@@ -9,7 +9,7 @@ import { User } from 'src/app/models/user/user';
 import { TeamCreationRequest } from 'src/app/models/teamcreationrequest';
 
 
-const TEAM_API = 'http://localhost:8081/teamsapi/teams';
+const TEAM_API = '/teamsapi/teams';
 
 @Injectable({
   providedIn: 'root'

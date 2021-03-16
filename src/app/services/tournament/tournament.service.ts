@@ -6,7 +6,7 @@ import {retry, catchError } from 'rxjs/operators';
 import { Team } from '../../models/team';
 import { TournamentCreationRequest } from '../../models/tournament/tournament-creation-request';
 
-const TOURNAMENTS_API = 'http://localhost:8081/tournamentsapi/tournaments';
+const TOURNAMENTS_API = '/tournamentsapi/tournaments';
 
 @Injectable({
   providedIn: 'root'

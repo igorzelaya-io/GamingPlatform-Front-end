@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Tournament } from '../models/tournament/tournament';
 import { catchError, retry } from 'rxjs/operators';
 
-const USER_TOURNAMENTS_API = 'http://localhost:8080/usertournamentsapi';
+const USER_TOURNAMENTS_API = '/usertournamentsapi/userTournaments';
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +28,7 @@ export class UserTournamentService {
   }
 
   public getAllTournamentsFromUser(userId: string): Observable<Array<Tournament>>{
-	return this.httpClient.get<Array<Tournament>>(USER_TOURNAMENTS_API + '/userTournaments?userId=' + userId).pipe(
+	return this.httpClient.get<Array<Tournament>>(USER_TOURNAMENTS_API + '?userId=' + userId).pipe(
 		retry(1), catchError(this.handleError('getAllTournamentsFromUser', [] as Array<Tournament>)));
   }
 

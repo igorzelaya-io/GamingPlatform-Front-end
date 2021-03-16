@@ -6,7 +6,7 @@ import { UserLoginRequest } from '../models/user/userloginrequest';
 import { MessageResponse} from '../models/messageresponse';
 import { JwtResponse } from '../models/jwtresponse';
 
-const AUTH_API_ENDPOINT = 'http://localhost:8080/auth';
+const AUTH_API_ENDPOINT = '/auth';
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})

@@ -1,7 +1,68 @@
 {
 	"/billing":{
-		"target":"http://d1-gaming-user-backend-service.com",
+		"target":"http://d1-gaming-user-backend.com",
 		"secure":"false",
 		"logLevel":"info"
+	},
+	"/auth":{
+		"target":"http://d1-gaming-user-backend.com",
+		"secure":"false",
+		"logLevel":"debug"
+	},
+	"/userapi":{
+		"target":"http://d1-gaming-user-backend.com",
+		"secure":"false",
+		"logLevel":"debug"
+	},
+	"/userteamapi/userTeams":{
+		"target":"http://d1-gaming-user-backend.com",
+		"secure":"false",
+		"logLevel":"debug"
+	},
+	"/userteamapi/userTeamRequests":{
+		"target":"http://d1-gaming-user-backend.com",
+		"secure":"false",
+		"logLevel":"debug"
+	},
+	"usertournamentsapi/userTournaments":{
+		"target":"http://d1-gaming-user-backend.com",
+		"secure":"false",
+		"logLevel":"debug"
+	},
+	"/challengesapi":{
+		"target":"http://d1-gaming-event-backend.com",
+		"secure":"false",
+		"logLevel":"debug"
+	},
+	
+	"/servicesapi":{
+		"target":"http://d1-gaming-event-backend.com",
+		"secure":"false",
+		"logLevel":"debug"
+	},
+	"/teamsapi/teams":{
+		"target":"http://d1-gaming-event-backend.com",
+		"secure":"false",
+		"logLevel":"debug"
+	},
+	"/teamtournamentsapi/teamTournaments":{
+		"target":"http://d1-gaming-event-backend.com",
+		"secure":"false",
+		"logLevel":"debug"
+	},
+	"/tournamentsapi/tournaments":{
+		"target":"http://d1-gaming-event-backend.com",
+		"secure":"false",
+		"logLevel":"debug"
+	},
+	"/upcomingtournamentsapi":{
+		"target":"http://d1-gaming-event-backend.com",
+		"secure":"false",
+		"logLevel":"debug"
+	},
+	"/eventimagesapi":{
+		"target":"http://d1-gaming-event-backend.com",
+		"secure":"false",
+		"logLevel":"debug"
 	}
 }
