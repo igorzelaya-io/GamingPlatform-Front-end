@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { Team } from '../models/team';
 import { catchError } from 'rxjs/internal/operators';
-import { TeamInviteRequest } from '../models/teamInviteRequest';
+import { TeamInviteRequest } from '../models/teaminviterequest';
 
 const USER_TEAMS_API = '/userteamapi/userTeams';
 const USER_TEAMS_REQUEST_API = '/userteamapi/userTeamRequests';

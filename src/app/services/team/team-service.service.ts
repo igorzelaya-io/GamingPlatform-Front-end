@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Team } from 'src/app/models/team';
 import { Observable, of, pipe  } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
-import { TeamInviteRequest } from 'src/app/models/teamInviteRequest';
+import { TeamInviteRequest } from 'src/app/models/teaminviterequest';
 import { ImageModel } from '../../models/imagemodel';
 import { User } from 'src/app/models/user/user';
 import { TeamCreationRequest } from 'src/app/models/teamcreationrequest';

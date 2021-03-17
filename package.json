@@ -24,6 +24,7 @@
     "@angular/router": "~11.1.0",
     "@syncfusion/ej2-angular-inputs": "^18.4.33",
     "bootstrap": "^4.5.0",
+    "cropperjs": "^1.5.11",
     "hammerjs": "^2.0.8",
     "jquery": "^3.5.1",
     "ngx-owl-carousel": "^2.0.7",

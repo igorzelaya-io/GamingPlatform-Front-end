@@ -7,7 +7,7 @@ import { Team } from '../../../models/team';
 import { User } from '../../../models/user/user';
 import { UserService } from 'src/app/services/user.service';
 import { TokenStorageService } from 'src/app/services/token-storage.service';
-import { TeamInviteRequest } from 'src/app/models/teamInviteRequest';
+import { TeamInviteRequest } from 'src/app/models/teaminviterequest';
 import { TeamCreationRequest } from '../../../models/teamcreationrequest';
 import { Router } from '@angular/router';
 

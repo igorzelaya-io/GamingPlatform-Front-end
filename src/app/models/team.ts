@@ -2,7 +2,7 @@ import { User } from './user/user';
 import { Challenge} from './challenge';
 import { Tournament } from './tournament/tournament';
 import { ImageModel } from './imagemodel';
-import { TeamInviteRequest } from './teamInviteRequest'; 
+import { TeamInviteRequest } from './teaminviterequest'; 
 
 export class Team {
     teamId: string;

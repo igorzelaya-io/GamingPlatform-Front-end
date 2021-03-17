@@ -14,5 +14,5 @@ FROM nginx:1.18-alpine
 
 COPY --from=build-stage /app/dist/out/ /var/www/d1gaming
 
-COPY ./nginx.conf /etc/nginx/conf.d/default/conf
+COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
