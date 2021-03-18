@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { User } from '../models/user/user';
 import {retry, catchError } from 'rxjs/operators';
 import { ImageModel } from '../models/imagemodel';
+import { MessageResponse } from '../models/messageresponse';
 
 
 const USER_API = '/userapi';
@@ -50,22 +51,22 @@ export class UserService {
     .pipe(catchError(this.handleError('getAllUsers', [])));
   }
 
-  public updateUser(user: User): Observable<string>{
-      return this.httpClient.put<string>(USER_API + '/users/update' + user, user);
+  public updateUser(user: User): Observable<MessageResponse>{
+      return this.httpClient.put<MessageResponse>(USER_API + '/users/update' + user, user);
   }
 
-  public updateUserField(userId: string, userField: string, replaceValue:string ): Observable<string>{
-    return this.httpClient.put<string>(USER_API + '/users/update?userId=' + userId
+  public updateUserField(userId: string, userField: string, replaceValue:string ): Observable<MessageResponse>{
+    return this.httpClient.put<MessageResponse>(USER_API + '/users/update?userId=' + userId
                                         + '?userField='+ userField
                                         + '?replaceValue=' + replaceValue, replaceValue);
   }
 
-  public deleteUser(userId: string):Observable<string>{
-    return this.httpClient.delete<string>(USER_API + '/delete?userId=' + userId);
+  public deleteUser(userId: string):Observable<MessageResponse>{
+    return this.httpClient.delete<MessageResponse>(USER_API + '/delete?userId=' + userId);
   }
 
-  public deleteUserField(userId: string, userField: string): Observable<string>{
-    return this.httpClient.delete<string>(USER_API + '/delete?userId=' + userId
+  public deleteUserField(userId: string, userField: string): Observable<MessageResponse>{
+    return this.httpClient.delete<MessageResponse>(USER_API + '/delete?userId=' + userId
                                           + '?userField=' + userField);
   }
 

@@ -5,6 +5,7 @@ import { Tournament } from '../../models/tournament/tournament';
 import {retry, catchError } from 'rxjs/operators';
 import { Team } from '../../models/team';
 import { TournamentCreationRequest } from '../../models/tournament/tournament-creation-request';
+import { MessageResponse } from 'src/app/models/messageresponse';
 
 const TOURNAMENTS_API = '/tournamentsapi/tournaments';
 
@@ -39,7 +40,7 @@ export class TournamentService {
 	.pipe(retry(1), catchError(this.handleError('getAllTournamentsAfterOneWeek', [])));
   }
 
-  public getAllTournamentsNow(){
+  public getAllTournamentsNow(): Observable<Tournament[]>{
 	return this.httpClient.get<Tournament[]>(TOURNAMENTS_API + '/now')
 	.pipe(retry(1), catchError(this.handleError('getAllTournamentsNow', [])));	
   }
@@ -59,28 +60,28 @@ export class TournamentService {
     .pipe(retry(1), catchError(this.handleError('getAllTeamsOnTournament', [])));
   }
 
-  public postTournament(tournament: TournamentCreationRequest, jwtToken: string):Observable<string>{
-    return this.httpClient.post<string>(TOURNAMENTS_API + '/save', tournament,
+  public postTournament(tournament: TournamentCreationRequest, jwtToken: string):Observable<MessageResponse>{
+    return this.httpClient.post<MessageResponse>(TOURNAMENTS_API + '/save', tournament,
 	{headers: new HttpHeaders( { 'Authorization': 'Bearer ' + jwtToken})})
-    .pipe(catchError(this.handleError('postTournament', {} as string)));
+    .pipe(catchError(this.handleError('postTournament', {} as MessageResponse)));
   }
 
-  public deleteTournament(tournamentId: string, jwtToken:string): Observable<string>{
-    return this.httpClient.delete<string>(TOURNAMENTS_API + '/delete?tournamentId=' + tournamentId,
+  public deleteTournament(tournamentId: string, jwtToken:string): Observable<MessageResponse>{
+    return this.httpClient.delete<MessageResponse>(TOURNAMENTS_API + '/delete?tournamentId=' + tournamentId,
 	{headers: new HttpHeaders( { 'Authorization': 'Bearer ' + jwtToken})})
-    .pipe(catchError(this.handleError('deleteTournament', {} as string)));
+    .pipe(catchError(this.handleError('deleteTournament', {} as MessageResponse)));
   }
 
-  public deleteTournamentField(tournamentId: string, tournamentField: string, jwtToken: string){
-    return this.httpClient.delete<string>(TOURNAMENTS_API + '/delete?tournamentId=' + tournamentId
+  public deleteTournamentField(tournamentId: string, tournamentField: string, jwtToken: string): Observable<MessageResponse>{
+    return this.httpClient.delete<MessageResponse>(TOURNAMENTS_API + '/delete?tournamentId=' + tournamentId
                                                             + '?tournamentField=' + tournamentField,
 	{headers: new HttpHeaders( { 'Authorization': 'Bearer ' + jwtToken})})
-    .pipe(catchError(this.handleError('deleteTournamentField', {} as string)));
+    .pipe(catchError(this.handleError('deleteTournamentField', {} as MessageResponse)));
   }
 
-  public updateTournament(tournament: Tournament, jwtToken: string): Observable<string>{
-    return this.httpClient.put<string>(TOURNAMENTS_API + '/update', tournament,
+  public updateTournament(tournament: Tournament, jwtToken: string): Observable<MessageResponse>{
+    return this.httpClient.put<MessageResponse>(TOURNAMENTS_API + '/update', tournament,
 	{headers: new HttpHeaders( { 'Authorization': 'Bearer ' + jwtToken})})
-    .pipe(catchError(this.handleError('updateTournament', {} as string)));
+    .pipe(catchError(this.handleError('updateTournament', {} as MessageResponse)));
   }
 }

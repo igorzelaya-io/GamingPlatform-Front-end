@@ -31,7 +31,7 @@
 	
 	            <div class="popular-leagues-content">
 	                <div class="content">
-	                    <h3><a routerLink="/single-tournament">{{tournament.tournamentName}}</a></h3>
+	                    <h3><a (click)="viewTournament(tournament)">{{tournament.tournamentName}}</a></h3>
 	                    <p>{{tournament.tournamentDescription}}</p>
 	                    <ul class="info">
 	                        <li><i class="flaticon-coin"></i>${{tournament.tournamentCashPrice}}</li>

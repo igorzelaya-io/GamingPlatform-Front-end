@@ -9,6 +9,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TournamentService } from '../../../services/tournament/tournament.service';
 import { TournamentCreationRequest } from 'src/app/models/tournament/tournament-creation-request';
 import { TokenStorageService } from 'src/app/services/token-storage.service';
+import { MessageResponse } from 'src/app/models/messageresponse';
 
 @Component({
   selector: 'app-tournament-creation-config-page',
@@ -106,8 +107,8 @@ export class TournamentCreationConfigPageComponent implements OnInit {
 		this.tournamentCreation.tournamentToBeCreated = this.tournament;
 		this.tournamentCreation.tournamentUserModerator = this.tournament.tournamentModerator;
 		this.tournamentService.postTournament(this.tournamentCreation, this.tokenService.getToken())
-		.subscribe((data: string) => {
-			this.message = data;
+		.subscribe((data: MessageResponse) => {
+			this.message = data.message;
 			console.log(data);
 			this.isSuccessfulTournamentCreation = true;
 		},

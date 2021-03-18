@@ -10,6 +10,7 @@ import { TokenStorageService } from 'src/app/services/token-storage.service';
 import { TeamInviteRequest } from 'src/app/models/teaminviterequest';
 import { TeamCreationRequest } from '../../../models/teamcreationrequest';
 import { Router } from '@angular/router';
+import { MessageResponse } from 'src/app/models/messageresponse';
 
 @Component({
   selector: 'app-team-creation-page',
@@ -101,8 +102,8 @@ export class TeamCreationPageComponent implements OnInit {
    //   this.postTeamWithImage();
    // }
     this.teamService.postTeam(this.teamCreationRequest, this.tokenService.getToken())
-	  .subscribe((response: string) => {
-      console.log(response);
+	  .subscribe((response: MessageResponse) => {
+      console.log(response.message);
 	  this.isClicked = true;
       this.isSuccessfulRegister = true;
 	},
@@ -127,7 +128,7 @@ export class TeamCreationPageComponent implements OnInit {
 
   public sendTeamInviteToUser(userToInvite: TeamInviteRequest){
 	this.teamService.sendTeamInvite(userToInvite, this.tokenService.getToken())
-	.subscribe((data: string) => {
+	.subscribe((data: MessageResponse) => {
 		console.log(data);
 	},
 	err => {
@@ -188,7 +189,7 @@ export class TeamCreationPageComponent implements OnInit {
     const uploadImageData = new FormData();
     uploadImageData.append('imageFile', this.selectedImageFile, this.selectedImageFile.name);
     this.teamService.postTeamWithImage(this.teamCreationRequest, this.tokenService.getToken())
-    .subscribe((resp: string) => {
+    .subscribe((resp: MessageResponse) => {
       console.log(resp);
     },
     err => {

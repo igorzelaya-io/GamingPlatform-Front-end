@@ -7,6 +7,7 @@ import { TeamInviteRequest } from 'src/app/models/teaminviterequest';
 import { ImageModel } from '../../models/imagemodel';
 import { User } from 'src/app/models/user/user';
 import { TeamCreationRequest } from 'src/app/models/teamcreationrequest';
+import { MessageResponse } from 'src/app/models/messageresponse';
 
 
 const TEAM_API = '/teamsapi/teams';
@@ -52,16 +53,16 @@ export class TeamService {
 	.pipe(retry(1), catchError(this.handleError('getAllUsersInTeam', [])));
   }
 
-  public postTeam(team: TeamCreationRequest, jwtToken: string): Observable<string>{
-    return this.httpClient.post<string>(TEAM_API + '/create', team, 
+  public postTeam(team: TeamCreationRequest, jwtToken: string): Observable<MessageResponse>{
+    return this.httpClient.post<MessageResponse>(TEAM_API + '/create', team, 
 	{ headers: new HttpHeaders( {'Authorization' : 'Bearer ' + jwtToken} )})
-	.pipe(catchError(this.handleError('postTeam', {} as string)));
+	.pipe(catchError(this.handleError('postTeam', {} as MessageResponse)));
   }
 
-  public postTeamWithImage(team: TeamCreationRequest, jwtToken: string): Observable<string>{
-    return this.httpClient.post<string>(TEAM_API + '/create', team,
+  public postTeamWithImage(team: TeamCreationRequest, jwtToken: string): Observable<MessageResponse>{
+    return this.httpClient.post<MessageResponse>(TEAM_API + '/create', team,
 	{headers: new HttpHeaders( {'Authorization': 'Bearer ' + jwtToken})})
-    .pipe(catchError(this.handleError('postTeamWithImage', {} as string)));
+    .pipe(catchError(this.handleError('postTeamWithImage', {} as MessageResponse)));
   }
 
   public addImageToTeam(team: Team, image: ImageModel): Observable<void>{
@@ -71,40 +72,40 @@ export class TeamService {
     return;
   }
 
-  public sendTeamInvite(teamInvite: TeamInviteRequest, jwtToken: string): Observable<string>{
-    return this.httpClient.post<string>(TEAM_API + '/invite', teamInvite,
+  public sendTeamInvite(teamInvite: TeamInviteRequest, jwtToken: string): Observable<MessageResponse>{
+    return this.httpClient.post<MessageResponse>(TEAM_API + '/invite', teamInvite,
 	{headers: new HttpHeaders({'Authorization' : 'Bearer ' + jwtToken })})
-    .pipe(catchError(this.handleError('sendTeamInvite', {} as string)));
+    .pipe(catchError(this.handleError('sendTeamInvite', {} as MessageResponse)));
   }
 
-  public deleteTeam(teamId: string, jwtToken: string): Observable<string>{
-    return this.httpClient.delete<string>(TEAM_API + '/delete?teamId=' + teamId,
+  public deleteTeam(teamId: string, jwtToken: string): Observable<MessageResponse>{
+    return this.httpClient.delete<MessageResponse>(TEAM_API + '/delete?teamId=' + teamId,
 	{headers: new HttpHeaders({'Authorization' : 'Bearer ' + jwtToken })})
-    .pipe(catchError(this.handleError('deleteTeam', {} as string)));
+    .pipe(catchError(this.handleError('deleteTeam', {} as MessageResponse)));
   }
 
-  public banTeam(teamId: string, jwtToken: string): Observable<string>{
-    return this.httpClient.delete<string>(TEAM_API + '/ban?teamId=' + teamId,
+  public banTeam(teamId: string, jwtToken: string): Observable<MessageResponse>{
+    return this.httpClient.delete<MessageResponse>(TEAM_API + '/ban?teamId=' + teamId,
 	{headers: new HttpHeaders({'Authorization' : 'Bearer ' + jwtToken })})
-    .pipe(catchError(this.handleError('banTeam',  {} as string)));
+    .pipe(catchError(this.handleError('banTeam',  {} as MessageResponse)));
   }
 
-  public deleteTeamField(teamId: string, teamField: string, jwtToken: string): Observable<string>{
-    return this.httpClient.delete<string>(TEAM_API + '/update?teamId=' + teamId + '?teamField=' + teamField,
+  public deleteTeamField(teamId: string, teamField: string, jwtToken: string): Observable<MessageResponse>{
+    return this.httpClient.delete<MessageResponse>(TEAM_API + '/update?teamId=' + teamId + '?teamField=' + teamField,
 	{headers: new HttpHeaders({'Authorization' : 'Bearer ' + jwtToken })})
-    .pipe(catchError(this.handleError('deleteTeamField', {} as string)));
+    .pipe(catchError(this.handleError('deleteTeamField', {} as MessageResponse)));
   }
 
-  public updateTeam(team: Team, jwtToken: string): Observable<string>{
-    return this.httpClient.put<string>(TEAM_API, team,
+  public updateTeam(team: Team, jwtToken: string): Observable<MessageResponse>{
+    return this.httpClient.put<MessageResponse>(TEAM_API, team,
 	{headers: new HttpHeaders({'Authorization' : 'Bearer ' + jwtToken })})
-    .pipe(catchError(this.handleError('updateTeam', {} as string)));
+    .pipe(catchError(this.handleError('updateTeam', {} as MessageResponse)));
   }
 
-  public updateTeamField(teamId: string, teamField: string, replaceValue: string, jwtToken: string): Observable<string>{
-    return this.httpClient.put<string>(TEAM_API + '/update?teamId=' + teamId + 'teamField=' + teamField + '?replaceValue=' + replaceValue,
+  public updateTeamField(teamId: string, teamField: string, replaceValue: string, jwtToken: string): Observable<MessageResponse>{
+    return this.httpClient.put<MessageResponse>(TEAM_API + '/update?teamId=' + teamId + 'teamField=' + teamField + '?replaceValue=' + replaceValue,
      {teamId, teamField, replaceValue}, {headers: new HttpHeaders({'Authorization' : 'Bearer ' + jwtToken })})
-    .pipe(catchError(this.handleError('updateTeamField', {} as string)));
+    .pipe(catchError(this.handleError('updateTeamField', {} as MessageResponse)));
   }
 
 }
