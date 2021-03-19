@@ -11,7 +11,7 @@ spec:
     metadata:
       labels:
         app: d1-gaming-frontend
-        version: 1.0.2
+        version: 1.0.3
     spec:
       volumes: 
         - name: google-cloud-key
@@ -19,7 +19,7 @@ spec:
             secretName: pubsub-key
       containers:
         - name: d1-gaming-frontend-container
-          image: gcr.io/d1gamingapp/d1-gaming-frontend:v1.0.2
+          image: gcr.io/d1gamingapp/d1-gaming-frontend:v1.0.3
           volumeMounts: 
             - name: google-cloud-key
               mountPath: /var/secrets/google

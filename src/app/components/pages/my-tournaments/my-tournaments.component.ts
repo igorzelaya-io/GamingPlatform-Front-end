@@ -30,7 +30,7 @@ export class MyTournamentsComponent implements OnInit {
 
   getAllTournamentsFromUser(){
 	this.userTournamentService.getAllTournamentsFromUser(this.user.userId).subscribe(
-		(data: Array<Tournament>) => {
+		(data: Tournament[]) => {
 			console.log(data);
 			this.userTournaments = data;
 		},
@@ -40,7 +40,7 @@ export class MyTournamentsComponent implements OnInit {
   }
 
   passTournamentToTournamentDetails(tournament: Tournament){
-		this.router.navigate(['/tournament-details']);
+	this.router.navigate(['/tournament-details'],{queryParams: {tournament : JSON.stringify(tournament)}} );
   }
 
 }
