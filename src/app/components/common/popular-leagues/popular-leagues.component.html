@@ -2,7 +2,7 @@
     <div class="section-title">
         <span class="sub-title">TOURNAMENTS</span>
         <h2>Popular Tournaments</h2>
-        <button (click)="isAuthenticatedButton()">Create Tournament</button>
+        <button *ngIf="isAdministrator" (click)="isAuthenticatedButton()">Create Tournament</button>
     </div>
 
     <div *ngIf="!allTournaments || isEmptyTournaments" style="vertical-align: middle">

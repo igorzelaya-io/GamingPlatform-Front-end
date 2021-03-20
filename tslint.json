@@ -35,10 +35,7 @@
       "rxjs/Rx"
     ],
     "import-spacing": true,
-    "indent": {
-      "options": [
-        "spaces"
-      ]
+    "indent": false
     },
     "interface-name": false,
     "max-classes-per-file": false,

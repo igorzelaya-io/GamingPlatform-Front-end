@@ -18,6 +18,8 @@ export class PopularLeaguesComponent implements OnInit {
 
   isAuthenticated = false;
 
+  public isAdministrator = false;
+
   isEmptyTournaments = true;
   allTournaments: Tournament[];
 
@@ -46,11 +48,16 @@ export class PopularLeaguesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if(this.tokenService.loggedIn()){
+	
+	if(this.tokenService.loggedIn()){
+		if(this.tokenService.getUser().userRoles.includes('"authority":"ADMIN"')){
+			this.isAdministrator = true;	
+		}
 		if(this.tokenService.isTokenExpired()){
 			this.isAuthenticated = false;
 			this.tokenService.signOut();
 			this.getAllTournamentsNow();
+
 			return;
 		}
 		this.isAuthenticated = true;		
