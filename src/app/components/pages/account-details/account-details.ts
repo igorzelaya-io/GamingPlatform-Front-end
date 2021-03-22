@@ -39,7 +39,7 @@ export class AccountDetailsComponent implements OnInit {
   }
 
   calculateUserWinLossRatio(){
-    
+    //TODO
   }
 
 

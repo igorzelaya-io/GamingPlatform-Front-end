@@ -3,6 +3,11 @@ import { D1Service } from '../../../models/d1service';
 import { CartService } from 'src/app/services/cart.service';
 import { BillingServiceService } from '../../../services/billing-service.service';
 import { TokenStorageService } from 'src/app/services/token-storage.service';
+import { Router, ActivatedRoute } from '@angular/router';
+import { SliderTickEventArgs } from '@syncfusion/ej2-angular-inputs';
+import { UserService } from 'src/app/services/user.service';
+import { UserTokenRequest } from 'src/app/models/usertokenrequest';
+import { MessageResponse } from 'src/app/models/messageresponse';
 
 @Component({
   selector: 'app-cart-page',
@@ -21,11 +26,18 @@ export class CartPageComponent implements OnInit {
 
   totalAmountOnServices: number;
 
+  paymentId: string = '';
+  payerId: string = '';
+
+  isSucessfulPayment = false;
   isEmptyCart: boolean = true;
 
   constructor(private cartService: CartService,
 			  private billingService: BillingServiceService,
-			  private tokenService: TokenStorageService) {
+			  private tokenService: TokenStorageService,
+			  private router: Router,
+			  private route: ActivatedRoute,
+			  private userService: UserService) {
   	this.servicesOnCart = [];
 	this.subTotalAmountOnServices = 0;
 	this.serviceFeeAmountOnServices = 0;
@@ -98,7 +110,48 @@ export class CartPageComponent implements OnInit {
   }
 
   makePayment(){
-	this.billingService.makePayment(this.totalAmountOnServices.toString(), this.tokenService.getToken());	
+	if(this.cartService.getAllServicesFromCart().length !== 0){
+		return this.billingService.makePayment(this.totalAmountOnServices.toString(), this.tokenService.getToken())
+		.subscribe((data: Map<string, object>) => {
+			const mapValues = Object.values(data);
+			if(mapValues.find(value => value === 'success') !== undefined){
+				this.isSucessfulPayment = true;
+				window.location.href= mapValues[0];
+				this.route.queryParams.subscribe(params => {
+					this.billingService.confirmPayment(params['paymentId'], params['[payerId'], this.tokenService.getToken())
+					.subscribe((data: any) => {
+						if(data.get("status") as string === 'success'){
+							this.isSucessfulPayment = true;
+							return;
+						}		
+					});
+				});
+				this.isSucessfulPayment = false;
+			}
+		},
+		err => console.error(err),
+		() => {
+			if(this.isSucessfulPayment){
+				const d1services: D1Service[] = this.cartService.getAllServicesFromCart();
+				d1services.forEach(d1service => {
+					let userTokenRequest = new UserTokenRequest();
+					userTokenRequest.service = d1service;
+					userTokenRequest.user = this.tokenService.getUser();
+					this.addTokensToUser(userTokenRequest);
+				});
+			}
+		});	
+	}
+}
+
+  addTokensToUser(userTokenRequest: UserTokenRequest){
+	return this.userService.updateUserTokens(userTokenRequest, this.tokenService.getToken())
+	.subscribe((data: MessageResponse) => {
+		console.log(data.message);
+	},
+	err => {
+		console.error(err.error.message);
+	});
   }
 		
 }
