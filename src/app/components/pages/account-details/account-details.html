@@ -13,42 +13,42 @@
 <section class="player-details-area ptb-100">
     <div class="container">
         <div class="player-details-desc">
-            <span class="sub-title">DOTA 01</span>
+            <span class="sub-title">{{user.userRealName}}</span>
             <h3>About the player</h3>
-            <p>Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget.</p>
+            <p>...</p>
 
             <ul class="player-meta">
                 <li>
                     <div class="icon">
                         <i class="flaticon-3d"></i>
                     </div>
-                    TRN RATING
-                    <span>3204.5</span>
+                    Win/Loss Ratio
+                    <span>0</span>
                 </li>
 
                 <li>
                     <div class="icon">
                         <i class="flaticon-network"></i>
                     </div>
-                    WINS / 1201 MATCHES
-                    <span>617</span>
+                    WINS
+                    <span>0</span>
                 </li>
-
+    
                 <li>
                     <div class="icon">
                         <i class="flaticon-fall"></i>
                     </div>
-                    FRAGS / 2401 MATCHES
-                    <span>00</span>
+                    Losses
+                    <span>0</span>
                 </li>
 
-                <li>
+                <!-- <li>
                     <div class="icon">
                         <i class="flaticon-game-computer"></i>
                     </div>
                     WIN RATIO
                     <span>74.8%</span>
-                </li>
+                </li> -->
 
                 <li>
                     <div class="icon">
@@ -62,9 +62,10 @@
                         <a href="#" target="_blank"><i class="bx bxl-youtube"></i></a>
                     </div>
                 </li>
+            
             </ul>
 
-            <div class="streams-list">
+            <!-- <div class="streams-list">
                 <h3>STREAMS</h3>
 
                 <div class="row">
@@ -119,12 +120,36 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <!-- <div class="partner-list">
                 <app-partner></app-partner>
             </div> -->
         </div>
+        
+    </div>
+    <div class="container" style="margin-top: 20px; vertical-align: middle;">
+        <div class="row">
+            <div class="col-sm">
+
+                <div class="text">
+                    D1Points
+                </div>
+                <div>
+                    <img src="assets/d1images/D1TokenBag.png">
+                    <span style="font-size: 30px;">{{user.userTokens}}</span>
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="text">
+                    Cash
+                 </div>
+                <div>
+                    <img src="assets/d1images/MoneyBag.png">
+                    <span style="font-size: 30px;">{{user.userCash}}</span>
+                </div>
+            </div>
+        </div>    
     </div>
 </section>
 

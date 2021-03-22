@@ -1,5 +1,13 @@
 @import "../../common/trending-streams/trending-streams.component.scss";
 
+.text{
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #c2c0c0;
+    padding-left: 62px;
+    color: var(--mainColor);
+    size:16px;
+}
 .player-details-desc {
     .sub-title {
         display: block;

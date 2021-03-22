@@ -4,6 +4,7 @@ import { User } from '../../../models/user/user';
 import { UserService } from 'src/app/services/user.service';
 import { Router } from '@angular/router';
 import { Team } from '../../../models/team';
+import { MessageResponse } from 'src/app/models/messageresponse';
 
 @Component({
   selector: 'app-account-details',
@@ -17,24 +18,28 @@ export class AccountDetailsComponent implements OnInit {
   userTeams: Array<Team>;
 
   constructor(private tokenService: TokenStorageService,
-              private userService: UserService,
-			  private router: Router) {
+              private userService: UserService) {
   		this.user = new User();
 		this.userTeams = new Array<Team>();	
   }
   
 
   ngOnInit(): void {
-	this.user = this.tokenService.getUser();
+    this.user = this.tokenService.getUser();
+    
   }
   
   deleteUser(){
-    this.userService.deleteUser(this.user.userId).subscribe(
-      response => {
+    this.userService.deleteUser(this.user.userId, this.tokenService.getToken())
+    .subscribe((response:MessageResponse) => {
         console.log(response);
       },
-      err => console.log(err)
+      err => console.log(err.error.message)
     );
+  }
+
+  calculateUserWinLossRatio(){
+    
   }
 
 
