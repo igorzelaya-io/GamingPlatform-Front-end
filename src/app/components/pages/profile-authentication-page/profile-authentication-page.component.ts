@@ -41,16 +41,16 @@ export class ProfileAuthenticationPageComponent implements OnInit {
   
   public onSubmit(){
     this.userToLogin.userName = this.txtUserName.value;
-	this.userToLogin.userPassword = this.txtPassword.value;
-	this.authenticationService.login(this.userToLogin).subscribe(
+  	this.userToLogin.userPassword = this.txtPassword.value;
+	  this.authenticationService.login(this.userToLogin).subscribe(
       (data: JwtResponse) => {
         if (data != null){
-		  this.tokenService.saveToken(data.token);				
-		  this.tokenService.saveUserId(data.id);		            
+		      this.tokenService.saveToken(data.token);				
+		      this.tokenService.saveUserId(data.id);		            
           console.log(data);
-		  this.isLoggedIn = true;
-		  return;
-		}
+		     this.isLoggedIn = true;
+		       return;
+		    }
         this.isLoginFailed = true;
       },
       err => {

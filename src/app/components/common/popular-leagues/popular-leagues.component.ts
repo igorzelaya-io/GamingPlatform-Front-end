@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 
 import { TournamentService } from '../../../services/tournament/tournament.service';
 import { Tournament } from 'src/app/models/tournament/tournament';
+import { Role } from 'src/app/models/role';
 
 const monthNames = [ "January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December" ];
@@ -18,7 +19,7 @@ export class PopularLeaguesComponent implements OnInit {
 
   isAuthenticated = false;
 
-  public isAdministrator = false;
+  isAdmin = false;
 
   isEmptyTournaments = true;
   allTournaments: Tournament[];
@@ -50,9 +51,7 @@ export class PopularLeaguesComponent implements OnInit {
   ngOnInit(): void {
 	
 	if(this.tokenService.loggedIn()){
-		if(this.tokenService.getUser().userRoles.includes('"authority":"ADMIN"')){
-			this.isAdministrator = true;	
-		}
+		this.hasAdminRole();
 		if(this.tokenService.isTokenExpired()){
 			this.isAuthenticated = false;
 			this.tokenService.signOut();
@@ -92,7 +91,6 @@ export class PopularLeaguesComponent implements OnInit {
 
   getAllTournamentMonths(tournaments: Tournament[]){
 	for(let i = 0; i < tournaments.length; i++){
-		//this.allTournamentMonths.push(tournaments[i].tournamentDate.toString().slice(0, 10));
 		this.allTournamentMonths.push(monthNames[new Date(tournaments[i].tournamentDate).getMonth()] + ' ' + tournaments[i].tournamentDate.toString().slice(8, 10));
 	}
   }
@@ -105,6 +103,15 @@ export class PopularLeaguesComponent implements OnInit {
 
   public viewTournament(tournament: Tournament){
 	this.router.navigate(['tournament-details'], {queryParams: {tournament: JSON.stringify(tournament)}});
+  }
+
+  public hasAdminRole(): void{
+	  const user = this.tokenService.getUser();
+	  if(user.userRoles.filter((role: Role) => role.authority === "ADMIN").length !== 0){
+		this.isAdmin = true;
+		return;
+	  }
+	  this.isAdmin = false;
   }
 
   public isWarzoneTournament(tournament: Tournament): boolean{

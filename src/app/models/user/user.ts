@@ -1,6 +1,7 @@
 import { Team } from '../team';
 import { ImageModel } from '../imagemodel';
 import { UserTournament } from '../user/user-tournament';
+import { Role } from '../role';
 
 export class User {
 	userId: string;
@@ -14,14 +15,14 @@ export class User {
 	userTokens: number;
 	userCash: number;
 	userBirthDate: any
-	userRoles: Array<string>;
+	userRoles: Array<Role>;
 	userImage: FormData;
 	userGetImage: ImageModel;
 	userTournament: UserTournament;
 
 	constructor(userRealName?: string, userName?: string, userPassword?: string,
 		userEmail?: string, userCountry?: string, userBirthDate?: any,
-		userRoles?: Array<string>) {
+		userRoles?: Array<Role>) {
 
 		this.userRealName = userRealName;
 		this.userName = userName;
