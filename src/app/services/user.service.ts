@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { User } from '../models/user/user';
 import {retry, catchError } from 'rxjs/operators';
 import { ImageModel } from '../models/imagemodel';
 import { MessageResponse } from '../models/messageresponse';
-
+import { UserTokenRequest } from '../models/usertokenrequest';
 
 const USER_API = '/userapi';
 
@@ -51,23 +51,37 @@ export class UserService {
     .pipe(catchError(this.handleError('getAllUsers', [])));
   }
 
-  public updateUser(user: User): Observable<MessageResponse>{
-      return this.httpClient.put<MessageResponse>(USER_API + '/users/update' + user, user);
+  public updateUser(user: User, jwtToken: string): Observable<MessageResponse>{
+      return this.httpClient.put<MessageResponse>(USER_API + '/users/update', user,
+      {headers: new HttpHeaders({'Authorization': 'Bearer ' + jwtToken})})
+      .pipe(catchError(this.handleError('updateUserTokens', {} as MessageResponse)));
   }
 
-  public updateUserField(userId: string, userField: string, replaceValue:string ): Observable<MessageResponse>{
+  public updateUserField(userId: string, userField: string, replaceValue:string, jwtToken: string ): Observable<MessageResponse>{
     return this.httpClient.put<MessageResponse>(USER_API + '/users/update?userId=' + userId
                                         + '?userField='+ userField
-                                        + '?replaceValue=' + replaceValue, replaceValue);
+                                        + '?replaceValue=' + replaceValue,
+    {headers: new HttpHeaders({'Authorization': 'Bearer ' + jwtToken})})
+    .pipe(catchError(this.handleError('updateUserTokens', {} as MessageResponse)));
   }
 
-  public deleteUser(userId: string):Observable<MessageResponse>{
-    return this.httpClient.delete<MessageResponse>(USER_API + '/delete?userId=' + userId);
+  public deleteUser(userId: string, jwtToken: string):Observable<MessageResponse>{
+    return this.httpClient.delete<MessageResponse>(USER_API + '/delete?userId=' + userId,
+    {headers: new HttpHeaders({'Authorization': 'Bearer ' + jwtToken})})
+    .pipe(catchError(this.handleError('updateUserTokens', {} as MessageResponse)));
   }
 
-  public deleteUserField(userId: string, userField: string): Observable<MessageResponse>{
+  public deleteUserField(userId: string, userField: string, jwtToken: string): Observable<MessageResponse>{
     return this.httpClient.delete<MessageResponse>(USER_API + '/delete?userId=' + userId
-                                          + '?userField=' + userField);
+                                          + '?userField=' + userField, 
+    {headers: new HttpHeaders({'Authorization': 'Bearer ' + jwtToken})})
+    .pipe(catchError(this.handleError('updateUserTokens', {} as MessageResponse)));
+  }
+
+  public updateUserTokens(userTokenRequest: UserTokenRequest, jwtToken: string): Observable<MessageResponse>{
+    return this.httpClient.post<MessageResponse>(USER_API + '/tokens/add', userTokenRequest,
+    {headers: new HttpHeaders({'Authorization': 'Bearer ' + jwtToken})})
+    .pipe(catchError(this.handleError('updateUserTokens', {} as MessageResponse)));
   }
 
   public addImageToUser(user: User, imageModel: ImageModel): Observable<void>{
