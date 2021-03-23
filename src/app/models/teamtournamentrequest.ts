@@ -5,7 +5,7 @@ export class TeamTournamentRequest{
 	tournament: Tournament;
 	team: Team;
 	
-	constructor(tournament: Tournament, team: Team){
+	constructor(tournament?: Tournament, team?: Team){
 		this.tournament = tournament;
 		this.team = team;
 	}

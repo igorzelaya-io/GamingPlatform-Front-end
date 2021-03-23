@@ -118,7 +118,7 @@ export class CartPageComponent implements OnInit {
 				this.isSucessfulPayment = true;
 				window.location.href= mapValues[0];
 				this.route.queryParams.subscribe(params => {
-					this.billingService.confirmPayment(params['paymentId'], params['[payerId'], this.tokenService.getToken())
+					this.billingService.confirmPayment(params['paymentId'], params['payerId'], this.tokenService.getToken())
 					.subscribe((data: any) => {
 						if(data.get("status") as string === 'success'){
 							this.isSucessfulPayment = true;

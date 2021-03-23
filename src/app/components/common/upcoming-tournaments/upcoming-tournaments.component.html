@@ -51,7 +51,8 @@
                         <li><i class="flaticon-game-1"></i>{{tournament.tournamentPlatforms}}</li>
                         <li *ngIf="isPvPTournament(tournament)"><i class="flaticon-teamwork"></i>{{tournament.tournamentMatchesNumber}}</li>
                     	<li><i class="flaticon-teamwork"></i>{{tournament.tournamentNumberOfTeams}}/{{tournament.tournamentLimitNumberOfTeams}} Teams</li>
-	                </ul>
+						<li><img src="/assets/d1images/D1TokenBag.png">{{tournament.tournamentEntryFee}} Entry Fee</li>
+					</ul>
 	                <a (click)="viewTournament(tournament)" class="default-btn">More Info</a>
 	            </div>
 	        </div>

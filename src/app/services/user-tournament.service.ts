@@ -41,13 +41,26 @@ export class UserTournamentService {
     .pipe(catchError(this.handleError('addTournamentToUserTournamentList', {} as MessageResponse)));
   }
 
-  public addWToUserTournament(userTournamentRequest: UserTournamentRequest): Observable<MessageResponse>{
-    return this.httpClient.post<MessageResponse>(USER_TOURNAMENTS_API + '/matches/addW', userTournamentRequest)
+  public removeTournamentFromUserTournamentList(userTournamentRequest: UserTournamentRequest, jwtToken: string): Observable<MessageResponse>{
+    const httpOptions = {
+		  headers: new HttpHeaders({
+			  'Authorization': 'Bearer ' + jwtToken,
+		  }),
+		  body: userTournamentRequest
+	  }
+    return this.httpClient.delete<MessageResponse>(USER_TOURNAMENTS_API + '/delete', httpOptions)
+    .pipe(catchError(this.handleError('removeTournamentFromUserTournamentList', {} as MessageResponse)));
+  }
+
+  public addWToUserTournament(userTournamentRequest: UserTournamentRequest, jwtToken: string): Observable<MessageResponse>{
+    return this.httpClient.post<MessageResponse>(USER_TOURNAMENTS_API + '/matches/addW', userTournamentRequest,
+    {headers: new HttpHeaders({'Authorization': 'Bearer '+ jwtToken })})
     .pipe(catchError(this.handleError('addWinToUserTournament', {} as MessageResponse)));
   }
   
-  public addLToUserTournament(userTournamentRequest: UserTournamentRequest): Observable<MessageResponse>{
-    return this.httpClient.post<MessageResponse>(USER_TOURNAMENTS_API + '/matches/addL', userTournamentRequest)
+  public addLToUserTournament(userTournamentRequest: UserTournamentRequest, jwtToken: string): Observable<MessageResponse>{
+    return this.httpClient.post<MessageResponse>(USER_TOURNAMENTS_API + '/matches/addL', userTournamentRequest,
+    {headers: new HttpHeaders({'Authorization': 'Bearer '+ jwtToken })})
     .pipe(catchError(this.handleError('addLToUserTournament', {} as MessageResponse)));
   }
 

@@ -63,9 +63,72 @@
                     Tournament Limit Number of teams
                 </li>
                 <li>
-                	<button>
+                    <div class="icon">
+                        <img src="assets/d1images/D1TokenBag.png">
+                    </div>
+                    <span>{{tournament.tournamentEntryFee}}</span>
+                    Tournament Points Entry Fee
+                </li>
+                <li *ngIf="!alreadyJoinedTournament">
+                	<button (click)="isJoiningTournament()">
                 		Join Tournament
-                	</button>
+                    </button>
+                    <div style="vertical-align: middle;" *ngIf="isTryingToJoinTournament">
+                        <div style="text-align: cetner;">
+                            <h5>Select Team To Join Tournament</h5>
+                        </div>
+                        <button (click)="navigateToTeamCreation()">Create Team</button>
+                        <div *ngIf="hasNoTeams">
+                            You currently have no teams to select.
+                        </div>
+                        <div *ngFor="let team of userTeamsAvailableToJoinTournaments">
+                            <div class="container">
+                                <div class="row">
+                                   <div class="col-sm" style="vertical-align:middle">
+                                        <img
+                                            src="assets/d1images/anonymoususer-big.png"
+                                            style="border: solid red 2px"
+                                        >
+                                   </div>
+                                   <div class="col-sm" style="vertical-align:middle">
+                                        <h3 style="text-align:center">{{team.teamName}}</h3>
+                                        <p style="text-align:center">{{team.teamCountry}}</p>
+                                   </div>
+                                   <div style="vertical-align: middle;" class="col-sm">
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-sm" style="vertical-align: middle;">
+                                                    <button (click)="selectTeamToJoinTournament(team); isClickedSelectTeamButton()" [disabled]="isClickedSelectButton">
+                                                        Select Team
+                                                    </button>
+                                                </div>
+                                                <div class="col-sm" *ngIf="isClickedSelectButton" style="vertical-align: middle;">
+                                                    <button (click)="deselectTeamToJoinTournament()">
+                                                        Cancel
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                   </div> 
+                                </div>
+                            </div>
+                        </div>
+                        <div style="vertical-align: middle;">
+                            <button (click)="joinTournament(); isClickedJoinTournamentButton()" [disabled]="isClickedJoinButton">
+                                Join
+                            </button>
+                        </div>
+                    </div>
+                    <div *ngIf="isFailedTournamentJoin" style="vertical-align: middle;">
+                        <div style="text-align: center;">
+                        <h5 class="alert alert-danger">{{errorMessage}}</h5>
+                    </div>
+                    </div>
+                </li>
+                <li *ngIf="alreadyJoinedTournament">
+                   <button (click)="removeTeamFromTournament(); isClickedExitTournamentButton()" [disabled]="isClickedExitButton">
+                        Exit Tournament
+                   </button> 
                 </li>
             </ul>
         </div>

@@ -148,9 +148,9 @@ export class TeamCreationPageComponent implements OnInit {
   }
 
   public getUserByUserName(){
-	if(this.txtUserToSearch === null){
-		return;
-	}
+	  if(this.txtUserToSearch === null){
+		  return;
+    }
 	this.userService.getUserByUserName(this.txtUserToSearch.value.trim())
 	.subscribe(data => {
 		if(data && Object.keys(data).length !== 0){			

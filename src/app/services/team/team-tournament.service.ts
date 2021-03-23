@@ -52,11 +52,11 @@ export class TeamTournamentService {
 
   public removeTeamFromTournament(teamTournamentRequest: TeamTournamentRequest, jwtToken: string): Observable<MessageResponse> {
     const httpOptions = {
-		headers: new HttpHeaders({
-			'Authorization': 'Bearer ' + jwtToken,
-		}),
-		body: teamTournamentRequest
-	}	 
+		  headers: new HttpHeaders({
+			  'Authorization': 'Bearer ' + jwtToken,
+		  }),
+		  body: teamTournamentRequest
+	  }	 
 	return this.httpClient.delete<MessageResponse>(TEAM_TOURNAMENT_API + '/remove', httpOptions)
 	.pipe(catchError(this.handleError('removeTeamFromTournament', {} as MessageResponse)));
   }
