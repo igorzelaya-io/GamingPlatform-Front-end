@@ -137,12 +137,17 @@ export class CartPageComponent implements OnInit {
 					let userTokenRequest = new UserTokenRequest();
 					userTokenRequest.service = d1service;
 					userTokenRequest.user = this.tokenService.getUser();
+					this.addTokensToUserInStorage(d1service);
 					this.addTokensToUser(userTokenRequest);
 				});
 			}
 		});	
+	  }
 	}
-}
+
+	public addTokensToUserInStorage(d1service: D1Service): void{
+		this.tokenService.addTokensToSavedUser(d1service);
+	}
 
   addTokensToUser(userTokenRequest: UserTokenRequest){
 	return this.userService.updateUserTokens(userTokenRequest, this.tokenService.getToken())

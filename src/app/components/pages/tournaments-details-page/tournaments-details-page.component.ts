@@ -10,7 +10,7 @@ import { UserTournamentRequest } from '../../../models/user/user-tournament-requ
 import { MessageResponse } from 'src/app/models/messageresponse';
 import { UserTournamentService } from 'src/app/services/user-tournament.service';
 import { UserTeamService } from 'src/app/services/user-team.service';
-import { trimTrailingNulls } from '@angular/compiler/src/render3/view/util';
+
 
 const monthNames = [ "January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December" ];
@@ -78,11 +78,40 @@ export class TournamentsDetailsPageComponent implements OnInit {
   
 
   public joinTournament(){
-    // if(!this.selectTeamToJoinTournament || !Object.keys(this.selectTeamToJoinTournament)){
-      
-    // }
-    // this.isFailedTournamentJoin = true;
-    // this.errorMessage  = 'A team must be selected to join tournament';
+    if(!this.selectTeamToJoinTournament || !Object.keys(this.selectTeamToJoinTournament)){
+      const teamTournamentRequest = new TeamTournamentRequest(this.tournament, this.selectedTeamToJoinTournamentWith); 
+      this.teamTournamentService.addTeamToTournament(teamTournamentRequest, this.tokenService.getToken())
+      .subscribe((data: MessageResponse) => {
+        console.log(data);
+      },
+      err => {
+        console.error(err.error.message);
+        this.errorMessage = err.error.message;
+        this.isClickedJoinButton = false;
+        this.isFailedTournamentJoin = true;
+        return;
+      });  
+      this.selectedTeamToJoinTournamentWith.teamUsers.forEach(user => {
+        let userTeamRequest = new UserTournamentRequest(this.tournament, this.selectedTeamToJoinTournamentWith, user);
+        this.addTournamentToUserTournamentList(userTeamRequest);
+      });
+
+      this.alreadyJoinedTournament = true;
+      return;
+    }
+    this.isFailedTournamentJoin = true;
+    this.errorMessage  = 'A team must be selected to join tournament';
+  }
+
+  public addTournamentToUserTournamentList(userTournamentRequest: UserTournamentRequest){
+    this.userTournamentService.addTournamentToUserTournamentList(userTournamentRequest, this.tokenService.getToken())
+    .subscribe((data: MessageResponse) => {
+      console.log(data);  
+    },
+    err => {
+      console.error(err.error.message);
+      this.isClickedJoinButton = false;
+    });
   }
 
   public removeTeamFromTournament(): void{
@@ -97,10 +126,11 @@ export class TournamentsDetailsPageComponent implements OnInit {
       this.teamTournamentService.removeTeamFromTournament(teamTournamentRequest, this.tokenService.getToken())
       .subscribe((data: MessageResponse) => {
         console.log(data);
-      }, err => {
+      }, 
+        err => {
         console.error(err.error.message);
         this.isClickedExitButton = false;
-      
+        return;
       });
 
       teamOnTournament.teamUsers.forEach(user => {
