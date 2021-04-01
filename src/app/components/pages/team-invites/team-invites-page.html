@@ -22,7 +22,6 @@
                             <img src="assets/img/main-blog-img2.jpg" alt="image"> 
                         </a>
                     </div>
-
                     <div class="post-content">
                         <ul class="post-meta">
                         <li>By <a routerLink="/blog-1">{{invite.teamRequest.teamModerator}}</a></li>
@@ -31,11 +30,11 @@
                         </ul>
                         <a (click)="passTeam(invite.teamRequest)" class="read-more-btn">View Team<i class="flaticon-null"></i></a>
                     </div>
-                    <div>
-	                    <button>
+                    <div style="vertical-align: middle;">
+	                    <button style="text-align: center" (click)="acceptUserTeamInviteRequest(invite)">
 	                        Accept
 	                    </button>
-	                    <button>
+	                    <button style="text-align: middle" (click)="declineUserTeamInviteRequests(invite)">
 	                    	Decline
 	                    </button>
                     </div>

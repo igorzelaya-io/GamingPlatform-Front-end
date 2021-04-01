@@ -54,20 +54,20 @@ export class UserTeamService {
   }
 
   public exitTeam(userId: string, teamId: string, jwtToken: string): Observable<MessageResponse>{
-    return this.httpClient.post<MessageResponse>(USER_TEAMS_API + '/exit?userId=' + userId, teamId,
-	{headers: new HttpHeaders({'Authorization': 'Bearer ' + jwtToken})})
+      return this.httpClient.post<MessageResponse>(USER_TEAMS_API + '/exit?userId=' + userId + '?teamId=' + teamId,
+	  {headers: new HttpHeaders({'Authorization': 'Bearer ' + jwtToken})})
     .pipe(catchError(this.handleError('exitTeam', {} as MessageResponse)));
   }
 
   public acceptUserTeamRequest(userTeamRequest: TeamInviteRequest, jwtToken: string ): Observable<MessageResponse>{
     return this.httpClient.post<MessageResponse>(USER_TEAMS_REQUEST_API + '/accept', userTeamRequest,
-	{headers: new HttpHeaders({'Authorization': 'Bearer ' + jwtToken})})
+	  {headers: new HttpHeaders({'Authorization': 'Bearer ' + jwtToken})})
     .pipe(catchError(this.handleError('acceptUserTeamRequest', {} as MessageResponse)));
   }
 
   public declineUserTeamRequest(userTeamRequest: TeamInviteRequest, jwtToken: string): Observable<MessageResponse>{
     return this.httpClient.post<MessageResponse>(USER_TEAMS_REQUEST_API + '/decline', userTeamRequest,
-	{headers: new HttpHeaders({'Authorization': 'Bearer ' + jwtToken})})
+	  {headers: new HttpHeaders({'Authorization': 'Bearer ' + jwtToken})})
     .pipe(catchError(this.handleError('declineUserTeamRequest', {} as MessageResponse)));
   }
 }

@@ -20,13 +20,14 @@ export class MyTeamsPageComponent implements OnInit {
   constructor(private userTeamService: UserTeamService,
               private tokenService: TokenStorageService,
 			  private router: Router) {
-	  this.user = new User();
+    
+    this.user = new User();
 	  this.userTeams = [];
   }
 
   ngOnInit(): void {
     if(this.tokenService.loggedIn()){
-		this.user = this.tokenService.getUser();
+		  this.user = this.tokenService.getUser();
 	    this.getAllUserTeams();
     }
   }
@@ -34,10 +35,12 @@ export class MyTeamsPageComponent implements OnInit {
   getAllUserTeams(){
     this.userTeamService.getAllUserTeams(this.user.userId)
     .subscribe((data: Team[]) => {
-      if(data === null || data.length){
-		this.isEmpty = false;
-	  	this.userTeams = data;
-	  }
+      if(data && data.length && Object.keys(data).length !== 0){
+		    this.isEmpty = false;
+	  	  this.userTeams = data;
+        return;
+      }
+      this.isEmpty = true;
     },
     err => {
       console.error(err);
@@ -46,13 +49,13 @@ export class MyTeamsPageComponent implements OnInit {
 
   createButton(){
    	if(this.tokenService.loggedIn()){
-		this.router.navigate(['/team-creation']);
-	}
+		  this.router.navigate(['/team-creation']);
+	  }
   }
 
   passTeam(team: Team){
     if(this.tokenService.loggedIn()){
-		this.router.navigate(['/team-details'], {queryParams: { teamId: team.teamId}});
-	}
+		  this.router.navigate(['/team-details'], {queryParams: { teamId: team.teamId}});
+	  }
   }
 }

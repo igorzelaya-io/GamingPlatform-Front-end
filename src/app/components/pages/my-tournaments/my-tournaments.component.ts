@@ -14,6 +14,8 @@ export class MyTournamentsComponent implements OnInit {
 
   user: User;  
   userTournaments: Tournament[];
+  isEmpty: boolean = false;
+
   constructor(private tokenService: TokenStorageService,
 			  private userTournamentService: UserTournamentService,
 			  private router: Router) {
@@ -31,11 +33,17 @@ export class MyTournamentsComponent implements OnInit {
   getAllTournamentsFromUser(){
 	this.userTournamentService.getAllTournamentsFromUser(this.user.userId).subscribe(
 		(data: Tournament[]) => {
-			console.log(data);
-			this.userTournaments = data;
+			if(data && data.length !== 0){
+				console.log(data);
+				this.userTournaments = data;
+				return;
+			}
+			this.isEmpty = true;
+
 		},
 		err => {
-			console.error(err.error.message);	
+			console.error(err.error.message);
+			this.isEmpty = true;	
 		});
   }
 

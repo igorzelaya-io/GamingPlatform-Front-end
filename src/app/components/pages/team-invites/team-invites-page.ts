@@ -6,6 +6,7 @@ import { TokenStorageService } from '../../../services/token-storage.service';
 import { TeamInviteRequest } from '../../../models/teaminviterequest';
 import { Router } from '@angular/router';
 import { UserService } from '../../../services/user.service';
+import { MessageResponse } from 'src/app/models/messageresponse';
 
 @Component({
   selector: 'app-team-invites-page',
@@ -23,7 +24,7 @@ export class TeamInvitesPageComponent implements OnInit {
               private tokenService: TokenStorageService,
               private router: Router
               ) {
-	this.user = new User();
+	  this.user = new User();
     this.teamInvites = [];
   	this.team = new Team();
   }
@@ -31,20 +32,20 @@ export class TeamInvitesPageComponent implements OnInit {
   
   ngOnInit(): void {
     if(this.tokenService.loggedIn()){
-		this.user = this.tokenService.getUser();
+		  this.user = this.tokenService.getUser();
 	    this.getAllUserTeamRequests();
-	}
+	  }
   }
 
   getAllUserTeamRequests(){
     this.userTeamService.getAllUserTeamRequests(this.user.userId)
     .subscribe((data: TeamInviteRequest[]) => {
       if(data.length){
-		this.teamInvites = data;
-		this.isEmpty = false;
-	  }
-	  this.teamInvites = data;	
-      console.log(data);
+		    this.teamInvites = data;
+		    this.isEmpty = false;
+	    }
+	      this.teamInvites = data;	
+        console.log(data);
     },
     err => {
       console.error(err.error.message);
@@ -55,13 +56,25 @@ export class TeamInvitesPageComponent implements OnInit {
     this.router.navigate(['/team-details'], {queryParams: {teamId: teamInvite.teamRequest.teamId}});
   }
 
-  acceptUserTeamInviteRequest(teamRequest: TeamInviteRequest){
-    this.userTeamService.acceptUserTeamRequest(teamRequest, this.tokenService.getToken());
+  acceptUserTeamInviteRequest(teamInviteRequest: TeamInviteRequest){
+    this.userTeamService.acceptUserTeamRequest(teamInviteRequest, this.tokenService.getToken())
+    .subscribe((data: MessageResponse) => {
+      console.log(data);  
+    },
+    err => {
+      console.error(err.error.message);
+    });
     window.location.reload();
   }
 
-  declineUserTeamInviteRequests(teamRequest: TeamInviteRequest){
-    this.userTeamService.declineUserTeamRequest(teamRequest, this.tokenService.getToken());
+  declineUserTeamInviteRequests(teamInviteRequest: TeamInviteRequest){
+    this.userTeamService.declineUserTeamRequest(teamInviteRequest, this.tokenService.getToken())
+    .subscribe((data: MessageResponse) => {
+      console.log(data);
+    },
+    err => {
+      console.error(err.error.message);
+    });
     window.location.reload();
   }
 

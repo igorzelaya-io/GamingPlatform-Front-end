@@ -11,11 +11,11 @@
 <section class="stream-schedule-area pt-100 pb-70">
     <div class="container">
     	
-  		<div style="vertical-align: middle" *ngIf="!userTournaments">
+  		<div style="vertical-align: middle" *ngIf="isEmpty">
   			<h1 style="text-align: center">You currently have no tournaments available</h1>
   		</div>
 
-        <div class="row" *ngIf="userTournaments">
+        <div class="row" *ngIf="!isEmpty">
             <div *ngFor="let tournament of userTournaments" class="col-lg-6 col-md-12">
                 <div class="single-stream-schedule-box">
                     <span class="date">{{tournament.tournamentDate}}</span>

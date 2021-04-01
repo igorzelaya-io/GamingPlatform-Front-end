@@ -70,16 +70,17 @@
                     Tournament Points Entry Fee
                 </li>
                 <li *ngIf="!alreadyJoinedTournament">
-                	<button (click)="isJoiningTournament()">
+                	<button *ngIf="!isTryingToJoinTournament" (click)="isJoiningTournament()">
                 		Join Tournament
                     </button>
                     <div style="vertical-align: middle;" *ngIf="isTryingToJoinTournament">
-                        <div style="text-align: cetner;">
-                            <h5>Select Team To Join Tournament</h5>
+                        <div style="vertical-align: middle">
+                            <h5 style="text-align: center">Select Team To Join Tournament</h5>
                         </div>
-                        <button (click)="navigateToTeamCreation()">Create Team</button>
                         <div *ngIf="hasNoTeams">
-                            You currently have no teams to select.
+                            <h5 class="alert alert-danger">
+                                You currently have no teams to select.
+                            </h5>
                         </div>
                         <div *ngFor="let team of userTeamsAvailableToJoinTournaments">
                             <div class="container">
@@ -113,8 +114,9 @@
                                 </div>
                             </div>
                         </div>
+                        <button (click)="navigateToTeamCreation()">Create Team</button>
                         <div style="vertical-align: middle;">
-                            <button (click)="joinTournament(); isClickedJoinTournamentButton()" [disabled]="isClickedJoinButton">
+                            <button *ngIf="!hasNoTeams" (click)="joinTournament(); isClickedJoinTournamentButton()" [disabled]="isClickedJoinButton">
                                 Join
                             </button>
                         </div>
