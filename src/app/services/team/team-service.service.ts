@@ -53,6 +53,12 @@ export class TeamService {
 	  .pipe(retry(1), catchError(this.handleError('getAllUsersInTeam', [])));
   }
 
+  public addUserToTeam(teamCreationRequest: TeamCreationRequest, jwtToken: string): Observable<MessageResponse>{
+    return this.httpClient.post<MessageResponse>(TEAM_API + '/users', teamCreationRequest,
+    {headers: new HttpHeaders({'Authorization': 'Bearer ' + jwtToken})})
+    .pipe(catchError(this.handleError('addUserToTeam', {} as MessageResponse)));
+  }
+
   public postTeam(team: TeamCreationRequest, jwtToken: string): Observable<MessageResponse>{
     return this.httpClient.post<MessageResponse>(TEAM_API + '/create', team, 
 	  {headers: new HttpHeaders( {'Authorization' : 'Bearer ' + jwtToken} )});
