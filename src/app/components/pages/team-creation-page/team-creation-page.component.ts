@@ -85,9 +85,9 @@ export class TeamCreationPageComponent implements OnInit {
 	  this.teamCreationRequest.teamToRegister = this.team; 
     this.teamCreationRequest.teamModerator = this.tokenService.getUser();
     this.teamService.postTeam(this.teamCreationRequest, this.tokenService.getToken())
-	  .subscribe((response: MessageResponse) => {
+	  .subscribe((response: any) => {
       console.log(response.message);
-      this.team.teamId = response.message;
+      this.team = response;
 	    this.isClicked = true;
       this.isSuccessfulRegister = true;
 	  },
@@ -105,17 +105,11 @@ export class TeamCreationPageComponent implements OnInit {
   }
 
   public sendTeamInviteToEachUser(){
-    this.teamService.addUserToTeam(this.teamCreationRequest, this.tokenService.getToken())
-    .subscribe((data: MessageResponse) => {
-      console.log(data);
-    },
-    err => {
-      console.error(err.error.message);
-    });
-    
+
     this.usersToInvite.forEach(userToInvite => {
 		   this.teamInviteRequestUsersToInvite.push(new TeamInviteRequest(this.team, userToInvite))
-	  });
+    });
+    
     this.teamInviteRequestUsersToInvite.forEach(userToInvite => {
 		  this.sendTeamInviteToUser(userToInvite);
 	  });

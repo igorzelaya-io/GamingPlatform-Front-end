@@ -43,8 +43,8 @@ export class TeamInvitesPageComponent implements OnInit {
       if(data.length){
 		    this.teamInvites = data;
 		    this.isEmpty = false;
-	    }
-	      this.teamInvites = data;	
+        return;
+      }	
         console.log(data);
     },
     err => {
