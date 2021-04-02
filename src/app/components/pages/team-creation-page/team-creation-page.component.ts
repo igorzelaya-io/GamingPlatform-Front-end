@@ -81,7 +81,8 @@ export class TeamCreationPageComponent implements OnInit {
   onSubmit(){
     this.team.teamName = this.txtName.value;
     this.team.teamEmail = this.txtEmail.value;
-   	this.team.teamCountry = this.txtCountry.value;
+     this.team.teamCountry = this.txtCountry.value;
+    this.team.teamModerator = this.tokenService.getUser();
 	  this.teamCreationRequest.teamToRegister = this.team; 
     this.teamCreationRequest.teamModerator = this.tokenService.getUser();
     this.teamService.postTeam(this.teamCreationRequest, this.tokenService.getToken())

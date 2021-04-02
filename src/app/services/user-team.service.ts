@@ -38,7 +38,7 @@ export class UserTeamService {
 
   public getAllUserTeamRequests(userId: string): Observable<TeamInviteRequest[]>{
     return this.httpClient.get<TeamInviteRequest[]>(USER_TEAMS_REQUEST_API + '?userId=' + userId)
-    .pipe(catchError(this.handleError('getAllUserTeams', [])));
+    .pipe(catchError(this.handleError('getAllUserTeamRequests', [])));
   }
 
   public getTeamById(userId: string , teamId: string): Observable<Team>{

@@ -12,6 +12,8 @@ export class PlayerDetailsPageComponent implements OnInit {
 
   isAdmin = false;
   user: User;
+
+  userWinLossRatio: number;
   constructor(private tokenService: TokenStorageService,
               private route: ActivatedRoute) {
     this.user = new User();
@@ -25,7 +27,7 @@ export class PlayerDetailsPageComponent implements OnInit {
   }
 
   calculateUserWinLossRatio(){
-    //TODO
+
   }
 
 }
