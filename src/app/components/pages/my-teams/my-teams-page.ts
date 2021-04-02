@@ -55,7 +55,13 @@ export class MyTeamsPageComponent implements OnInit {
 
   passTeam(team: Team){
     if(this.tokenService.loggedIn()){
-		  this.router.navigate(['/team-details'], {queryParams: { teamId: team.teamId}});
+		  this.router.navigate(['/team-details'], {queryParams: { team: JSON.stringify(team)}});
 	  }
+  }
+
+  passUser(user: User){
+    if(this.tokenService.loggedIn()){
+      this.router.navigate(['/player-details'], {queryParams: { user: JSON.stringify(user)}});
+    }
   }
 }

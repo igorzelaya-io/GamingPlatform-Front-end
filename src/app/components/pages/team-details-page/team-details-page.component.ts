@@ -19,16 +19,9 @@ export class TeamDetailsPageComponent implements OnInit {
   
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
-      this.getTeamById(params['teamId']);
+      this.team = JSON.parse(params['team']);
     });
   }
 
-  getTeamById(teamId: string){
-    this.teamService.getTeamById(teamId).subscribe((data: Team) => {
-      this.team = data;
-      console.log(data);
-    },
-    err => console.error(err));
-  }
 
 }

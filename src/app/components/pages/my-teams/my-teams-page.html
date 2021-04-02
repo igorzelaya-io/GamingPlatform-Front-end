@@ -27,38 +27,15 @@
 
                     <div class="post-content">
                         <ul class="post-meta">
-                        <li>By <a routerLink="/blog-1">{{team.teamModerator}}</a></li>
+                        <li>By <a (click)="passUser(team.teamModerator)">{{team.teamModerator.userName}}</a></li>
                         <li>{{team.teamCountry}}</li>
                         </ul>
-                        <h3><a routerLink="/single-blog">{{team.teamName}}</a></h3>
+                        <h3><a (click)="passTeam(team)">{{team.teamName}}</a></h3>
                         <a (click)="passTeam(team)" class="read-more-btn">View Team<i class="flaticon-null"></i></a>
                     </div>
                 </div>
             </div>
-            
-            
-            <div class="col-lg-6 col-md-6">
-                <div class="single-blog-post-box">
-                    <div class="post-image">
-                        <a routerLink="/single-blog">
-                            <img src="assets/img/main-blog-img2.jpg" alt="image">
-                        </a>
-                    </div>
 
-                    <div class="post-content">
-                        <ul class="post-meta">
-                        <li>By <a routerLink="/blog-1">Igor Zelaya</a></li>
-                        <li>Honduras</li>
-                        </ul>
-                        <h3><a routerLink="/single-blog">Young Kingz</a></h3>
-                        <a class="read-more-btn">View Team<i class="flaticon-null"></i></a>
-                    </div>
-                </div>
-            </div>
-
-            
-        
-        
         </div>
     </div>
 </section>
