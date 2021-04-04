@@ -69,6 +69,7 @@
                     <span>{{tournament.tournamentEntryFee}}</span>
                     Tournament Points Entry Fee
                 </li>
+                
                 <li *ngIf="!alreadyJoinedTournament">
                 	<button *ngIf="!isTryingToJoinTournament" (click)="isJoiningTournament()">
                 		Join Tournament
@@ -83,7 +84,7 @@
                             </h5>
                         </div>
                         <div *ngFor="let team of userTeamsAvailableToJoinTournaments">
-                            <div class="container">
+                            <div class="container" style="max-width: 400px; margin: auto;">
                                 <div class="row">
                                    <div class="col-sm" style="vertical-align:middle">
                                         <img
@@ -99,7 +100,7 @@
                                         <div class="container">
                                             <div class="row">
                                                 <div class="col-sm" style="vertical-align: middle;">
-                                                    <button (click)="selectTeamToJoinTournament(team); isClickedSelectTeamButton()" [disabled]="isClickedSelectButton">
+                                                    <button (click)="selectTeamToJoinTournament(team); clickSelectTeamButton()" [disabled]="isClickedSelectButton">
                                                         Select Team
                                                     </button>
                                                 </div>
@@ -116,7 +117,7 @@
                         </div>
                         <button (click)="navigateToTeamCreation()">Create Team</button>
                         <div style="vertical-align: middle;">
-                            <button *ngIf="!hasNoTeams" (click)="joinTournament(); isClickedJoinTournamentButton()" [disabled]="isClickedJoinButton">
+                            <button *ngIf="!hasNoTeams" (click)="joinTournament(); clickJoinTournamentButton();" [disabled]="isClickedJoinButton">
                                 Join
                             </button>
                         </div>
@@ -127,6 +128,7 @@
                     </div>
                     </div>
                 </li>
+                
                 <li *ngIf="alreadyJoinedTournament">
                    <button (click)="removeTeamFromTournament(); isClickedExitTournamentButton()" [disabled]="isClickedExitButton">
                         Exit Tournament

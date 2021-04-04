@@ -68,20 +68,25 @@ export class TournamentsDetailsPageComponent implements OnInit {
     this.getTournamentMonth();
     this.getTournamentTime();
     this.getTournamentMonthDate();
-    // if(){
-
-    // }
   }
 
-  
-
-  
+  public isJoiningTournament(): void{
+   if(this.userInspectingTournament.userTokens >= this.tournament.tournamentEntryFee){
+      this.isTryingToJoinTournament = true;  
+      this.getAllUserTeamsAvailable();
+      return;
+    }
+    this.isFailedTournamentJoin = true;
+    this.errorMessage = 'Not enough tokens to join tournament.';
+  }
 
   public joinTournament(){
-    if(!this.selectTeamToJoinTournament || !Object.keys(this.selectTeamToJoinTournament)){
+    if(!this.selectedTeamToJoinTournamentWith || !Object.keys(this.selectedTeamToJoinTournamentWith)){
       const teamTournamentRequest = new TeamTournamentRequest(this.tournament, this.selectedTeamToJoinTournamentWith); 
+      
       this.teamTournamentService.addTeamToTournament(teamTournamentRequest, this.tokenService.getToken())
       .subscribe((data: MessageResponse) => {
+        this.alreadyJoinedTournament = true;
         console.log(data);
       },
       err => {
@@ -91,6 +96,7 @@ export class TournamentsDetailsPageComponent implements OnInit {
         this.isFailedTournamentJoin = true;
         return;
       });  
+      
       this.selectedTeamToJoinTournamentWith.teamUsers.forEach(user => {
         let userTeamRequest = new UserTournamentRequest(this.tournament, this.selectedTeamToJoinTournamentWith, user);
         this.addTournamentToUserTournamentList(userTeamRequest);
@@ -126,6 +132,7 @@ export class TournamentsDetailsPageComponent implements OnInit {
       this.teamTournamentService.removeTeamFromTournament(teamTournamentRequest, this.tokenService.getToken())
       .subscribe((data: MessageResponse) => {
         console.log(data);
+        this.alreadyJoinedTournament = false;
       }, 
         err => {
         console.error(err.error.message);
@@ -139,7 +146,6 @@ export class TournamentsDetailsPageComponent implements OnInit {
         userTournamentRequest.user = user;
         this.removeTournamentFromUserList(userTournamentRequest);
       });
-      this.alreadyJoinedTournament = false;
     }
   }
   
@@ -155,16 +161,6 @@ export class TournamentsDetailsPageComponent implements OnInit {
       
   }
 
-  public isJoiningTournament(): void{
-   if(this.userInspectingTournament.userTokens >= this.tournament.tournamentEntryFee){
-      this.isTryingToJoinTournament = true;  
-      this.getAllUserTeamsAvailable();
-      return;
-    }
-    this.isFailedTournamentJoin = true;
-    this.errorMessage = 'Not enough tokens to join tournament.';
-  }
-
   public isAlreadyPartOfTournament(): void {
     if(this.userInspectingTournament.userTournament
           .filter(tournament => 
@@ -178,11 +174,11 @@ export class TournamentsDetailsPageComponent implements OnInit {
     this.isClickedExitButton = true;
   }
 
-  public isClickedJoinTournamentButton(){
+  public clickJoinTournamentButton(){
     this.isClickedJoinButton = true;
   }
 
-  public isClickedSelectTeamButton(){
+  public clickSelectTeamButton(){
     this.isClickedSelectButton = true;
   }
 
