@@ -79,27 +79,27 @@ export class CartPageComponent implements OnInit {
 		return;
 	}
 	else if(this.subTotalAmountOnServices > 15 && this.subTotalAmountOnServices <= 30){
-		this.serviceFeeAmountOnServices = this.subTotalAmountOnServices * 0.04 + 0.20;
-		this.totalAmountOnServices = this.serviceFeeAmountOnServices + this.subTotalAmountOnServices;
-		return;
-	}
-	else if(this.subTotalAmountOnServices > 30 && this.subTotalAmountOnServices <= 50){
 		this.serviceFeeAmountOnServices = this.subTotalAmountOnServices * 0.05 + 0.20;
 		this.totalAmountOnServices = this.serviceFeeAmountOnServices + this.subTotalAmountOnServices;
 		return;
 	}
-	else if(this.subTotalAmountOnServices > 50 && this.subTotalAmountOnServices <= 100){
+	else if(this.subTotalAmountOnServices > 30 && this.subTotalAmountOnServices <= 50){
 		this.serviceFeeAmountOnServices = this.subTotalAmountOnServices * 0.06 + 0.20;
 		this.totalAmountOnServices = this.serviceFeeAmountOnServices + this.subTotalAmountOnServices;
 		return;
 	}
-	else if(this.subTotalAmountOnServices > 100 && this.subTotalAmountOnServices <= 200){
+	else if(this.subTotalAmountOnServices > 50 && this.subTotalAmountOnServices <= 100){
 		this.serviceFeeAmountOnServices = this.subTotalAmountOnServices * 0.07 + 0.20;
 		this.totalAmountOnServices = this.serviceFeeAmountOnServices + this.subTotalAmountOnServices;
 		return;
 	}
+	else if(this.subTotalAmountOnServices > 100 && this.subTotalAmountOnServices <= 200){
+		this.serviceFeeAmountOnServices = this.subTotalAmountOnServices * 0.08 + 0.20;
+		this.totalAmountOnServices = this.serviceFeeAmountOnServices + this.subTotalAmountOnServices;
+		return;
+	}
 	else{
-		this.serviceFeeAmountOnServices = this.subTotalAmountOnServices *0.08 + 0.20;
+		this.serviceFeeAmountOnServices = this.subTotalAmountOnServices *0.09 + 0.20;
 		this.totalAmountOnServices = this.serviceFeeAmountOnServices + this.subTotalAmountOnServices;
 		return;
 	}

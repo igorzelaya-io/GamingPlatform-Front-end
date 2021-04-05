@@ -68,6 +68,7 @@ export class TournamentsDetailsPageComponent implements OnInit {
     this.getTournamentMonth();
     this.getTournamentTime();
     this.getTournamentMonthDate();
+    this.isAlreadyPartOfTournament();
   }
 
   public isJoiningTournament(): void{
@@ -81,7 +82,7 @@ export class TournamentsDetailsPageComponent implements OnInit {
   }
 
   public joinTournament(){
-    if(!this.selectedTeamToJoinTournamentWith || !Object.keys(this.selectedTeamToJoinTournamentWith)){
+    if(this.selectedTeamToJoinTournamentWith || Object.keys(this.selectedTeamToJoinTournamentWith).length !== 0){
       const teamTournamentRequest = new TeamTournamentRequest(this.tournament, this.selectedTeamToJoinTournamentWith); 
       
       this.teamTournamentService.addTeamToTournament(teamTournamentRequest, this.tokenService.getToken())
@@ -158,7 +159,6 @@ export class TournamentsDetailsPageComponent implements OnInit {
       console.error(err.error.message);
       this.isClickedExitButton = false;
     });
-      
   }
 
   public isAlreadyPartOfTournament(): void {
@@ -230,5 +230,5 @@ export class TournamentsDetailsPageComponent implements OnInit {
   public navigateToTeamCreation(){
     this.router.navigate(['/team-creation']);
   }
-  
+
 }
