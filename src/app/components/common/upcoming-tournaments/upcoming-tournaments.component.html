@@ -47,7 +47,7 @@
 	                <ul class="info">
                      <li><i class="flaticon-coin"></i>${{tournament.tournamentCashPrice}}</li>
                         <li><i class="flaticon-game"></i>{{tournament.tournamentFormat}}</li>
-                        <li><i class="flaticon-game"></i>{{tournament.tournamentGameMode}}</li>
+                        <li *ngIf="tournament.tournamentGameMode"><i class="flaticon-game"></i>{{tournament.tournamentGameMode}}</li>
                         <li><i class="flaticon-game-1"></i>{{tournament.tournamentPlatforms}}</li>
                         <li *ngIf="isPvPTournament(tournament)"><i class="flaticon-teamwork"></i>{{tournament.tournamentMatchesNumber}}</li>
                     	<li><i class="flaticon-teamwork"></i>{{tournament.tournamentNumberOfTeams}}/{{tournament.tournamentLimitNumberOfTeams}} Teams</li>

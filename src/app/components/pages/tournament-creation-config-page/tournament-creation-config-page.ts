@@ -70,6 +70,7 @@ export class TournamentCreationConfigPageComponent implements OnInit {
 	isClicked = false;
 	tournament: Tournament;
 	tournamentCreation: TournamentCreationRequest;
+	isFifaTournament: boolean = false;
 
 	constructor(private route: ActivatedRoute,
 				private renderer: Renderer2,
@@ -97,6 +98,11 @@ export class TournamentCreationConfigPageComponent implements OnInit {
 			.subscribe(params => {
 				this.tournament = JSON.parse(params['tournament']);
 			});
+		if(this.tournament.tournamentGame === 'Fifa'){
+			this.isFifaTournament = true;
+			// TODO:
+		}
+		
 	}
 
 	clickedButton(): void {

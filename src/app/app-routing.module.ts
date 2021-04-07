@@ -38,6 +38,7 @@ const routes: Routes = [
     {path: 'team-invites', component: TeamInvitesPageComponent},
     {path: 'team-details', component: TeamDetailsPageComponent},
     {path: 'team-creation', component: TeamCreationPageComponent},
+    {path: 'match-details', component: MatchDetailsPageComponent},
     {path: 'coming-soon', component: ComingSoonPageComponent},
     {path: 'error', component: ErrorPageComponent},
     {path: 'stream-schedule', component: StreamSchedulePageComponent},

@@ -17,19 +17,34 @@
 	              	<div class="form-group">
 	                	<div class="row" style="margin-top: 30px;">
 		                  	<div class="col-sm">
-		                	 
+
 		                		<img src="assets/d1images/Cup.png" 
 		                  			#leagueFormatElement 
 		                  			(click)="selectLeagueTournamentFormat()" 
 		                  			style="border: 3px solid white"
-		                  		>
+									*ngIf="!isFifaTournament"
+								>
+								<img
+									src="assets/d1images/CupFifa.png"
+									#leagueFormatElement								
+									(click)="selectLeagueTournamentFormat()"
+									style="border: 3px solid white"
+									*ngIf="isFifaTournament"
+								>
+
+
 		                  	</div>
-	                		<div class="col-sm">
-	              				
+	                		<div class="col-sm">	              				
 	              				<img #pvpFormatElement (click)="selectPvPTournamentFormat()"
 	              					 src="assets/d1images/VS.png" 
 	              					 style="border: 3px solid white"
-	              				>
+									*ngIf="!isFifaTournament"	  
+							   >
+								<img #pvpFormatElement (click)="selectPvPTournamentFormat()"
+									src="assets/d1images/VSFifa.png"
+									style="border: 3px solid white"  
+									*ngIf="isFifaTournament"
+								>
 	                		</div>
 	                	</div>
 	                	<div *ngIf="this.tournamentFormatString === 'PvP'" class="row" style="margin-top: 30px;">
@@ -43,7 +58,16 @@
 	                						#bestOfOneElement
 	                						(click)="selectBestOfOneTournamentMatchesNumber()"
 	                						style="border: 3px solid white"
-	                					>
+											*ngIf="!isFifaTournament"
+										>
+										<img
+											alt="image"
+											src="/assets/d1images/bestOfOneFifa.png"
+											#bestOfOneElement
+											(click)="selectBestOfOneTournamentMatchesNumber()"
+											style="border: 3px solid white"
+											*ngIf="isFifaTournament"
+										>
 	                				</div>
 	                				<div class="col-sm">
 	                					<img
@@ -51,7 +75,15 @@
 	                						#bestOfThreeElement
 	                						(click)="selectBestOfThreeTournamentMatchesNumber()"
 	                						style="border: 3px solid white"
-	                					>
+											*ngIf="!isFifaTournament"
+										>
+										<img
+											src="/assets/d1images/bestOf3Fifa.png"
+											#bestOfThreeElement
+											(click)="selectBestOfThreeTournamentMatchesNumber()"
+											style="border: 3px solid white"
+											*ngIf="isFifaTournament"
+										>
 	                				</div>
 	                				<div class="col-sm">
 	                					<img
@@ -59,7 +91,15 @@
 	                						#bestOfFiveElement
 	                						(click)="selectBestOfFiveTournamentMatchesNumber()"
 	                						style="border: 3px solid white"
-	                					>
+											*ngIf="!isFifaTournament"
+										>
+										<img
+											src="/assets/d1images/bestOf5Fifa.png"
+											#bestOfFiveElement
+											(click)="selectBestOfFiveTournamentMatchesNumber()"	
+											style="border: 3px solid white"
+											*ngIf="isFifaTournament"
+										>
 	                				</div>
 	                			</div>	
 	                		</div>
@@ -74,6 +114,7 @@
 				<div class="col-lg-12 col-md-12">
 		    		<div class="register-form">
 		    			<form>
+							<!-- TODO -->
 							<h2 style="text-align: center">Tournament Game Mode</h2>
 		    				<div class="form-group">
 			    				<div class="row" style="margin-top: 30px;">		
@@ -87,7 +128,8 @@
 			    						<img src="assets/d1images/Survival.png"
 		            						#survivalModeElement (click)="selectSurvivalTournamentGameMode()"
 		            						style="border: 3px solid white"
-		            					>
+
+										>
 			    					</div>
 			    				</div>
 		    				</div>    			
