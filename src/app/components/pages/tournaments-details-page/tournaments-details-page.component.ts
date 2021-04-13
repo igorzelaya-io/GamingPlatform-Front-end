@@ -85,7 +85,7 @@ export class TournamentsDetailsPageComponent implements OnInit {
     if(this.selectedTeamToJoinTournamentWith || Object.keys(this.selectedTeamToJoinTournamentWith).length !== 0){
       const teamTournamentRequest = new TeamTournamentRequest(this.tournament, this.selectedTeamToJoinTournamentWith); 
       
-      this.teamTournamentService.addTeamToTournament(teamTournamentRequest, this.tokenService.getToken())
+      this.teamTournamentService.addTeamToFifaTournament(teamTournamentRequest, this.tokenService.getToken())
       .subscribe((data: MessageResponse) => {
         this.alreadyJoinedTournament = true;
         console.log(data);
@@ -130,15 +130,15 @@ export class TournamentsDetailsPageComponent implements OnInit {
       const teamTournamentRequest = new TeamTournamentRequest();
       teamTournamentRequest.team = teamOnTournament;
       teamTournamentRequest.tournament = this.tournament;
-      this.teamTournamentService.removeTeamFromTournament(teamTournamentRequest, this.tokenService.getToken())
-      .subscribe((data: MessageResponse) => {
+      this.teamTournamentService.removeTeamFromFifaTournament(teamTournamentRequest, this.tokenService.getToken())
+        .subscribe((data: MessageResponse) => {
         console.log(data);
         this.alreadyJoinedTournament = false;
       }, 
         err => {
-        console.error(err.error.message);
-        this.isClickedExitButton = false;
-        return;
+          console.error(err.error.message);
+          this.isClickedExitButton = false;
+          return;
       });
 
       teamOnTournament.teamUsers.forEach(user => {
@@ -207,6 +207,10 @@ export class TournamentsDetailsPageComponent implements OnInit {
 	  this.tournamentMonthDate = new Date(this.tournament.tournamentDate).getDate();		
   } 
 
+  
+  
+  
+  
   getAllUserTeamsAvailable(){
     this.userTeamService.getAllUserTeams(this.userInspectingTournament.userId)
     .subscribe((data: Team[]) => {

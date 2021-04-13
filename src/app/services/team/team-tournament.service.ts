@@ -32,33 +32,62 @@ export class TeamTournamentService {
     console.log(message);
   }
 
-  public getAllTournamentsFromTeam(teamId: string): Observable<Array<Tournament>>{
-	return this.httpClient.get<Array<Tournament>>(TEAM_TOURNAMENT_API + '?teamId='+ teamId)
-	.pipe(retry(1), catchError(this.handleError('getAllTournamentsFromTeam', [] as Array<Tournament>)));
+  public getAllFifaTournamentsFromTeam(teamId: string): Observable<Array<Tournament>>{
+	  return this.httpClient.get<Array<Tournament>>(TEAM_TOURNAMENT_API + '/fifa/all?teamId='+ teamId)
+	    .pipe(retry(1), catchError(this.handleError('getAllTournamentsFromTeam', [] as Array<Tournament>)));
   }
 
-  public getTournamentFromTeamById(teamId: string , tournamentId: string): Observable<Tournament>{
-	return this.httpClient.get<Tournament>(TEAM_TOURNAMENT_API + '/search?teamId=' + teamId +'?tournamenId='+ tournamentId)
-	.pipe(retry(1), catchError(this.handleError('getTournamentFromTeamById', {} as Tournament)));
+  public getAllCodTournamentsFromTeam(teamId: string): Observable<Array<Tournament>>{
+	  return this.httpClient.get<Array<Tournament>>(TEAM_TOURNAMENT_API + '/cod/all?teamId='+ teamId)
+	    .pipe(retry(1), catchError(this.handleError('getAllTournamentsFromTeam', [] as Array<Tournament>)));
   }
 
-  public addTeamToTournament(teamTournamentRequest: TeamTournamentRequest, jwtToken: string): Observable<MessageResponse>{
-    	return this.httpClient.post<MessageResponse>(TEAM_TOURNAMENT_API + '/add', teamTournamentRequest,
-		{headers: new HttpHeaders(
-			{'Authorization': 'Bearer ' + jwtToken})
-		})
-		.pipe(catchError(this.handleError('teamTournamentRequest' , {} as MessageResponse)));
+  public getFifaTournamentFromTeamById(teamId: string , tournamentId: string): Observable<Tournament>{
+	  return this.httpClient.get<Tournament>(TEAM_TOURNAMENT_API + '/fifa/search?teamId=' + teamId +'?tournamenId='+ tournamentId)
+	  .pipe(retry(1), catchError(this.handleError('getTournamentFromTeamById', {} as Tournament)));
   }
 
-  public removeTeamFromTournament(teamTournamentRequest: TeamTournamentRequest, jwtToken: string): Observable<MessageResponse> {
+  public getCodTournamentFromTeamById(teamId: string , tournamentId: string): Observable<Tournament>{
+	  return this.httpClient.get<Tournament>(TEAM_TOURNAMENT_API + '/cod/search?teamId=' + teamId +'?tournamenId='+ tournamentId)
+	  .pipe(retry(1), catchError(this.handleError('getTournamentFromTeamById', {} as Tournament)));
+  }
+
+  public addTeamToFifaTournament(teamTournamentRequest: TeamTournamentRequest, jwtToken: string): Observable<MessageResponse>{
+    return this.httpClient.post<MessageResponse>(TEAM_TOURNAMENT_API + '/fifa/add', teamTournamentRequest,
+		  {headers: new HttpHeaders(
+			      {'Authorization': 'Bearer ' + jwtToken})
+	  	})
+		  .pipe(catchError(this.handleError('teamTournamentRequest' , {} as MessageResponse)));
+  }
+
+  public addTeamToCodTournament(teamTournamentRequest: TeamTournamentRequest, jwtToken: string): Observable<MessageResponse>{
+    return this.httpClient.post<MessageResponse>(TEAM_TOURNAMENT_API + '/cod/add', teamTournamentRequest,
+		  {headers: new HttpHeaders(
+			      {'Authorization': 'Bearer ' + jwtToken})
+	  	})
+		  .pipe(catchError(this.handleError('teamTournamentRequest' , {} as MessageResponse)));
+  }
+
+  public removeTeamFromFifaTournament(teamTournamentRequest: TeamTournamentRequest, jwtToken: string): Observable<MessageResponse> {
     const httpOptions = {
 		  headers: new HttpHeaders({
 			  'Authorization': 'Bearer ' + jwtToken,
 		  }),
 		  body: teamTournamentRequest
 	  }	 
-	return this.httpClient.delete<MessageResponse>(TEAM_TOURNAMENT_API + '/remove', httpOptions)
-	.pipe(catchError(this.handleError('removeTeamFromTournament', {} as MessageResponse)));
+	  return this.httpClient.delete<MessageResponse>(TEAM_TOURNAMENT_API + '/fifa/remove', httpOptions)
+	  .pipe(catchError(this.handleError('removeTeamFromTournament', {} as MessageResponse)));
+  }
+
+  public removeTeamFromCodTournament(teamTournamentRequest: TeamTournamentRequest, jwtToken: string): Observable<MessageResponse> {
+    const httpOptions = {
+		  headers: new HttpHeaders({
+			  'Authorization': 'Bearer ' + jwtToken,
+		  }),
+		  body: teamTournamentRequest
+	  }	 
+	  return this.httpClient.delete<MessageResponse>(TEAM_TOURNAMENT_API + '/cod/remove', httpOptions)
+	  .pipe(catchError(this.handleError('removeTeamFromTournament', {} as MessageResponse)));
   }
 
 }

@@ -1,8 +1,9 @@
 import { User } from './user/user';
 import { Challenge} from './challenge';
-import { Tournament } from './tournament/tournament';
 import { ImageModel } from './imagemodel';
 import { TeamInviteRequest } from './teaminviterequest'; 
+import { TeamCodTournament } from './team-cod-tournament';
+import { TeamFifaTournament } from './team-fifa-tournament';
 
 export class Team {
     teamId: string;
@@ -11,7 +12,8 @@ export class Team {
     teamStatus: string;
     teamUsers: Array<User>;
     teamChallenges: Array<Challenge>
-    teamTournaments: Array<Tournament>;
+    teamFifaTournaments: Array<TeamFifaTournament>;
+    teamCodTournaments: Array<TeamCodTournament>;
     teamModerator: User;
     teamEmail: string;
     teamRequests: Array<TeamInviteRequest>;
@@ -20,7 +22,7 @@ export class Team {
 
     constructor(teamId ?: string, teamCountry?: string, teamName?: string, 
                 teamStatus ?:string, teamUsers?: Array<User>, teamChallenges?: Array<Challenge>,
-                teamTournaments?: Array<Tournament>, teamModerator?: User, teamEmail?: string,
+                teamModerator?: User, teamEmail?: string,
                 teamRequests?: Array<TeamInviteRequest>, teamImage?: FormData){
         this.teamId = teamId;
         this.teamCountry = teamCountry;
@@ -28,7 +30,6 @@ export class Team {
         this.teamStatus = teamStatus;
         this.teamUsers = teamUsers;
         this.teamChallenges = teamChallenges;
-        this.teamTournaments = teamTournaments;
         this.teamModerator = teamModerator;
         this.teamEmail = teamEmail;
         this.teamRequests = teamRequests;

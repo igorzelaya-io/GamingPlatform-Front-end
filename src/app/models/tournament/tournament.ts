@@ -1,6 +1,7 @@
 import { Team } from '../team';
 import { User } from '../user/user';
-
+import { Match } from '../match';
+import { Stack } from '../helpers/stack';
 
 export class Tournament {
 
@@ -9,25 +10,28 @@ export class Tournament {
     tournamentTeams: Array<Team>;
     tournamentLimitNumberOfTeams: number;
     tournamentNumberOfTeams: number;
-    tournamentPlatforms: string;
     tournamentStatus: string;
-	tournamentTeamSize: string;
-	tournamentGameMode: string;
-	tournamentFormat: string;
     tournamentModerator: User;
     tournamentDate: Date;
-	tournamentDateInMilliseconds: number;
+    tournamentGameMode: string;
+    tournamentPlatforms: string;
     tournamentCashPrice: number;
     tournamentEntryFee: number;
     tournamentRegion: string;
+    tournamentFormat: string;
+    tournamentTeamSize: string;
     tournamentDescription: string;
 	tournamentGame: string;
 	tournamentCodGameMode: string;
-	tournamentMatchesNumber: string;
+    tournamentMatchesNumber: string;
+    tournamentMatches: Match[];
+    tournamentTeamBracketStack: Stack<Team>;
+    tournamentLeaderboardForLeague: Array<Team>;
     isStartedTournament: boolean;
-
+    tournamentDateInMilliseconds: number;
+    
     constructor(tournamentName?: string, tournamentStatus?: string, tournamentModerator?: User,
-                tournamentDate?: Date, tournamentTeams?: Array<Team>){
+    tournamentDate?: Date, tournamentTeams?: Array<Team>){
         this.tournamentName = tournamentName;
         this.tournamentTeams = tournamentTeams;
         this.tournamentStatus = tournamentStatus;
