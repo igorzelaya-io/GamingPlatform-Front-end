@@ -1,5 +1,6 @@
 import { Tournament} from '../tournament/tournament';
 import { Team } from '../team';
+import { Match } from '../match';
 
 export class UserTournament {
 
@@ -8,6 +9,7 @@ export class UserTournament {
 	userTournamentTeam: Team;
 	userTournamentMatchesWins: number;
 	userTournamentMatchesLosses: number;
+	userTournamentMatches: Array<Match>;
 	
 	constructor(userTournamentId?:string, userTournament?: Tournament, userTournamentTeam?: Team, userTournamentMatchesWins?: number, userTournamentMatchesLosses?: number){
 		this.userTournamentId = userTournamentId;

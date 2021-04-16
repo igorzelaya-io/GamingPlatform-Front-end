@@ -25,6 +25,8 @@ export class TeamFifaTournament {
 
     teamTournamentGoalsDifference: number;
 
+    teamTournamentStatus: string;
+
     constructor(teamCodTournamentId?: string, teamCodTournament?: Tournament, teamCodTournamentMatches?: Match[],
                 teamTournamentNumberOfMatchesPlayed?: number, teamTournamentNumberOfMatchesDraws?: number,
                 teamTournamentNumberOfMatchesWins?: number, teamTournamentNumberOfMatchesLosses?:number,){

@@ -90,4 +90,11 @@ export class TeamTournamentService {
 	  .pipe(catchError(this.handleError('removeTeamFromTournament', {} as MessageResponse)));
   }
 
+  public activateTournament(tournament: Tournament): Observable<Tournament>{
+    return this.httpClient.post<Tournament>(TEAM_TOURNAMENT_API + '/start', tournament)
+    .pipe(catchError(this.handleError('activateTournament', {} as Tournament)));
+  }
+ 
+  
+
 }

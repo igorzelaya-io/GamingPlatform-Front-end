@@ -10,6 +10,9 @@ import { UserTournamentRequest } from '../../../models/user/user-tournament-requ
 import { MessageResponse } from 'src/app/models/messageresponse';
 import { UserTournamentService } from 'src/app/services/user-tournament.service';
 import { UserTeamService } from 'src/app/services/user-team.service';
+import { TournamentService } from 'src/app/services/tournament/tournament.service';
+import { Observable, forkJoin } from 'rxjs';
+import { Message } from '@angular/compiler/src/i18n/i18n_ast';
 
 
 const monthNames = [ "January", "February", "March", "April", "May", "June",
@@ -45,6 +48,8 @@ export class TournamentsDetailsPageComponent implements OnInit {
   isClickedSelectButton = false;
 
   alreadyJoinedTournament = false;
+  
+  isStartedTournament = false;
 
 
   constructor(private route: ActivatedRoute,
@@ -52,7 +57,8 @@ export class TournamentsDetailsPageComponent implements OnInit {
               private tokenService: TokenStorageService,
               private userTournamentService: UserTournamentService,
               private userTeamService: UserTeamService, 
-              private teamTournamentService: TeamTournamentService) {
+              private teamTournamentService: TeamTournamentService,
+              private tournamentService: TournamentService) {
 	  this.tournament = new Tournament();
     this.userInspectingTournament = new User();
     this.userTeamsAvailableToJoinTournaments  = [];
@@ -62,12 +68,25 @@ export class TournamentsDetailsPageComponent implements OnInit {
   ngOnInit(): void {
     this.userInspectingTournament = this.tokenService.getUser();
   	this.route.queryParams.subscribe(params => {
-		  this.tournament = JSON.parse(params['tournament']);
+      this.tournamentService.getTournamentById(params['tournamentId'])
+      .subscribe((data: Tournament) => {
+        if(data){
+          console.log(data);
+          this.tournament = data;
+        }
+      }, 
+      err => {
+        console.error(err);
+      }, 
+      () => {
+        this.getAllTournamentDates();
+      });
 	  });
-    this.getTournamentYear();
-    this.getTournamentMonth();
-    this.getTournamentTime();
-    this.getTournamentMonthDate();
+    if(!this.tournament.isStartedTournament){
+      if(new Date() > this.tournament.tournamentDate){
+        this.activateTournament();
+      }
+    }
     this.isAlreadyPartOfTournament();
   }
 
@@ -82,43 +101,51 @@ export class TournamentsDetailsPageComponent implements OnInit {
   }
 
   public joinTournament(){
+    if(this.selectedTeamToJoinTournamentWith.teamModerator.userName !== this.userInspectingTournament.userName){
+      this.isFailedTournamentJoin = true;
+      this.errorMessage = 'Only Team Creator is allowed to join with this team. ';
+      return;
+    }
     if(this.selectedTeamToJoinTournamentWith || Object.keys(this.selectedTeamToJoinTournamentWith).length !== 0){
       const teamTournamentRequest = new TeamTournamentRequest(this.tournament, this.selectedTeamToJoinTournamentWith); 
       
-      this.teamTournamentService.addTeamToFifaTournament(teamTournamentRequest, this.tokenService.getToken())
-      .subscribe((data: MessageResponse) => {
-        this.alreadyJoinedTournament = true;
-        console.log(data);
-      },
-      err => {
-        console.error(err.error.message);
-        this.errorMessage = err.error.message;
-        this.isClickedJoinButton = false;
-        this.isFailedTournamentJoin = true;
-        return;
-      });  
-      
+      if(this.tournament.tournamentGame === 'Fifa'){
+        this.addTeamToFifaTournament(teamTournamentRequest);  
+        const observablesList: Observable<MessageResponse>[] = [];
+        this.selectedTeamToJoinTournamentWith.teamUsers.forEach(user => {
+          let userTeamRequest = new UserTournamentRequest(this.tournament, this.selectedTeamToJoinTournamentWith, user);
+          observablesList.push(this.userTournamentService.addTournamentToUserTournamentList(userTeamRequest, this.tokenService.getToken()));
+        });
+        forkJoin(observablesList)
+        .subscribe(data => {
+          console.log(data);
+          this.alreadyJoinedTournament = true;
+        }, 
+          err => {
+          console.error(err.error.message);
+          this.isClickedJoinButton = false;
+        });       
+        return; 
+      }
+      this.addTeamToCodTournament(teamTournamentRequest);
+      const observablesList: Observable<MessageResponse>[] = [];
       this.selectedTeamToJoinTournamentWith.teamUsers.forEach(user => {
         let userTeamRequest = new UserTournamentRequest(this.tournament, this.selectedTeamToJoinTournamentWith, user);
-        this.addTournamentToUserTournamentList(userTeamRequest);
+        observablesList.push(this.userTournamentService.addTournamentToUserTournamentList(userTeamRequest, this.tokenService.getToken()));
       });
-
-      this.alreadyJoinedTournament = true;
+      forkJoin(observablesList)
+      .subscribe(data => {
+        console.log(data);
+        this.alreadyJoinedTournament = true;
+      },
+      err => {
+        console.error(err);
+        this.isClickedJoinButton = false;
+      });
       return;
     }
     this.isFailedTournamentJoin = true;
     this.errorMessage  = 'A team must be selected to join tournament';
-  }
-
-  public addTournamentToUserTournamentList(userTournamentRequest: UserTournamentRequest){
-    this.userTournamentService.addTournamentToUserTournamentList(userTournamentRequest, this.tokenService.getToken())
-    .subscribe((data: MessageResponse) => {
-      console.log(data);  
-    },
-    err => {
-      console.error(err.error.message);
-      this.isClickedJoinButton = false;
-    });
   }
 
   public removeTeamFromTournament(): void{
@@ -130,42 +157,53 @@ export class TournamentsDetailsPageComponent implements OnInit {
       const teamTournamentRequest = new TeamTournamentRequest();
       teamTournamentRequest.team = teamOnTournament;
       teamTournamentRequest.tournament = this.tournament;
-      this.teamTournamentService.removeTeamFromFifaTournament(teamTournamentRequest, this.tokenService.getToken())
-        .subscribe((data: MessageResponse) => {
-        console.log(data);
-        this.alreadyJoinedTournament = false;
-      }, 
+      
+      if(this.tournament.tournamentName === 'Fifa'){
+        this.removeTeamFromFifaTournament(teamTournamentRequest);
+        const observablesList: Observable<MessageResponse>[] = [];
+        teamOnTournament.teamUsers.forEach(user => {
+          let userTournamentRequest = new UserTournamentRequest();
+          userTournamentRequest.tournament = this.tournament;
+          userTournamentRequest.user = user;
+          observablesList.push(this.userTournamentService.removeTournamentFromUserTournamentList(userTournamentRequest, this.tokenService.getToken()));
+        });
+        forkJoin(observablesList)
+        .subscribe(data => {
+          console.log(data);          
+        },
         err => {
           console.error(err.error.message);
           this.isClickedExitButton = false;
-          return;
-      });
-
-      teamOnTournament.teamUsers.forEach(user => {
-        let userTournamentRequest = new UserTournamentRequest();
-        userTournamentRequest.tournament = this.tournament;
-        userTournamentRequest.user = user;
-        this.removeTournamentFromUserList(userTournamentRequest);
-      });
+        });
+        return;
+      }
+      this.removeTeamFromCodTournament(teamTournamentRequest);
+      const observablesList: Observable<MessageResponse>[] = [];
+        teamOnTournament.teamUsers.forEach(user => {
+          let userTournamentRequest = new UserTournamentRequest();
+          userTournamentRequest.tournament = this.tournament;
+          userTournamentRequest.user = user;
+          observablesList.push(this.userTournamentService.removeTournamentFromUserTournamentList(userTournamentRequest, this.tokenService.getToken()));
+        });
+        forkJoin(observablesList)
+        .subscribe(data => {
+          console.log(data);          
+        },
+        err => {
+          console.error(err.error.message);
+          this.isClickedExitButton = false;
+        });
     }
   }
   
-  public removeTournamentFromUserList(userTournamentRequest: UserTournamentRequest):void{
-    this.userTournamentService.removeTournamentFromUserTournamentList(userTournamentRequest, this.tokenService.getToken())
-    .subscribe((data: MessageResponse) => {
-      console.log(data);
-    },
-    err => {
-      console.error(err.error.message);
-      this.isClickedExitButton = false;
-    });
-  }
-
   public isAlreadyPartOfTournament(): void {
-    if(this.userInspectingTournament.userTournament
-          .filter(tournament => 
-          tournament.userTournament.tournamentName === this.tournament.tournamentName).length !== 0){
-        this.alreadyJoinedTournament = true;
+    if(this.userInspectingTournament.userTournament){
+      if(this.userInspectingTournament.userTournament
+            .filter(tournament => 
+            tournament.userTournament.tournamentName === this.tournament.tournamentName).length !== 0){
+          this.alreadyJoinedTournament = true;
+          return;
+      }
     }
     this.alreadyJoinedTournament = false;
   }
@@ -200,16 +238,84 @@ export class TournamentsDetailsPageComponent implements OnInit {
   } 
 
   getTournamentTime(){
-	  this.tournamentTime = this.tournament.tournamentDate.toString().slice(11, 19) + '  ' + new Date(this.tournament.tournamentDate).toString().match(/([A-Z]+[\+-][0-9]+)/)[1];
+	  this.tournamentTime = new Date(this.tournament.tournamentDate).toString().slice(15, 25) + '  ' + new Date(this.tournament.tournamentDate).toString().match(/([A-Z]+[\+-][0-9]+)/)[1];
   }
 
   getTournamentMonthDate(){
 	  this.tournamentMonthDate = new Date(this.tournament.tournamentDate).getDate();		
   } 
 
+  public removeTeamFromFifaTournament(teamTournamentRequest: TeamTournamentRequest){   
+    this.teamTournamentService.removeTeamFromFifaTournament(teamTournamentRequest, this.tokenService.getToken())
+      .subscribe((data: MessageResponse) => {
+        console.log(data);
+        this.alreadyJoinedTournament = false;
+      }, 
+      err => {
+        console.error(err.error.message);
+        this.isClickedExitButton = false;
+        return;
+    });
+  }
   
+  public removeTeamFromCodTournament(teamTournamentRequest: TeamTournamentRequest){
+    this.teamTournamentService.removeTeamFromCodTournament(teamTournamentRequest, this.tokenService.getToken())
+      .subscribe((data: MessageResponse) => {
+        console.log(data);
+        this.alreadyJoinedTournament = false;
+      }, 
+      err => {
+        console.error(err.error.message);
+        this.isClickedExitButton = false;
+        return;
+      });
+  }
+
+  public addTeamToFifaTournament(teamTournamentRequest: TeamTournamentRequest){
+    this.teamTournamentService.addTeamToFifaTournament(teamTournamentRequest, this.tokenService.getToken())
+      .subscribe((data: MessageResponse) => {
+        this.alreadyJoinedTournament = true;
+        console.log(data);
+      },
+      err => {
+        console.error(err.error.message);
+        this.errorMessage = err.error.message;
+        this.isClickedJoinButton = false;
+        this.isFailedTournamentJoin = true;
+        return;
+      });
+  }
+
+  public addTeamToCodTournament(teamTournamentRequest: TeamTournamentRequest){
+    this.teamTournamentService.addTeamToCodTournament(teamTournamentRequest, this.tokenService.getToken())
+    .subscribe((data: MessageResponse) => {
+      console.log(data);
+      this.alreadyJoinedTournament = true;
+    },
+    err => {
+      console.error(err.error.message);
+      this.errorMessage = err.error.message;
+      this.isClickedJoinButton = false;
+      this.isFailedTournamentJoin = true;
+      return;
+    });
+  }
   
-  
+  public activateTournament(){
+    this.teamTournamentService.activateTournament(this.tournament)
+    .subscribe((data: Tournament) => {
+      if(data && Object.keys(data).length !== 0){
+        this.tournament = data;
+        console.log(data);
+        this.isStartedTournament = true;
+        window.location.reload();
+        return;
+      }
+    }, err => {
+      console.error(err);
+      this.isStartedTournament = false;
+    });
+  }
   
   getAllUserTeamsAvailable(){
     this.userTeamService.getAllUserTeams(this.userInspectingTournament.userId)
@@ -222,6 +328,13 @@ export class TournamentsDetailsPageComponent implements OnInit {
       this.hasNoTeams = true;
     },
     err => console.error(err));
+  }
+
+  getAllTournamentDates(): void{
+    this.getTournamentYear();
+    this.getTournamentMonth();
+    this.getTournamentTime();
+    this.getTournamentMonthDate();
   }
 
   public isPvPTournament(): boolean{

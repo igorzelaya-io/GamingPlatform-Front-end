@@ -12,6 +12,7 @@ export class TeamCodTournament {
     teamTournamentNumberOfMatchesLosses: number;
     teamTournamentTotalKills: number;
     teamTournamentPoints: number;
+    teamTournamentStatus: string;
 
     constructor(teamCodTournamentId?: string, teamCodTournament?: Tournament, teamCodTournamentMatches?: Match[],
                 teamTournamentNumberOfMatchesPlayed?: number, teamTournamentNumberOfMatchesDraws?: number,

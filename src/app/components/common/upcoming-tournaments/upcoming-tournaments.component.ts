@@ -98,7 +98,7 @@ export class UpcomingTournamentsComponent implements OnInit {
 	
 
   public viewTournament(tournament: Tournament){
-	this.router.navigate(['tournament-details'], {queryParams: {tournament: JSON.stringify(tournament)}});
+	this.router.navigate(['tournament-details'], {queryParams: {tournamentId: tournament.tournamentId}});
   }
 
   public isWarzoneTournament(tournament: Tournament): boolean{
