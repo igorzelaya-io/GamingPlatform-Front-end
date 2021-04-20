@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { TeamService } from '../../../services/team/team-service.service';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
 import { Team } from '../../../models/team';
 import { User } from '../../../models/user/user';
 import { UserService } from 'src/app/services/user.service';
@@ -55,8 +55,7 @@ export class TeamCreationPageComponent implements OnInit {
               private httpClient: HttpClient,
 			        private tokenService: TokenStorageService,
 			        private formBuilder: FormBuilder,
-              private router: Router,
-              private userTeamService: UserTeamService) {
+              private router: Router) {
 
   	this.team = new Team();
     this.teamCreationRequest = new TeamCreationRequest();
@@ -79,6 +78,7 @@ export class TeamCreationPageComponent implements OnInit {
   }
 
   onSubmit(){
+    this.isClicked = true;
     this.team.teamName = this.txtName.value;
     this.team.teamEmail = this.txtEmail.value;
      this.team.teamCountry = this.txtCountry.value;
@@ -111,22 +111,20 @@ export class TeamCreationPageComponent implements OnInit {
 		   this.teamInviteRequestUsersToInvite.push(new TeamInviteRequest(this.team, userToInvite))
     });
     
+    const observablesList: Observable<MessageResponse>[] = []; 
     this.teamInviteRequestUsersToInvite.forEach(userToInvite => {
-		  this.sendTeamInviteToUser(userToInvite);
+      observablesList.push(this.teamService.sendTeamInvite(userToInvite, this.tokenService.getToken()));
 	  });
-  }
-
-  public sendTeamInviteToUser(userToInvite: TeamInviteRequest){
-	  this.teamService.sendTeamInvite(userToInvite, this.tokenService.getToken())
-	  .subscribe((data: MessageResponse) => {
-		  console.log(data);
-	  },
-	  err => {
-		  console.error(err.error.message);
-		  this.errorMessage = err.error.message;
-		  this.isClicked = false;
-		  this.isSuccessfulRegister = false;		
-	  });
+    forkJoin(observablesList)
+    .subscribe(data => {
+      console.log(data);
+    },
+    err => {
+      console.error(err.error.message);
+      this.errorMessage = err.error.message;
+      this.isClicked = false;
+      this.isSuccessfulRegister = false;
+    });
   }
 
   clickedButton(): void{

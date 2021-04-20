@@ -49,7 +49,7 @@ export class PopularLeaguesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-	
+	this.getAllTournamentsNow();
 	if(this.tokenService.loggedIn()){
 		this.hasAdminRole();
 		if(this.tokenService.isTokenExpired()){
@@ -61,7 +61,6 @@ export class PopularLeaguesComponent implements OnInit {
 		}
 		this.isAuthenticated = true;		
 	}
-	this.getAllTournamentsNow();
   }
 
   getAllTournamentsNow(): void{

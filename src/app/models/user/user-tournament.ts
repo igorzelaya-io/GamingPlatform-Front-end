@@ -10,6 +10,7 @@ export class UserTournament {
 	userTournamentMatchesWins: number;
 	userTournamentMatchesLosses: number;
 	userTournamentMatches: Array<Match>;
+	userTournamentStatus: string;
 	
 	constructor(userTournamentId?:string, userTournament?: Tournament, userTournamentTeam?: Team, userTournamentMatchesWins?: number, userTournamentMatchesLosses?: number){
 		this.userTournamentId = userTournamentId;

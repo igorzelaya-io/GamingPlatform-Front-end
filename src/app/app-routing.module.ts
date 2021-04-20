@@ -42,7 +42,7 @@ const routes: Routes = [
     {path: 'coming-soon', component: ComingSoonPageComponent},
     {path: 'error', component: ErrorPageComponent},
     {path: 'stream-schedule', component: StreamSchedulePageComponent},
-    {path: 'single-match', component: MatchDetailsPageComponent},
+    {path: 'match-details', component: MatchDetailsPageComponent},
     {path: 'player-details', component: PlayerDetailsPageComponent},
 	{path: 'my-account', component: AccountDetailsComponent},
     {path: 'shop', component: ProductsListPageTwoComponent},

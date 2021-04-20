@@ -21,7 +21,7 @@ export class User {
 	userRoles: Array<Role>;
 	userImage: FormData;
 	userGetImage: ImageModel;
-	userTournament: Array<UserTournament>;
+	userTournaments: Array<UserTournament>;
 	userTotalWs: number;
 	userTotalLs: number;
 

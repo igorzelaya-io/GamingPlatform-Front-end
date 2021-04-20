@@ -6,13 +6,12 @@ import { TokenStorageService } from 'src/app/services/token-storage.service';
 import { Team } from '../../../models/team';
 import { TeamTournamentRequest } from '../../../models/teamtournamentrequest';
 import { TeamTournamentService } from '../../../services/team/team-tournament.service';
-import { UserTournamentRequest } from '../../../models/user/user-tournament-request';
 import { MessageResponse } from 'src/app/models/messageresponse';
 import { UserTournamentService } from 'src/app/services/user-tournament.service';
 import { UserTeamService } from 'src/app/services/user-team.service';
 import { TournamentService } from 'src/app/services/tournament/tournament.service';
-import { Observable, forkJoin } from 'rxjs';
-import { Message } from '@angular/compiler/src/i18n/i18n_ast';
+import { Match } from 'src/app/models/match';
+
 
 
 const monthNames = [ "January", "February", "March", "April", "May", "June",
@@ -38,6 +37,12 @@ export class TournamentsDetailsPageComponent implements OnInit {
   userInspectingTournament: User;
   selectedTeamToJoinTournamentWith: Team;
   userTeamsAvailableToJoinTournaments: Team[];
+  userTeamEnrolledInTournament: Team;
+  userTeamActiveMatches: Match[];
+  userTeamInactiveMatches: Match[];
+  tournamentMatches: Match[];
+  tournamentInactiveMatches: Match[];
+
   hasNoTeams: boolean = false;  
 
   errorMessage: string = '';
@@ -55,7 +60,6 @@ export class TournamentsDetailsPageComponent implements OnInit {
   constructor(private route: ActivatedRoute,
               private router: Router, 
               private tokenService: TokenStorageService,
-              private userTournamentService: UserTournamentService,
               private userTeamService: UserTeamService, 
               private teamTournamentService: TeamTournamentService,
               private tournamentService: TournamentService) {
@@ -63,6 +67,11 @@ export class TournamentsDetailsPageComponent implements OnInit {
     this.userInspectingTournament = new User();
     this.userTeamsAvailableToJoinTournaments  = [];
     this.selectedTeamToJoinTournamentWith = new Team();
+    this.userTeamEnrolledInTournament = new Team();
+    this.userTeamActiveMatches = [];
+    this.userTeamInactiveMatches = [];
+    this.tournamentMatches = [];
+    this.tournamentInactiveMatches = [];
   }
 
   ngOnInit(): void {
@@ -82,10 +91,15 @@ export class TournamentsDetailsPageComponent implements OnInit {
         this.getAllTournamentDates();
       });
 	  });
-    if(!this.tournament.isStartedTournament){
-      if(new Date() > this.tournament.tournamentDate){
-        this.activateTournament();
+    if(new Date() > this.tournament.tournamentDate){
+      if(!this.tournament.isStartedTournament){
+        this.activateTournament();    
       }
+      if(this.alreadyJoinedTournament){
+        
+      }
+      this.getAllTournamentMatches();
+      this.getAllTournamentInactiveMatches();
     }
     this.isAlreadyPartOfTournament();
   }
@@ -103,45 +117,18 @@ export class TournamentsDetailsPageComponent implements OnInit {
   public joinTournament(){
     if(this.selectedTeamToJoinTournamentWith.teamModerator.userName !== this.userInspectingTournament.userName){
       this.isFailedTournamentJoin = true;
-      this.errorMessage = 'Only Team Creator is allowed to join with this team. ';
+      this.errorMessage = 'Only Team Creator is allowed to join with this team.';
       return;
     }
     if(this.selectedTeamToJoinTournamentWith || Object.keys(this.selectedTeamToJoinTournamentWith).length !== 0){
       const teamTournamentRequest = new TeamTournamentRequest(this.tournament, this.selectedTeamToJoinTournamentWith); 
       
       if(this.tournament.tournamentGame === 'Fifa'){
-        this.addTeamToFifaTournament(teamTournamentRequest);  
-        const observablesList: Observable<MessageResponse>[] = [];
-        this.selectedTeamToJoinTournamentWith.teamUsers.forEach(user => {
-          let userTeamRequest = new UserTournamentRequest(this.tournament, this.selectedTeamToJoinTournamentWith, user);
-          observablesList.push(this.userTournamentService.addTournamentToUserTournamentList(userTeamRequest, this.tokenService.getToken()));
-        });
-        forkJoin(observablesList)
-        .subscribe(data => {
-          console.log(data);
-          this.alreadyJoinedTournament = true;
-        }, 
-          err => {
-          console.error(err.error.message);
-          this.isClickedJoinButton = false;
-        });       
+        this.addTeamToFifaTournament(teamTournamentRequest);    
         return; 
       }
+
       this.addTeamToCodTournament(teamTournamentRequest);
-      const observablesList: Observable<MessageResponse>[] = [];
-      this.selectedTeamToJoinTournamentWith.teamUsers.forEach(user => {
-        let userTeamRequest = new UserTournamentRequest(this.tournament, this.selectedTeamToJoinTournamentWith, user);
-        observablesList.push(this.userTournamentService.addTournamentToUserTournamentList(userTeamRequest, this.tokenService.getToken()));
-      });
-      forkJoin(observablesList)
-      .subscribe(data => {
-        console.log(data);
-        this.alreadyJoinedTournament = true;
-      },
-      err => {
-        console.error(err);
-        this.isClickedJoinButton = false;
-      });
       return;
     }
     this.isFailedTournamentJoin = true;
@@ -151,7 +138,7 @@ export class TournamentsDetailsPageComponent implements OnInit {
   public removeTeamFromTournament(): void{
     if(this.alreadyJoinedTournament){
       const teamOnTournament = this.userInspectingTournament
-              .userTournament.filter(userTournaments => 
+              .userTournaments.filter(userTournaments => 
               userTournaments.userTournament.tournamentName === this.tournament.tournamentName)[0].userTournamentTeam;
       
       const teamTournamentRequest = new TeamTournamentRequest();
@@ -160,47 +147,18 @@ export class TournamentsDetailsPageComponent implements OnInit {
       
       if(this.tournament.tournamentName === 'Fifa'){
         this.removeTeamFromFifaTournament(teamTournamentRequest);
-        const observablesList: Observable<MessageResponse>[] = [];
-        teamOnTournament.teamUsers.forEach(user => {
-          let userTournamentRequest = new UserTournamentRequest();
-          userTournamentRequest.tournament = this.tournament;
-          userTournamentRequest.user = user;
-          observablesList.push(this.userTournamentService.removeTournamentFromUserTournamentList(userTournamentRequest, this.tokenService.getToken()));
-        });
-        forkJoin(observablesList)
-        .subscribe(data => {
-          console.log(data);          
-        },
-        err => {
-          console.error(err.error.message);
-          this.isClickedExitButton = false;
-        });
         return;
       }
       this.removeTeamFromCodTournament(teamTournamentRequest);
-      const observablesList: Observable<MessageResponse>[] = [];
-        teamOnTournament.teamUsers.forEach(user => {
-          let userTournamentRequest = new UserTournamentRequest();
-          userTournamentRequest.tournament = this.tournament;
-          userTournamentRequest.user = user;
-          observablesList.push(this.userTournamentService.removeTournamentFromUserTournamentList(userTournamentRequest, this.tokenService.getToken()));
-        });
-        forkJoin(observablesList)
-        .subscribe(data => {
-          console.log(data);          
-        },
-        err => {
-          console.error(err.error.message);
-          this.isClickedExitButton = false;
-        });
     }
   }
   
   public isAlreadyPartOfTournament(): void {
-    if(this.userInspectingTournament.userTournament){
-      if(this.userInspectingTournament.userTournament
+    if(this.userInspectingTournament.userTournaments){
+      if(this.userInspectingTournament.userTournaments
             .filter(tournament => 
-            tournament.userTournament.tournamentName === this.tournament.tournamentName).length !== 0){
+            tournament.userTournament.tournamentId === this.tournament.tournamentId).length !== 0){
+          
           this.alreadyJoinedTournament = true;
           return;
       }
@@ -328,6 +286,82 @@ export class TournamentsDetailsPageComponent implements OnInit {
       this.hasNoTeams = true;
     },
     err => console.error(err));
+  }
+
+  getAllActiveFifaMatchesFromTournament(team: Team){
+    this.teamTournamentService.getAllActiveFifaMatchesFromTournament(team.teamId, this.tournament.tournamentId)
+    .subscribe((data: Array<Match>) => {
+      if(data && data.length > 0){
+        console.log(data);
+        this.userTeamActiveMatches = data;
+      }
+    }, 
+    err => {
+      console.error(err);
+    });
+  }
+
+  getAllInactiveFifaMatchesFromTournament(team: Team){
+    this.teamTournamentService.getAllInactiveFifaMatchesFromTournament(team.teamId, this.tournament.tournamentId)
+    .subscribe((data: Match[]) => {
+      console.log(data);
+      this.userTeamInactiveMatches = data;
+    },
+    err => {
+      console.log(err);
+    });
+  }
+
+  getAllActiveCodMatchesFromTournament(team: Team){
+    this.teamTournamentService.getAllActiveCodMatchesFromTournament(team.teamId, this.tournament.tournamentId)
+    .subscribe((data: Match[]) => {
+      console.log(data);
+      this.userTeamActiveMatches = data;
+    },
+    err => {
+      console.error(err);
+    });
+  }
+
+  getAllInactiveCodMatchesFromTournament(team: Team){
+    this.teamTournamentService.getAllInactiveCodMatchesFromTournament(team.teamId, this.tournament.tournamentId)
+    .subscribe((data: Match[]) => {
+      console.log(data);
+      this.userTeamInactiveMatches = data;
+    }, 
+    err => {
+      console.error(err);
+    });
+  }
+
+  getAllTournamentMatches(){
+    this.tournamentService.getAllTournamentMatches(this.tournament.tournamentId)
+    .subscribe((data: Match[]) => {
+      console.log(data);
+      this.tournamentMatches = data;
+    },
+    err => {
+      console.error(err);
+    });
+  }
+
+  getAllTournamentInactiveMatches(){
+    this.tournamentService.getAllTournamentInactiveMatches(this.tournament.tournamentId)
+    .subscribe((data: Match[]) => {
+      console.log(data);
+      this.tournamentInactiveMatches = data;
+    },
+    err => {
+      console.error(err);
+    });  
+  }
+  //Match details
+  // getTeamMatchFromTournament(matchId: string, tournamentId: string){
+  //   this.teamTournamentService.getTeamMatchFromTournament(matchId, this.tournament.tournamentId)
+  //   .subscribe();
+  // }
+  passMatch(matchId: string){
+    this.router.navigate(['/match-details'], { queryParams: {matchId: matchId, tournamentId: this.tournament.tournamentId}});
   }
 
   getAllTournamentDates(): void{
