@@ -46,8 +46,8 @@ export class TournamentService {
 	  .pipe(retry(1), catchError(this.handleError('getAllTournamentsNow', [])));	
   }
 
-  public getAllTournamentMatches(tournamentId: string):Observable<Match[]>{
-    return this.httpClient.get<Match[]>(TOURNAMENTS_API + '/matches/active?tournamentId=' + tournamentId)
+  public getAllActiveTournamentMatches(tournamentId: string):Observable<Match[]>{
+    return this.httpClient.get<Match[]>(TOURNAMENTS_API + '/matches/all?tournamentId=' + tournamentId)
     .pipe(retry(1), catchError(this.handleError('getAllTournamentMatches', [])));
   }
 

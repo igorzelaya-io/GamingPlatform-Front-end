@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { User } from '../models/user/user';
 import { D1Service } from '../models/d1service';
+import { Role }from '../models/role';
 
 const TOKEN_KEY = 'auth-token';
 const USER_KEY = 'auth-user';
@@ -46,6 +47,11 @@ export class TokenStorageService {
     const user: User = this.getUser();
     user.userTokens = user.userTokens + d1service.serviceGivingAmount;
     this.saveUser(user);
+  }
+
+  public addTeamAdminRoleToSavedUser(){
+    const user: User = this.getUser();
+    user.userRoles.push(new Role("TEAM_ADMIN"));
   }
 
   public loggedIn(): boolean{

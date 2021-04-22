@@ -7,10 +7,10 @@ import { Team } from '../../../models/team';
 import { TeamTournamentRequest } from '../../../models/teamtournamentrequest';
 import { TeamTournamentService } from '../../../services/team/team-tournament.service';
 import { MessageResponse } from 'src/app/models/messageresponse';
-import { UserTournamentService } from 'src/app/services/user-tournament.service';
 import { UserTeamService } from 'src/app/services/user-team.service';
 import { TournamentService } from 'src/app/services/tournament/tournament.service';
 import { Match } from 'src/app/models/match';
+import { UserService } from 'src/app/services/user.service';
 
 
 
@@ -62,7 +62,8 @@ export class TournamentsDetailsPageComponent implements OnInit {
               private tokenService: TokenStorageService,
               private userTeamService: UserTeamService, 
               private teamTournamentService: TeamTournamentService,
-              private tournamentService: TournamentService) {
+              private tournamentService: TournamentService,
+              private userService: UserService) {
 	  this.tournament = new Tournament();
     this.userInspectingTournament = new User();
     this.userTeamsAvailableToJoinTournaments  = [];
@@ -80,7 +81,6 @@ export class TournamentsDetailsPageComponent implements OnInit {
       this.tournamentService.getTournamentById(params['tournamentId'])
       .subscribe((data: Tournament) => {
         if(data){
-          console.log(data);
           this.tournament = data;
         }
       }, 
@@ -89,19 +89,10 @@ export class TournamentsDetailsPageComponent implements OnInit {
       }, 
       () => {
         this.getAllTournamentDates();
+        this.isAlreadyPartOfTournament();
+        this.evaluateTournamentDate();    
       });
-	  });
-    if(new Date() > this.tournament.tournamentDate){
-      if(!this.tournament.isStartedTournament){
-        this.activateTournament();    
-      }
-      if(this.alreadyJoinedTournament){
-        
-      }
-      this.getAllTournamentMatches();
-      this.getAllTournamentInactiveMatches();
-    }
-    this.isAlreadyPartOfTournament();
+    });
   }
 
   public isJoiningTournament(): void{
@@ -125,10 +116,12 @@ export class TournamentsDetailsPageComponent implements OnInit {
       
       if(this.tournament.tournamentGame === 'Fifa'){
         this.addTeamToFifaTournament(teamTournamentRequest);    
+        window.location.reload();
         return; 
       }
 
-      this.addTeamToCodTournament(teamTournamentRequest);
+      this.addTeamToCodTournament(teamTournamentRequest);       
+      window.location.reload();
       return;
     }
     this.isFailedTournamentJoin = true;
@@ -154,11 +147,10 @@ export class TournamentsDetailsPageComponent implements OnInit {
   }
   
   public isAlreadyPartOfTournament(): void {
-    if(this.userInspectingTournament.userTournaments){
+    if(this.userInspectingTournament.userTournaments !== null && typeof this.userInspectingTournament.userTournaments !== undefined){
       if(this.userInspectingTournament.userTournaments
             .filter(tournament => 
             tournament.userTournament.tournamentId === this.tournament.tournamentId).length !== 0){
-          
           this.alreadyJoinedTournament = true;
           return;
       }
@@ -206,7 +198,6 @@ export class TournamentsDetailsPageComponent implements OnInit {
   public removeTeamFromFifaTournament(teamTournamentRequest: TeamTournamentRequest){   
     this.teamTournamentService.removeTeamFromFifaTournament(teamTournamentRequest, this.tokenService.getToken())
       .subscribe((data: MessageResponse) => {
-        console.log(data);
         this.alreadyJoinedTournament = false;
       }, 
       err => {
@@ -241,6 +232,9 @@ export class TournamentsDetailsPageComponent implements OnInit {
         this.isClickedJoinButton = false;
         this.isFailedTournamentJoin = true;
         return;
+      }, 
+      () => {
+        this.getUserById();
       });
   }
 
@@ -256,7 +250,22 @@ export class TournamentsDetailsPageComponent implements OnInit {
       this.isClickedJoinButton = false;
       this.isFailedTournamentJoin = true;
       return;
+    }, () => {
+      this.getUserById();
     });
+  }
+
+  public getUserById(){
+    this.userService.getUserById(this.userInspectingTournament.userId)
+    .subscribe((data: User) => {
+      if(data){
+        this.tokenService.saveUser(data);
+      }
+    },
+    err => {
+      this.isFailedTournamentJoin = true;
+      this.errorMessage = 'Failed to join tournament, please try again later';
+    }); 
   }
   
   public activateTournament(){
@@ -335,10 +344,13 @@ export class TournamentsDetailsPageComponent implements OnInit {
   }
 
   getAllTournamentMatches(){
-    this.tournamentService.getAllTournamentMatches(this.tournament.tournamentId)
+    this.tournamentService.getAllActiveTournamentMatches(this.tournament.tournamentId)
     .subscribe((data: Match[]) => {
-      console.log(data);
-      this.tournamentMatches = data;
+      if(data){
+        console.log(data);
+        this.tournamentMatches = data;
+        return;
+      }
     },
     err => {
       console.error(err);
@@ -348,14 +360,17 @@ export class TournamentsDetailsPageComponent implements OnInit {
   getAllTournamentInactiveMatches(){
     this.tournamentService.getAllTournamentInactiveMatches(this.tournament.tournamentId)
     .subscribe((data: Match[]) => {
-      console.log(data);
-      this.tournamentInactiveMatches = data;
+      if(data){
+        console.log(data);
+        this.tournamentInactiveMatches = data;
+        return;
+      }
     },
     err => {
       console.error(err);
     });  
   }
-  //Match details
+  //This method belongs to match-details.
   // getTeamMatchFromTournament(matchId: string, tournamentId: string){
   //   this.teamTournamentService.getTeamMatchFromTournament(matchId, this.tournament.tournamentId)
   //   .subscribe();
@@ -364,11 +379,26 @@ export class TournamentsDetailsPageComponent implements OnInit {
     this.router.navigate(['/match-details'], { queryParams: {matchId: matchId, tournamentId: this.tournament.tournamentId}});
   }
 
+  evaluateTournamentDate(){
+    if(new Date().getTime() > new Date(this.tournament.tournamentDate).getTime()){
+      if(!this.tournament.isStartedTournament){
+        this.activateTournament();    
+      }
+      this.isStartedTournament = true;
+      if(this.alreadyJoinedTournament){
+        //getAllActiveTournamentMatchesFromTeam()
+      }
+      this.getAllTournamentMatches();
+      this.getAllTournamentInactiveMatches();
+      //getTournamentLeaderboard
+    }
+  }
+
   getAllTournamentDates(): void{
     this.getTournamentYear();
     this.getTournamentMonth();
     this.getTournamentTime();
-    this.getTournamentMonthDate();
+    this.getTournamentMonthDate(); 
   }
 
   public isPvPTournament(): boolean{

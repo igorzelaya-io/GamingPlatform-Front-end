@@ -24,7 +24,6 @@ export class Tournament {
 	tournamentGame: string;
 	tournamentCodGameMode: string;
     tournamentMatchesNumber: string;
-    tournamentMatches: Match[];
     tournamentTeamBracketStack: Stack<Team>;
     tournamentLeaderboardForLeague: Array<Team>;
     isStartedTournament: boolean;

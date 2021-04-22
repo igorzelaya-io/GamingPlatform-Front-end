@@ -101,7 +101,8 @@ export class TeamCreationPageComponent implements OnInit {
     () => {
 		  if(this.isSuccessfulRegister || !this.isSignUpFailed){
         this.sendTeamInviteToEachUser();
-	  	}
+        this.tokenService.addTeamAdminRoleToSavedUser();
+      }
     });
   }
 
@@ -126,7 +127,7 @@ export class TeamCreationPageComponent implements OnInit {
       this.isSuccessfulRegister = false;
     });
   }
-
+  
   clickedButton(): void{
     this.isClicked = true;
   }

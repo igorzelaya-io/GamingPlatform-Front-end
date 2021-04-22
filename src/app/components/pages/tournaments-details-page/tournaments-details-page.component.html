@@ -138,60 +138,77 @@
         </div>
         
         <div class="matches-tabs">
-            <ul class="nav nav-tabs" id="myTab" role="tablist">
-                <li *ngIf="alreadyJoinedTournament" class="nav-item" role="presentation"><a class="nav-link active" id="all-matches-tab" data-toggle="tab" href="#all-matches" role="tab" aria-controls="all-matches" aria-selected="true">My Matches</a></li>
+            <ul class="nav nav-tabs" id="myTab" role="tablist">  
+
+                <li class="nav-item" role="presentation"><a class="nav-link" id="all-matches-tab" data-toggle="tab" href="#all-matches" role="tab" aria-controls="all-matches" aria-selected="true">My Matches</a></li>
 
                 <li class="nav-item" role="presentation"><a class="nav-link" id="upcoming-matches-tab" data-toggle="tab" href="#upcoming-matches" role="tab" aria-controls="upcoming-matches" aria-selected="false">All Matches</a></li>
 
                 <li class="nav-item" role="presentation"><a class="nav-link" id="latest-result-tab" data-toggle="tab" href="#latest-result" role="tab" aria-controls="latest-result" aria-selected="false">Latest Result</a></li>
+            
+                
             </ul>
             
             <div class="tab-content" id="myTabContent">
                 
                 <div class="tab-pane fade show active" id="all-matches" role="tabpanel">
                     <div *ngIf="!isStartedTournament" style="vertical-align: middle;">
-                        <h1 style="text-align: center">Tournament has not Started</h1>
+                        <h1 style="text-align: center">Tournament has not started</h1>
                     </div>
-                    <div class="single-matches-box">
-                        <div class="row align-items-center">
-                            <div class="col-lg-5 col-md-12">
-                                <div class="matches-team">
-                                    <img src="assets/img/team1.png" alt="image">
-    
-                                    <div class="content">
-                                        <h3>Fierce</h3>
-                                        <ul class="watch-list">
-                                            <li><span>Watch</span></li>
-                                            <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on YouTube"><i class='bx bxl-youtube'></i></a></li>
-                                            <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on Twitch"><i class='bx bxl-twitch'></i></a></li>
-                                            <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on Vimeo"><i class='bx bxl-vimeo'></i></a></li>
-                                        </ul>
+                    <div *ngIf="!isStartedTournament && !alreadyJoinedTournament" style="vertical-align: middle;">
+                        <h1 style="text-align: center;">Join tournament to access matches</h1>
+                    </div>
+
+                    <div *ngIf="isStartedTournament && !alreadyJoinedTournament" style="vertical-align: middle;">
+                        <h1 style="text-align: center">You are not registered in this tournament</h1>
+                    </div>
+
+                    <div *ngIf="userTeamActiveMatches.length === 0 && this.alreadyJoinedTournament && isStartedTournament" style="vertical-align: middle">
+                        <h1 style="text-align: center">You have no matches available</h1>
+                    </div>
+                        
+                        <div *ngIf="isStartedTournament && alreadyJoinedTournament && userTeamActiveMatches.length !== 0">
+                            
+                            <div *ngFor="let match of userTeamActiveMatches" class="single-matches-box">
+                                <div class="row align-items-center">
+                                    <div class="col-lg-5 col-md-12">
+                                        <div class="matches-team">
+                                            
+                                            <div class="content">
+                                                <h3>{{match.matchLocalTeam}}</h3>
+                                                <ul class="watch-list">
+                                                    <!-- <li><span>Watch</span></li> -->
+                                                    <!-- <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on YouTube"><i class='bx bxl-youtube'></i></a></li>
+                                                    <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on Twitch"><i class='bx bxl-twitch'></i></a></li>
+                                                    <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on Vimeo"><i class='bx bxl-vimeo'></i></a></li> -->
+                                                </ul>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-    
-                            <div class="col-lg-2 col-md-12">
-                                <div class="matches-result">
-                                    <ul>
-                                        <li>9</li>
-                                        <li>14</li>
-                                    </ul>
-                                    <span class="date-time">20TH May 2020, 23:00</span>
-                                </div>
-                            </div>
-    
-                            <div class="col-lg-5 col-md-12">
-                                <div class="matches-team right-image">
-                                    <img src="assets/img/team2.png" alt="image">
-    
-                                    <div class="content">
-                                        <h3>Devlis</h3>
-                                        <ul class="watch-list">
-                                            <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on YouTube"><i class='bx bxl-youtube'></i></a></li>
-                                            <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on Twitch"><i class='bx bxl-twitch'></i></a></li>
-                                            <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on Vimeo"><i class='bx bxl-vimeo'></i></a></li>
-                                            <li><span>Watch</span></li>
+        
+                                <div class="col-lg-2 col-md-12">
+                                    <div class="matches-result">
+                                        <ul>
+                                            <li>{{match.localTeamMatchScore}}</li>
+                                            <li>{{match.awayTeamMatchScore}}</li>
                                         </ul>
+                                        <span class="date-time"><button (click)="passMatch(match.matchId)">View Match</button></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-5 col-md-12">
+                                    <div class="matches-team right-image">
+                                        <img src="assets/img/team2.png" alt="image">
+        
+                                        <div class="content">
+                                            <h3>{{match.matchAwayTeam}}</h3>
+                                            <ul class="watch-list">
+                                                <!-- <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on YouTube"><i class='bx bxl-youtube'></i></a></li>
+                                                <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on Twitch"><i class='bx bxl-twitch'></i></a></li>
+                                                <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on Vimeo"><i class='bx bxl-vimeo'></i></a></li>
+                                                <li><span>Watch</span></li> -->
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -200,49 +217,56 @@
                 </div>
 
                 <div class="tab-pane fade" id="upcoming-matches" role="tabpanel">
+                    
                     <div *ngIf="!isStartedTournament" style="vertical-align: middle;">
-                        <h1 style="text-align: center">Tournament has not Started</h1>
+                        <h1 style="text-align: center">Tournament has not started</h1>
                     </div>
-                    <div class="single-matches-box">
-                        <div class="row align-items-center">
-                            <div class="col-lg-5 col-md-12">
-                                <div class="matches-team">
-                                    <img src="assets/img/team5.png" alt="image">
-    
-                                    <div class="content">
-                                        <h3>Rover</h3>
-                                        <ul class="watch-list">
-                                            <li><span>Watch</span></li>
-                                            <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on YouTube"><i class='bx bxl-youtube'></i></a></li>
-                                            <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on Twitch"><i class='bx bxl-twitch'></i></a></li>
-                                            <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on Vimeo"><i class='bx bxl-vimeo'></i></a></li>
-                                        </ul>
+
+                    <div *ngIf="tournamentMatches.length === 0" style="vertical-align: middle;">
+                        <h1 style="text-align: center">No matches available</h1>
+                    </div>
+                    <div *ngIf="this.isStartedTournament && tournamentMatches.length !== 0">
+                        <div *ngFor="let match of tournamentMatches" class="single-matches-box">
+                            <div class="row align-items-center">
+                                <div class="col-lg-5 col-md-12">
+                                    <div class="matches-team">
+                                        <!-- <img src="assets/img/team5.png" alt="image"> -->
+        
+                                        <div class="content">
+                                            <h3>{{match.matchLocalTeam}}</h3>
+                                            <ul class="watch-list">
+                                                <!-- <li><span>Watch</span></li>
+                                                <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on YouTube"><i class='bx bxl-youtube'></i></a></li>
+                                                <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on Twitch"><i class='bx bxl-twitch'></i></a></li>
+                                                <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on Vimeo"><i class='bx bxl-vimeo'></i></a></li> -->
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-    
-                            <div class="col-lg-2 col-md-12">
-                                <div class="matches-result">
-                                    <ul>
-                                        <li>0</li>
-                                        <li>0</li>
-                                    </ul>
-                                    <span class="date-time">18TH May 2020, 21:00</span>
-                                </div>
-                            </div>
-    
-                            <div class="col-lg-5 col-md-12">
-                                <div class="matches-team right-image">
-                                    <img src="assets/img/team6.png" alt="image">
-    
-                                    <div class="content">
-                                        <h3>Gleopsis</h3>
-                                        <ul class="watch-list">
-                                            <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on YouTube"><i class='bx bxl-youtube'></i></a></li>
-                                            <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on Twitch"><i class='bx bxl-twitch'></i></a></li>
-                                            <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on Vimeo"><i class='bx bxl-vimeo'></i></a></li>
-                                            <li><span>Watch</span></li>
+        
+                                <div class="col-lg-2 col-md-12">
+                                    <div class="matches-result">
+                                        <ul>
+                                            <li>{{match.localTeamMatchScore}}</li>
+                                            <li>{{match.awayTeamMatchScore}}</li>
                                         </ul>
+                                        <span class="date-time"><button (click)="passMatch(match.matchId)">View Match</button></span>
+                                    </div>
+                                </div>
+        
+                                <div class="col-lg-5 col-md-12">
+                                    <div class="matches-team right-image">
+                                        <!-- <img src="assets/img/team6.png" alt="image"> -->
+        
+                                        <div class="content">
+                                            <h3>{{match.matchAwayTeam}}</h3>
+                                            <ul class="watch-list">
+                                                <!-- <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on YouTube"><i class='bx bxl-youtube'></i></a></li>
+                                                <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on Twitch"><i class='bx bxl-twitch'></i></a></li>
+                                                <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on Vimeo"><i class='bx bxl-vimeo'></i></a></li>
+                                                <li><span>Watch</span></li> -->
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -252,52 +276,60 @@
 
                 <div class="tab-pane fade" id="latest-result" role="tabpanel">
                     <div *ngIf="!isStartedTournament" style="vertical-align: middle;">
-                        <h1 style="text-align: center">Tournament has not Started</h1>
+                        <h1 style="text-align: center">Tournament has not started</h1>
                     </div>
-                    <div class="single-matches-box">
-                        <div class="row align-items-center">
-                            <div class="col-lg-5 col-md-12">
-                                <div class="matches-team">
-                                    <img src="assets/img/team1.png" alt="image">
-    
-                                    <div class="content">
-                                        <h3>Fierce</h3>
-                                        <ul class="watch-list">
-                                            <li><span>Watch</span></li>
-                                            <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on YouTube"><i class='bx bxl-youtube'></i></a></li>
-                                            <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on Twitch"><i class='bx bxl-twitch'></i></a></li>
-                                            <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on Vimeo"><i class='bx bxl-vimeo'></i></a></li>
-                                        </ul>
+                    <div *ngIf="isStartedTournament && tournamentInactiveMatches.length === 0" style="vertical-align: middle;">
+                        <h1 style="text-align: center;">No matches available</h1>
+                    </div>
+                    <div *ngIf="isStartedTournament && tournamentInactiveMatches.length !== 0 && !isPvPTournament()">
+                        <div class="single-matches-box" *ngFor="let match of tournamentInactiveMatches">
+                            <div class="row align-items-center">
+                                <div class="col-lg-5 col-md-12">
+                                    <div class="matches-team">
+                                        <!-- <img src="assets/img/team1.png" alt="image"> -->
+        
+                                        <div class="content">
+                                            <h3>{{match.matchLocalTeam}}</h3>
+                                            <ul class="watch-list">
+                                                <!-- <li><span>Watch</span></li>
+                                                <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on YouTube"><i class='bx bxl-youtube'></i></a></li>
+                                                <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on Twitch"><i class='bx bxl-twitch'></i></a></li>
+                                                <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on Vimeo"><i class='bx bxl-vimeo'></i></a></li> -->
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-    
-                            <div class="col-lg-2 col-md-12">
-                                <div class="matches-result">
-                                    <ul>
-                                        <li>9</li>
-                                        <li>14</li>
-                                    </ul>
-                                    <span class="date-time">20TH May 2020, 23:00</span>
-                                </div>
-                            </div>
-    
-                            <div class="col-lg-5 col-md-12">
-                                <div class="matches-team right-image">
-                                    <img src="assets/img/team2.png" alt="image">
-    
-                                    <div class="content">
-                                        <h3>Devlis</h3>
-                                        <ul class="watch-list">
-                                            <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on YouTube"><i class='bx bxl-youtube'></i></a></li>
-                                            <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on Twitch"><i class='bx bxl-twitch'></i></a></li>
-                                            <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on Vimeo"><i class='bx bxl-vimeo'></i></a></li>
-                                            <li><span>Watch</span></li>
+        
+                                <div class="col-lg-2 col-md-12">
+                                    <div class="matches-result">
+                                        <ul>
+                                            <li>{{match.localTeamMatchScore}}</li>
+                                            <li>{{match.awayTeamMatchScore}}</li>
                                         </ul>
+                                        <span class="date-time"><button (click)="passMatch(match.matchId)">View Match</button></span>
+                                    </div>
+                                </div>
+        
+                                <div class="col-lg-5 col-md-12">
+                                    <div class="matches-team right-image">
+                                        <!-- <img src="assets/img/team2.png" alt="image"> -->
+        
+                                        <div class="content">
+                                            <h3>{{match.matchAwayTeam}}</h3>
+                                            <ul class="watch-list">
+                                                <!-- <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on YouTube"><i class='bx bxl-youtube'></i></a></li>
+                                                <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on Twitch"><i class='bx bxl-twitch'></i></a></li>
+                                                <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on Vimeo"><i class='bx bxl-vimeo'></i></a></li>
+                                                <li><span>Watch</span></li> -->
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div *ngIf="isPvPTournament()">
+                        <!-- TODO: Leaderboard -->
                     </div>
                 </div>
             </div>
