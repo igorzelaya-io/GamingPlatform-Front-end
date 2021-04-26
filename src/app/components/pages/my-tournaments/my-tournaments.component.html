@@ -3,7 +3,7 @@
 <section class="page-title-area page-title-bg1">
     <div class="container">
         <div class="page-title-content">
-            <h1 title="Tournaments">Tournaments</h1>
+            <h1 title="My Tournaments">My Tournaments</h1>
         </div>
     </div>
 </section>
@@ -16,14 +16,14 @@
   		</div>
 
         <div class="row" *ngIf="!isEmpty">
-            <div *ngFor="let tournament of userTournaments" class="col-lg-6 col-md-12">
+            <div *ngFor="let tournament of userTournaments; index as i" class="col-lg-6 col-md-12">
                 <div class="single-stream-schedule-box">
-                    <span class="date">{{tournament.tournamentDate}}</span>
+                    <span class="date">{{allTournamentMonths[i]}} {{allTournamentYears[i]}}</span>
                     <div class="content">
                         <span class="time">{{tournament.tournamentGame}}</span>
                         <h3><a (click)="passTournamentToTournamentDetails(tournament)">{{tournament.tournamentName}}</a></h3>
                     </div>
-                    <a href="#" class="link-btn" target="_blank"></a>
+                    <a (click)="passTournamentToTournamentDetails(tournament)" class="link-btn" target="_blank"></a>
                 </div>
             </div>
         </div>

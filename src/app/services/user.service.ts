@@ -41,9 +41,9 @@ export class UserService {
   }
 
   public getUserById(userId: string): Observable<User>{
-     return this.httpClient.get<User>(USER_API + '/users/search?userId=' + userId).pipe(
-         retry(1), catchError(this.handleError<User>('getUserById', {} as User))
-     );
+      return this.httpClient.get<User>(USER_API + '/users/search?userId=' + userId).pipe(
+        retry(1), catchError(this.handleError<User>('getUserById', {} as User))
+    );
   }
 
   public getAllUsers(): Observable<User[]>{
