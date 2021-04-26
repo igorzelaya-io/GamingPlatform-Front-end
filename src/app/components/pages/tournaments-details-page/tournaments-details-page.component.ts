@@ -250,15 +250,17 @@ export class TournamentsDetailsPageComponent implements OnInit {
       this.isClickedJoinButton = false;
       this.isFailedTournamentJoin = true;
       return;
-    }, () => {
+    }, 
+    () => {
       this.getUserById();
     });
   }
 
   public getUserById(){
-    this.userService.getUserById(this.userInspectingTournament.userId)
+    this.userService.getUserById(this.tokenService.getUserId())
     .subscribe((data: User) => {
       if(data){
+        this.userInspectingTournament = data;
         this.tokenService.saveUser(data);
       }
     },

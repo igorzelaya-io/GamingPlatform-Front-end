@@ -31,15 +31,14 @@ export class MyTournamentsComponent implements OnInit {
   }
 
   getAllTournamentsFromUser(){
-	this.userTournamentService.getAllTournamentsFromUser(this.user.userId).subscribe(
-		(data: Tournament[]) => {
-			if(data && data.length !== 0){
-				console.log(data);
-				this.userTournaments = data;
-				return;
-			}
-			this.isEmpty = true;
-
+	this.userTournamentService.getAllTournamentsFromUser(this.user.userId)
+	.subscribe((data: Tournament[]) => {
+		if(data && data.length !== 0){
+			console.log(data);
+			this.userTournaments = data;
+			return;
+		}
+		this.isEmpty = true;
 		},
 		err => {
 			console.error(err.error.message);

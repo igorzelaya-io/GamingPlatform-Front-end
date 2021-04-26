@@ -173,7 +173,7 @@
                                 <div class="row align-items-center">
                                     <div class="col-lg-5 col-md-12">
                                         <div class="matches-team">
-                                            
+                                            <!-- <img> -->
                                             <div class="content">
                                                 <h3>{{match.matchLocalTeam}}</h3>
                                                 <ul class="watch-list">
@@ -198,7 +198,7 @@
 
                                 <div class="col-lg-5 col-md-12">
                                     <div class="matches-team right-image">
-                                        <img src="assets/img/team2.png" alt="image">
+                                        <!-- <img src="assets/img/team2.png" alt="image"> -->
         
                                         <div class="content">
                                             <h3>{{match.matchAwayTeam}}</h3>
@@ -278,7 +278,7 @@
                     <div *ngIf="!isStartedTournament" style="vertical-align: middle;">
                         <h1 style="text-align: center">Tournament has not started</h1>
                     </div>
-                    <div *ngIf="isStartedTournament && tournamentInactiveMatches.length === 0" style="vertical-align: middle;">
+                    <div *ngIf="tournamentInactiveMatches.length === 0" style="vertical-align: middle;">
                         <h1 style="text-align: center;">No matches available</h1>
                     </div>
                     <div *ngIf="isStartedTournament && tournamentInactiveMatches.length !== 0 && !isPvPTournament()">
@@ -328,9 +328,11 @@
                             </div>
                         </div>
                     </div>
-                    <div *ngIf="isPvPTournament()">
-                        <!-- TODO: Leaderboard -->
-                    </div>
+                    <!-- TODO: League leaderboard -->
+                    <!--
+                        <div *ngIf="isPvPTournament()">
+                        </div>
+                    -->
                 </div>
             </div>
         </div>
