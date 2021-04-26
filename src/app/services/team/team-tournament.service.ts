@@ -37,26 +37,6 @@ export class TeamTournamentService {
     return this.httpClient.get<Match>(TEAM_TOURNAMENT_API + '/teamTournaments/matches/search?matchId=' + matchId + '?tournamentId=' + tournamentId)
     .pipe(retry(1), catchError(this.handleError('getMatchFromTournament', {} as Match)));
   }
-  
-  public getAllActiveFifaMatchesFromTournament(teamId: string, tournamentId: string): Observable<Array<Match>>{
-    return this.httpClient.get<Array<Match>>(TEAM_TOURNAMENT_API + '/fifa/matches/active/all?teamId=' + teamId + '?tournamentId=' + tournamentId)
-    .pipe(retry(1), catchError(this.handleError('getAllActiveFifaTournamentsFromTournament', [])));
-  }
-
-  public getAllActiveCodMatchesFromTournament(teamId:string, tournamentId: string): Observable<Array<Match>>{
-    return this.httpClient.get<Array<Match>>(TEAM_TOURNAMENT_API + '/cod/matches/active/all?teamId=' + teamId + '?tournamentId=' + tournamentId)
-    .pipe(retry(1), catchError(this.handleError('getAllActiveCodTournamentsFromTournament', [])));
-  }
-
-  public getAllInactiveFifaMatchesFromTournament(teamId: string, tournamentId: string): Observable<Array<Match>>{
-    return this.httpClient.get<Array<Match>>(TEAM_TOURNAMENT_API + '/fifa/matches/inactive/all?teamId=' + teamId + '?tournamentId=' + tournamentId)
-    .pipe(retry(1), catchError(this.handleError('getAllInactiveFifaTournamentsFromTournament', [])));
-  }
-
-  public getAllInactiveCodMatchesFromTournament(teamId: string, tournamentId: string): Observable<Array<Match>>{
-    return this.httpClient.get<Array<Match>>(TEAM_TOURNAMENT_API + '/cod/matches/inactive/all?teamId=' + teamId + '?tournamentId=' + tournamentId)
-    .pipe(retry(1), catchError(this.handleError('getAllInactiveFifaTournamentsFromTournament', [])));
-  }
 
   public getAllFifaTournamentsFromTeam(teamId: string): Observable<Array<Tournament>>{
 	  return this.httpClient.get<Array<Tournament>>(TEAM_TOURNAMENT_API + '/fifa/all?teamId='+ teamId)
@@ -69,12 +49,12 @@ export class TeamTournamentService {
   }
 
   public getFifaTournamentFromTeamById(teamId: string , tournamentId: string): Observable<Tournament>{
-	  return this.httpClient.get<Tournament>(TEAM_TOURNAMENT_API + '/fifa/search?teamId=' + teamId +'?tournamenId='+ tournamentId)
+	  return this.httpClient.get<Tournament>(TEAM_TOURNAMENT_API + '/fifa/search?teamId=' + teamId +'&tournamenId='+ tournamentId)
 	  .pipe(retry(1), catchError(this.handleError('getTournamentFromTeamById', {} as Tournament)));
   }
 
   public getCodTournamentFromTeamById(teamId: string , tournamentId: string): Observable<Tournament>{
-	  return this.httpClient.get<Tournament>(TEAM_TOURNAMENT_API + '/cod/search?teamId=' + teamId +'?tournamenId='+ tournamentId)
+	  return this.httpClient.get<Tournament>(TEAM_TOURNAMENT_API + '/cod/search?teamId=' + teamId +'&tournamenId='+ tournamentId)
 	  .pipe(retry(1), catchError(this.handleError('getTournamentFromTeamById', {} as Tournament)));
   }
 

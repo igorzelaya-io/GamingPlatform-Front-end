@@ -1,6 +1,5 @@
 import { Team } from '../team';
 import { User } from '../user/user';
-import { Match } from '../match';
 import { Stack } from '../helpers/stack';
 
 export class Tournament {
@@ -30,7 +29,7 @@ export class Tournament {
     tournamentDateInMilliseconds: number;
     
     constructor(tournamentName?: string, tournamentStatus?: string, tournamentModerator?: User,
-    tournamentDate?: Date, tournamentTeams?: Array<Team>){
+                tournamentDate?: Date, tournamentTeams?: Array<Team>){
         this.tournamentName = tournamentName;
         this.tournamentTeams = tournamentTeams;
         this.tournamentStatus = tournamentStatus;

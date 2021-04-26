@@ -39,7 +39,6 @@ export class TournamentsDetailsPageComponent implements OnInit {
   userTeamsAvailableToJoinTournaments: Team[];
   userTeamEnrolledInTournament: Team;
   userTeamActiveMatches: Match[];
-  userTeamInactiveMatches: Match[];
   tournamentMatches: Match[];
   tournamentInactiveMatches: Match[];
 
@@ -68,7 +67,6 @@ export class TournamentsDetailsPageComponent implements OnInit {
     this.userTeamsAvailableToJoinTournaments  = [];
     this.userTeamEnrolledInTournament = new Team();
     this.userTeamActiveMatches = [];
-    this.userTeamInactiveMatches = [];
     this.tournamentMatches = [];
     this.tournamentInactiveMatches = [];
   }
@@ -295,53 +293,7 @@ export class TournamentsDetailsPageComponent implements OnInit {
     err => console.error(err));
   }
 
-  getAllActiveFifaMatchesFromTournament(team: Team){
-    this.teamTournamentService.getAllActiveFifaMatchesFromTournament(team.teamId, this.tournament.tournamentId)
-    .subscribe((data: Array<Match>) => {
-      if(data && data.length > 0){
-        console.log(data);
-        this.userTeamActiveMatches = data;
-      }
-    }, 
-    err => {
-      console.error(err);
-    });
-  }
-
-  getAllInactiveFifaMatchesFromTournament(team: Team){
-    this.teamTournamentService.getAllInactiveFifaMatchesFromTournament(team.teamId, this.tournament.tournamentId)
-    .subscribe((data: Match[]) => {
-      console.log(data);
-      this.userTeamInactiveMatches = data;
-    },
-    err => {
-      console.log(err);
-    });
-  }
-
-  getAllActiveCodMatchesFromTournament(team: Team){
-    this.teamTournamentService.getAllActiveCodMatchesFromTournament(team.teamId, this.tournament.tournamentId)
-    .subscribe((data: Match[]) => {
-      console.log(data);
-      this.userTeamActiveMatches = data;
-    },
-    err => {
-      console.error(err);
-    });
-  }
-
-  getAllInactiveCodMatchesFromTournament(team: Team){
-    this.teamTournamentService.getAllInactiveCodMatchesFromTournament(team.teamId, this.tournament.tournamentId)
-    .subscribe((data: Match[]) => {
-      console.log(data);
-      this.userTeamInactiveMatches = data;
-    }, 
-    err => {
-      console.error(err);
-    });
-  }
-
-  getAllTournamentMatches(){
+  getAllActiveTournamentMatches(){
     this.tournamentService.getAllActiveTournamentMatches(this.tournament.tournamentId)
     .subscribe((data: Match[]) => {
       if(data){
@@ -368,6 +320,16 @@ export class TournamentsDetailsPageComponent implements OnInit {
       console.error(err);
     });  
   }
+
+  getAllUserActiveMatches(){
+    this.tournamentService.getAllUserActiveMatches(this.userInspectingTournament.userId, this.tournament.tournamentId)
+    .subscribe((data: Match[]) => {
+      if(data){
+        this.userTeamActiveMatches = data;
+        return;
+      }
+    });
+  }
   //This method belongs to match-details.
   // getTeamMatchFromTournament(matchId: string, tournamentId: string){
   //   this.teamTournamentService.getTeamMatchFromTournament(matchId, this.tournament.tournamentId)
@@ -384,10 +346,13 @@ export class TournamentsDetailsPageComponent implements OnInit {
       }
       this.isStartedTournament = true;
       if(this.alreadyJoinedTournament){
-        //getAllActiveTournamentMatchesFromTeam()
+        this.getAllUserActiveMatches();
       }
-      this.getAllTournamentMatches();
-      this.getAllTournamentInactiveMatches();
+      if(!this.isPvPTournament()){
+        this.getAllActiveTournamentMatches();
+        this.getAllTournamentInactiveMatches();
+        return;
+      }
       //getTournamentLeaderboard
     }
   }

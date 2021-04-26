@@ -56,6 +56,11 @@ export class TournamentService {
     .pipe(retry(1), catchError(this.handleError('getAllTournamentInactiveMatches', [])));
   }
 
+  public getAllUserActiveMatches(userId: string, tournamentId: string): Observable<Match[]>{
+    return this.httpClient.get<Match[]>(TOURNAMENTS_API + '/user/matches/active?userId=' + userId + '&tournamentId=' + tournamentId)
+    .pipe(retry(1), catchError(this.handleError('getAllUserActiveMatches', [])));
+  }
+
   public getTournamentById(tournamentId: string): Observable<Tournament>{
     return this.httpClient.get<Tournament>(TOURNAMENTS_API + '/search?tournamentId=' + tournamentId)
     .pipe(retry(1), catchError(this.handleError('getTournamentById', {} as Tournament)));
