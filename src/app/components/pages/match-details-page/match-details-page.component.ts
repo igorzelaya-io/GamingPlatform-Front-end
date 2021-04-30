@@ -25,6 +25,7 @@ export class MatchDetailsPageComponent implements OnInit {
   userTeamPointsScored: FormControl;
   oppositeTeamPointsScored: FormControl;
   isWinningUserTeam: boolean = false;
+  isWinningOppTeam: boolean = false;
   
   isTeamAdmin: boolean = false;
 
@@ -90,10 +91,10 @@ export class MatchDetailsPageComponent implements OnInit {
 
   uploadResults(): void{
     this.isClickedSentButton = true;
-    if(this.isWinningUserTeam === true){
+    if(this.isWinningUserTeam === true && this.isWinningOppTeam === false){
       this.match.matchWinningTeam = this.userTeamInTournament;
     }
-    else{
+    else {
       this.match.matchWinningTeam = this.match.matchLocalTeam.teamId === this.userTeamInTournament.teamId ? this.match.matchAwayTeam : this.match.matchLocalTeam
     }
     if(this.match.matchLocalTeam.teamId === this.userTeamInTournament.teamId){
@@ -127,6 +128,7 @@ export class MatchDetailsPageComponent implements OnInit {
       this.isFailedUpload = true;
       console.error(err.error.message);
       this.errorMessage = err.error.message;
+      this.isClickedSentButton = false; 
     }, 
     () => {
       window.location.reload();
@@ -145,17 +147,20 @@ export class MatchDetailsPageComponent implements OnInit {
       this.isFailedUpload = true;
       console.error(err.error.message);
       this.errorMessage = err.error.message;
+      this.isClickedSentButton = false;
     }, 
     () => {
       window.location.reload();
     });
   }
   selectLostMatchOption(): void{
+    this.isWinningOppTeam = true;
     this.isWinningUserTeam = false;
   }
 
   selectWonMatchOption(): void{
     this.isWinningUserTeam = true;
+    this.isWinningOppTeam = false;
   }
 
   public isTryingToSubmitResults(){

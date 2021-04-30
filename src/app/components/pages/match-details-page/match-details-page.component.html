@@ -71,11 +71,11 @@
                             <p style="text-align: center; font-size: large;">Did you team win or lose this match ?</p>
                             <div class="container">
                                 <div class="row">
-                                    <div class="col-md">
+                                    <div class="col-md" *ngIf="!isWinningUserTeam">
                                         <button (click)="selectWonMatchOption()">Won</button>
                                     </div>
-                                    <div class="col-md">
-                                        <button (click)="selectLostMatchOption()">Lost</button>
+                                    <div class="col-md" *ngIf="!isWinningOppTeam">
+                                        <button (click)="selectLostMatchOption()" >Lost</button>
                                     </div>
                                 </div>
                             </div>
