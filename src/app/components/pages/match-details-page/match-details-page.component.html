@@ -37,7 +37,7 @@
                             <!-- <img src="assets/img/team2.png" class="wow fadeInRight" data-wow-delay="00ms" data-wow-duration="1500ms" alt="image"> -->
 
                             <div class="content">
-                                <h3>{{match.awayTeamMatchScore}}</h3>
+                                <h3>{{match.matchAwayTeam.teamName}}</h3>
                                 <ul class="watch-list">
                                     <!-- <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on YouTube"><i class='bx bxl-youtube'></i></a></li>
                                     <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on Twitch"><i class='bx bxl-twitch'></i></a></li>
@@ -65,9 +65,69 @@
                                 <!-- <li>20 May 2020, 19:00</li> -->
                             </ul>
                         </div>
-                        <h3>{{match.matchLocalTeam}} vs {{match.matchAwayTeam}}</h3>
-                        <button>Upload Results</button>
-                        <p>Quuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quia non numquam eius modi tempora incidunt ut labore et dolore magnam dolor sit amet, consectetur adipisicing.</p>
+                        <h3>{{match.matchLocalTeam.teamName}} vs {{match.matchAwayTeam.teamName}}</h3>
+                        <button *ngIf="isTeamAdmin" (click)="isTryingToSubmitResults()" [disabled]="isClickedUploadButton">Upload Results</button>
+                        <div style="vertical-align: middle; margin-top: 50px;" *ngIf="isClickedUploadButton">
+                            <p style="text-align: center; font-size: large;">Did you team win or lose this match ?</p>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md">
+                                        <button (click)="selectWonMatchOption()">Won</button>
+                                    </div>
+                                    <div class="col-md">
+                                        <button (click)="selectLostMatchOption()">Lost</button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="container">
+                                <div class="row">
+                                     <div style="vertical-align: middle; margin-top: 50px;" class="form-group col-md">
+                                            <p style="text-align: center; font-size: large;">How many points did your team score ?</p>
+                                            <input
+                                                class="form-control"
+                                                type="number"
+                                                placeholder="Enter score"
+                                                required
+                                                [formControl]="userTeamPointsScored"
+                                            >
+                                    </div>
+                                    <div class="alert alert-danger" *ngIf="userTeamPointsScored.invalid && (userTeamPointsScored.dirty || userTeamPointsScored.touched)">
+                                        <div *ngIf="userTeamPointsScored.errors.required">
+                                            <p style="text-align: center; font-size: large;"> Enter match score to upload result.</p>
+                                        </div>
+                                    </div>
+                                    <div style="margin-top: 50px; vertical-align: middle;" class="col-md form-group">
+                                        <p style="text-align: center; font-size: large;">How many points did the opposite team score ?</p>
+                                        <input
+                                            class="form-control"
+                                            required
+                                            placeholder="Enter opposite team score"
+                                            type="number"
+                                            [formControl]="oppositeTeamPointsScored"
+                                        >
+                                    </div>
+                                    <div class="alert alert-danger" *ngIf="oppositeTeamPointsScored.invalid && (oppositeTeamPointsScored.dirty || oppositeTeamPointsScored.touched)">
+                                        <div *ngIf="oppositeTeamPointsScored.errors.required">
+                                            <p style="text-align: center; font-size: large;"> Enter opposite team match score to upload result.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div style="vertical-align: middle;">
+                                <button [disabled]="userTeamPointsScored.invalid || isClickedSentButton" (click)="uploadResults()">Upload Results</button>
+                                <p style="font-size: medium;">*Inserting unreal results may result in the permament ban of your D1Gaming account.</p>
+                            </div>
+                            <div *ngIf="isFailedUpload && !isSuccessfulUpload" style="vertical-align: middle;" class="alert alert-danger">
+                                <p style="text-align: center; font-size: large;">{{errorMessage}}</p>
+                            </div>
+                            <div *ngIf="isSuccessfulUpload && !isFailedUpload" style="vertical-align: middle;" class="alert alert-danger">
+                                <p style="text-align: center; font-size: large;">{{errorMessage}}</p>
+                            </div>
+                       </div>
+                        <!-- <p>Quuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quia non numquam eius modi tempora incidunt ut labore et dolore magnam dolor sit amet, consectetur adipisicing.</p>
                         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in  sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.</p>
                         <blockquote class="wp-block-quote">
                             <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</p>
@@ -92,12 +152,12 @@
                                     <img src="assets/img/main-blog-img4.jpg" alt="image">
                                 </figure>
                             </li>
-                        </ul>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in  sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.</p>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud.</p>
+                        </ul> -->
+                        <!-- <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in  sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.</p>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud.</p> -->
                     </div>
 
-                    <div class="article-footer">
+                    <!-- <div class="article-footer">
                         <div class="article-tags">
                             <span><i class="bx bx-purchase-tag"></i></span>
                             <a routerLink="/">Fashion</a>,
@@ -114,11 +174,11 @@
                                 <li><a href="#" class="instagram" target="_blank"><i class="bx bxl-instagram"></i></a></li>
                             </ul>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
 
-            <div class="col-lg-4 col-md-12">
+            <!-- <div class="col-lg-4 col-md-12">
                 <aside class="widget-area">
                     <section class="widget widget_match_list">
                         <div class="single-match-list">
@@ -218,7 +278,7 @@
                         <a routerLink="/products-list-1" class="d-block"><img src="assets/img/ads.jpg" alt="image"></a>
                     </section>
                 </aside>
-            </div>
+            </div> -->
         </div>
     </div>
 </section>

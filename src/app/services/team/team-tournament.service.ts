@@ -8,6 +8,7 @@ import { MessageResponse } from 'src/app/models/messageresponse';
 import { TeamTournamentRequest } from '../../models/teamtournamentrequest';
 import { HttpHeaders } from '@angular/common/http';
 import { Match } from 'src/app/models/match';
+import { MatchTournamentRequest } from '../../models/matchtournamentrequest';
 
 const TEAM_TOURNAMENT_API = '/teamtournamentsapi/teamTournaments';
 
@@ -34,7 +35,7 @@ export class TeamTournamentService {
   }
   
   public getTeamMatchFromTournament(matchId: string, tournamentId: string): Observable<Match>{
-    return this.httpClient.get<Match>(TEAM_TOURNAMENT_API + '/teamTournaments/matches/search?matchId=' + matchId + '?tournamentId=' + tournamentId)
+    return this.httpClient.get<Match>(TEAM_TOURNAMENT_API + '/matches/search?matchId=' + matchId + '&tournamentId=' + tournamentId)
     .pipe(retry(1), catchError(this.handleError('getMatchFromTournament', {} as Match)));
   }
 
@@ -72,6 +73,18 @@ export class TeamTournamentService {
 			      {'Authorization': 'Bearer ' + jwtToken})
 	  	})
 		  .pipe(catchError(this.handleError('teamTournamentRequest' , {} as MessageResponse)));
+  }
+
+  public uploadCodMatchResult(matchTournamentRequest: MatchTournamentRequest, jwtToken: string): Observable<MessageResponse>{
+    return this.httpClient.post<MessageResponse>(TEAM_TOURNAMENT_API + '/matches/cod/save', matchTournamentRequest,
+     {headers: new HttpHeaders( {'Authorization': 'Bearer ' + jwtToken})})
+    .pipe(catchError(this.handleError('uploadMatchResult', {} as MessageResponse)));
+  }
+
+  public uploadFifaMatchResult(matchTournamentRequest: MatchTournamentRequest, jwtToken: string): Observable<MessageResponse>{
+    return this.httpClient.post<MessageResponse>(TEAM_TOURNAMENT_API + '/matches/fifa/save', matchTournamentRequest,
+    {headers: new HttpHeaders( {'Authorization': 'Bearer ' + jwtToken})})
+    .pipe(catchError(this.handleError('uploadMatchResult', {} as MessageResponse)));
   }
 
   public removeTeamFromFifaTournament(teamTournamentRequest: TeamTournamentRequest, jwtToken: string): Observable<MessageResponse> {

@@ -7,6 +7,8 @@ import { Team } from '../../models/team';
 import { TournamentCreationRequest } from '../../models/tournament/tournament-creation-request';
 import { MessageResponse } from 'src/app/models/messageresponse';
 import { Match } from '../../models/match';
+import { MatchTournamentRequest } from '../../models/matchtournamentrequest';
+
 
 const TOURNAMENTS_API = '/tournamentsapi/tournaments';
 
@@ -78,7 +80,7 @@ export class TournamentService {
 
   public postTournament(tournament: TournamentCreationRequest, jwtToken: string):Observable<MessageResponse>{
     return this.httpClient.post<MessageResponse>(TOURNAMENTS_API + '/save', tournament,
-	  {headers: new HttpHeaders( { 'Authorization': 'Bearer ' + jwtToken})})
+	    {headers: new HttpHeaders( { 'Authorization': 'Bearer ' + jwtToken})})
     .pipe(catchError(this.handleError('postTournament', {} as MessageResponse)));
   }
 

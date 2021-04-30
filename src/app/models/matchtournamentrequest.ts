@@ -1,19 +1,15 @@
 import { Match } from './match';
-import { Tournament } from './tournament/tournament';
-import { User } from './user/user';
 import { Team } from './team';
 
 export class MatchTournamentRequest {
     matchTournamentMatch:Match;
-    matchTournamentTournament:Tournament;
-    matchTournamentUser: User;
+    matchTournamentTournamentId: string;
     matchTournamentTeam: Team;
 
-    constructor(matchTournamentTournament: Tournament, matchTournamentMatch : Match, matchTournamentUser: User
-                , matchTournamentTeam: Team){
+    constructor(matchTournamentTournamentId?: string, matchTournamentMatch?: Match
+                , matchTournamentTeam?: Team){
         this.matchTournamentMatch = matchTournamentMatch;
-        this.matchTournamentTournament = matchTournamentTournament;
-        this.matchTournamentUser = matchTournamentUser;
+        this.matchTournamentTournamentId = matchTournamentTournamentId;
         this.matchTournamentTeam = matchTournamentTeam;
     }
 }

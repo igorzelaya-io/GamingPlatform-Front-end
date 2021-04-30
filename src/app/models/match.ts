@@ -9,19 +9,17 @@ export class Match {
     matchAwayTeam: Team;
     localTeamMatchScore: number;
     awayTeamMatchScore: number;
-    isUploadedMatchResult: boolean;
-    matchDate: Date;
+    matchStatus: string;
+    matchWinningTeam: Team;
 
     constructor(matchId?: string, matchTournament?: Tournament, matchLocalTeam?: Team, matchAwayTeam?:Team,
-                localTeamMatchScore?: number, awayTeamMatchScore?: number, isUploadedMatchResult?: boolean, matchDate?: Date){
+                localTeamMatchScore?: number, awayTeamMatchScore?: number){
         this.matchId = matchId;
         this.matchTournament = matchTournament;
         this.matchLocalTeam = matchLocalTeam;
         this.matchAwayTeam = matchAwayTeam;
         this.localTeamMatchScore = localTeamMatchScore;
         this.awayTeamMatchScore = awayTeamMatchScore;
-        this.isUploadedMatchResult = isUploadedMatchResult;
-        this.matchDate = matchDate;
     }
 
 }
