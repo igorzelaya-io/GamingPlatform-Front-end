@@ -85,10 +85,6 @@ export class MatchDetailsPageComponent implements OnInit {
     this.isTeamAdmin = false;
   }
 
-  evaluateUploadedResults(){
-
-  }
-
   uploadResults(): void{
     this.isClickedSentButton = true;
     if(this.isWinningUserTeam === true && this.isWinningOppTeam === false){

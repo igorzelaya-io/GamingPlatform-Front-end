@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { TokenStorageService } from 'src/app/services/token-storage.service';
 
 @Component({
   selector: 'app-main-banner',
@@ -7,9 +8,21 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MainBannerComponent implements OnInit {
 
-  constructor() { }
+  isLoggedIn: boolean = false;
+
+  constructor(private tokenService: TokenStorageService) {
+
+  }
 
   ngOnInit(): void {
+    this.evaluateLogin();
+  }
+
+  evaluateLogin(){
+    if(this.tokenService.loggedIn()){
+      this.isLoggedIn = true;
+      return;
+    }
   }
 
 }
