@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TokenStorageService } from '../../../services/token-storage.service';
 import { Router } from '@angular/router';
-
+import { Team } from '../../../models/team';
 import { TournamentService } from '../../../services/tournament/tournament.service';
 import { Tournament } from 'src/app/models/tournament/tournament';
 import { Role } from 'src/app/models/role';
@@ -22,6 +22,9 @@ export class PopularLeaguesComponent implements OnInit {
   isAdmin = false;
 
   isEmptyTournaments = true;
+
+  isPartOfTournament: boolean[] = [];
+
   allTournaments: Tournament[];
 
   allTournamentYears:number[];
@@ -79,6 +82,11 @@ export class PopularLeaguesComponent implements OnInit {
 	err => {
 		console.error(err.error.message);
 		this.isEmptyTournaments = true;
+	}, 
+	() => {
+		if(this.tokenService.loggedIn()){
+			this.isPartOfAnyTournament(this.allTournaments);
+		}
 	});
   }
 
@@ -135,9 +143,23 @@ export class PopularLeaguesComponent implements OnInit {
   }
   
   public isPvPTournament(tournament: Tournament): boolean{
-	if(tournament.tournamentFormat === 'PVP'){
+	if(tournament.tournamentFormat === 'PvP'){
 		return true; 
 	}
 	return false; 
+  }
+
+  public isPartOfAnyTournament(allTournaments: Tournament[]): void{
+	for(let i = 0; i < allTournaments.length; i++){
+		const userTeams: Team[] = this.tokenService.getUser().userTeams;
+		userTeams.forEach(userTeam => {
+			if(allTournaments[i].tournamentTeams.filter(tournamentTeam => tournamentTeam.teamId === userTeam.teamId).length !== 0){
+				this.isPartOfTournament.push(true);
+			}
+			else{
+				this.isPartOfTournament.push(false);
+			}
+		});
+	}
   }
 }

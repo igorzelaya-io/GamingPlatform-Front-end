@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TokenStorageService } from 'src/app/services/token-storage.service';
 import { User } from 'src/app/models/user/user';
@@ -10,6 +10,9 @@ import { FormControl } from '@angular/forms';
 import { MatchTournamentRequest } from 'src/app/models/matchtournamentrequest';
 import { TournamentService } from 'src/app/services/tournament/tournament.service';
 import { MessageResponse } from 'src/app/models/messageresponse';
+import { Renderer2 } from '@angular/core';
+import { SharedService } from 'src/app/services/helpers/shared-service';
+import { NgttTournament } from 'ng-tournament-tree';
 
 @Component({
   selector: 'app-match-details-page',
@@ -18,6 +21,14 @@ import { MessageResponse } from 'src/app/models/messageresponse';
 })
 export class MatchDetailsPageComponent implements OnInit {
 
+  @ViewChild('wonButton')
+  wonButton: ElementRef;
+
+  @ViewChild('lostButton')
+  lostButton: ElementRef;
+
+  singleEliminationTournamentBracketData: NgttTournament;
+
   userInspectingMatch: User;
   match: Match;
   tournamentId: string;
@@ -25,7 +36,6 @@ export class MatchDetailsPageComponent implements OnInit {
   userTeamPointsScored: FormControl;
   oppositeTeamPointsScored: FormControl;
   isWinningUserTeam: boolean = false;
-  isWinningOppTeam: boolean = false;
   
   isTeamAdmin: boolean = false;
 
@@ -39,10 +49,14 @@ export class MatchDetailsPageComponent implements OnInit {
   constructor(private route: ActivatedRoute,
               private tokenService: TokenStorageService,
               private teamTournamentService: TeamTournamentService,
-              private tournamentService: TournamentService) {
+              private tournamentService: TournamentService,
+              private renderer: Renderer2,
+              private sharedService: SharedService) {
     this.match = new Match();
     this.userTeamPointsScored = new FormControl();
     this.oppositeTeamPointsScored = new FormControl();
+    this.wonButton = sharedService.get();
+    this.lostButton = sharedService.get();
   }
 
   ngOnInit(): void {
@@ -52,6 +66,7 @@ export class MatchDetailsPageComponent implements OnInit {
       this.tournamentId = params['tournamentId'];
     });
   }
+  
   
   public getMatchFromTournament(matchId:string, tournamentId: string){
     this.teamTournamentService.getTeamMatchFromTournament(matchId, tournamentId)
@@ -87,7 +102,7 @@ export class MatchDetailsPageComponent implements OnInit {
 
   uploadResults(): void{
     this.isClickedSentButton = true;
-    if(this.isWinningUserTeam === true && this.isWinningOppTeam === false){
+    if(this.isWinningUserTeam === true){
       this.match.matchWinningTeam = this.userTeamInTournament;
     }
     else {
@@ -150,16 +165,53 @@ export class MatchDetailsPageComponent implements OnInit {
     });
   }
   selectLostMatchOption(): void{
-    this.isWinningOppTeam = true;
+    if(this.isWhiteBorder(this.lostButton)){
+      this.changeToBlackBorder(this.lostButton);
+      return; 
+    }
+    else if(this.isWhiteBorder(this.wonButton)){
+      this.changeToBlackBorder(this.wonButton);
+      this.changeToWhiteBorder(this.lostButton);
+      this.isWinningUserTeam = false;
+      return;
+    }
+    this.changeToWhiteBorder(this.lostButton);
     this.isWinningUserTeam = false;
   }
 
   selectWonMatchOption(): void{
+    if(this.isWhiteBorder(this.wonButton)){
+      this.changeToBlackBorder(this.wonButton);
+      this.isWinningUserTeam = false;
+      return;
+    }
+    else if(this.isWhiteBorder(this.lostButton)){
+      this.changeToBlackBorder(this.lostButton);
+      this.changeToWhiteBorder(this.wonButton);
+      this.isWinningUserTeam = true;
+      return;
+    }
+    this.changeToWhiteBorder(this.wonButton);
     this.isWinningUserTeam = true;
-    this.isWinningOppTeam = false;
   }
 
   public isTryingToSubmitResults(){
     this.isClickedUploadButton = true;
   }
+
+  private isWhiteBorder(elementToEvaluate: ElementRef){
+    if(elementToEvaluate.nativeElement.style.border === '3px solid white'){
+      return true;
+    }
+    return false;
+  }
+
+  private changeToBlackBorder(elementToChange: ElementRef): void{
+    this.renderer.setStyle(elementToChange.nativeElement, 'border', '3px solid black');
+  }
+
+  private changeToWhiteBorder(elementToChange: ElementRef){
+    this.renderer.setStyle(elementToChange.nativeElement, 'border', '3px solid white');
+  }
+
 }

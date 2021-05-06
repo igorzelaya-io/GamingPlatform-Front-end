@@ -12,7 +12,10 @@ import { TournamentService } from 'src/app/services/tournament/tournament.servic
 import { Match } from 'src/app/models/match';
 import { UserService } from 'src/app/services/user.service';
 import { UserTournament } from 'src/app/models/user/user-tournament';
-
+import { NgttTournament } from 'ng-tournament-tree';
+import { NgttRound } from 'ng-tournament-tree';
+import { Stack } from 'src/app/models/helpers/stack';
+import { MatchesStyleOneComponent } from '../../common/matches-style-one/matches-style-one.component';
 
 
 const monthNames = [ "January", "February", "March", "April", "May", "June",
@@ -26,6 +29,8 @@ const monthNames = [ "January", "February", "March", "April", "May", "June",
 
 
 export class TournamentsDetailsPageComponent implements OnInit {
+
+  public singleEliminationTournament: NgttTournament;
 
   tournament: Tournament;
   tournamentYear: number;
@@ -73,6 +78,7 @@ export class TournamentsDetailsPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.arrangeTournamentMatchesToBracket();
     this.userInspectingTournament = this.tokenService.getUser();
   	this.route.queryParams.subscribe(params => {
       this.tournamentService.getTournamentById(params['tournamentId'])
@@ -364,7 +370,8 @@ export class TournamentsDetailsPageComponent implements OnInit {
       if(this.alreadyJoinedTournament){
         this.getAllUserActiveMatches();
       }
-      if(!this.isPvPTournament()){
+      if(this.isPvPTournament()){
+        //getTournamentBracket()
         this.getAllActiveTournamentMatches();
         this.getAllTournamentInactiveMatches();
         return;
@@ -381,7 +388,7 @@ export class TournamentsDetailsPageComponent implements OnInit {
   }
 
   public isPvPTournament(): boolean{
-    if(this.tournament.tournamentFormat === 'PVP'){
+    if(this.tournament.tournamentFormat === 'PvP'){
       return true; 
     }
     return false; 
@@ -389,6 +396,123 @@ export class TournamentsDetailsPageComponent implements OnInit {
 
   public navigateToTeamCreation(){
     this.router.navigate(['/team-creation']);
+  }
+
+  public getTournamentBracketRoundsNumber(){
+    const numberOfTeamsInTournament: number = this.tournament.tournamentNumberOfTeams;
+    let splitNumberOfTeams: number = numberOfTeamsInTournament;
+    let numberOfRounds: number = 0; 
+    if(numberOfTeamsInTournament % 2 == 0){
+      for(let i = 0; i < numberOfTeamsInTournament; i++){
+        if(splitNumberOfTeams === 2 ){
+          break;
+        }
+        splitNumberOfTeams = splitNumberOfTeams / 2;
+        numberOfRounds++;
+      }
+      return numberOfRounds;
+    }
+
+  }
+
+  public arrangeTournamentMatchesToBracket(){
+    // let match: number = 1; 
+    // let team: number = match * 2;
+    // let numStack: Stack<number>;
+    // numStack.push(match);
+    // while(match < this.tournament.tournamentNumberOfTeams){
+    //   match *= 2;
+    //   team = match * 2;
+    //   numStack.push(match);
+    // }
+    // let autoTeams: number = team - this.tournament.tournamentNumberOfTeams;
+    // let roundOneMatches: number = numStack.pop() - autoTeams;
+    // console.log(roundOneMatches);
+    // let roundTwoMatches: number = autoTeams + numStack.pop();
+    // console.log(roundTwoMatches);
+    // while(!numStack.isEmpty()){
+    //   let roundN: number = numStack.pop();
+    //   console.log(roundN);
+    // }
+
+
+    this.singleEliminationTournament = {
+      rounds: [
+        {
+          type: 'Winnerbracket',
+          matches: [
+            {
+              teams: [{name: 'Team  A', score: 1}, {name: 'Team  B', score: 2}]
+            },
+            {
+              teams: [{name: 'Team  C', score: 1}, {name: 'Team  D', score: 2}]
+            },
+            {
+              teams: [{name: 'Team  E', score: 1}, {name: 'Team  F', score: 2}]
+            },
+            {
+              teams: [{name: 'Team  G', score: 1}, {name: 'Team  H', score: 2}]
+            }, {
+              teams: [{name: 'Team  A', score: 1}, {name: 'Team  B', score: 2}]
+            },
+            {
+              teams: [{name: 'Team  C', score: 1}, {name: 'Team  D', score: 2}]
+            },
+            {
+              teams: [{name: 'Team  E', score: 1}, {name: 'Team  F', score: 2}]
+            },
+            {
+              teams: [{name: 'Team  G', score: 1}, {name: 'Team  H', score: 2}]
+            }
+          ]
+        }, {
+          type: 'Winnerbracket',
+          matches: [
+            {
+              teams: [{name: 'Team  A', score: 1}, {name: 'Team  B', score: 2}]
+            },
+            {
+              teams: [{name: 'Team  C', score: 1}, {name: 'Team  D', score: 2}]
+            },
+            {
+              teams: [{name: 'Team  E', score: 1}, {name: 'Team  F', score: 2}]
+            },
+            {
+              teams: [{name: 'Team  G', score: 1}, {name: 'Team  H', score: 2}]
+            }
+          ]
+        },
+        {
+          type: 'Winnerbracket',
+          matches: [
+            {
+              teams: [{name: 'Team  B', score: 1}, {name: 'Team  D', score: 2}]
+            },
+            {
+              teams: [{name: 'Team  F', score: 1}, {name: 'Team  H', score: 2}]
+            }
+          ]
+        },
+        {
+          type: 'Final',
+          matches: [
+            {
+              teams: [
+                {
+                  name: 'Team  D',
+                  score: 1
+                },
+                {
+                  name: 'Team  H',
+                  score: 2
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    };
+
   }
 
 }

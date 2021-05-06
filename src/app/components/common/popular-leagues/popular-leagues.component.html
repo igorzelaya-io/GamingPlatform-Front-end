@@ -6,7 +6,7 @@
     </div>
 
     <div *ngIf="!allTournaments || isEmptyTournaments" style="vertical-align: middle">
-		<h1 style="text-align: center">No tournaments available</h1>
+		<h1 style="text-align: center;">No tournaments available</h1>
 	</div>
 
 	<div class="container" *ngIf="allTournaments">
@@ -42,8 +42,9 @@
 	                    	<li><i class="flaticon-teamwork"></i>{{tournament.tournamentNumberOfTeams}}/{{tournament.tournamentLimitNumberOfTeams}} Teams</li>
 							<li><img src="/assets/d1images/D1TokenBag.png">{{tournament.tournamentEntryFee}} Entry Fee</li>
 						</ul>
-	                    <a (click)="viewTournament(tournament)" class="join-now-btn">Join Now</a>
-	                </div>
+						<a (click)="viewTournament(tournament)" *ngIf="!isPartOfTournament[i]" class="join-now-btn">Join Now</a>
+						<a class="join-now-btn" (click)="viewTournament(tournament)" *ngIf="isPartOfTournament[i]">View Tournament</a>
+					</div>
 	            </div>
 	
 	            <div class="popular-leagues-date">

@@ -226,46 +226,52 @@
                         <h1 style="text-align: center">No matches available</h1>
                     </div>
                     <div *ngIf="this.isStartedTournament && tournamentMatches.length !== 0">
-                        <div *ngFor="let match of tournamentMatches" class="single-matches-box">
-                            <div class="row align-items-center">
-                                <div class="col-lg-5 col-md-12">
-                                    <div class="matches-team">
-                                        <!-- <img src="assets/img/team5.png" alt="image"> -->
-        
-                                        <div class="content">
-                                            <h3>{{match.matchLocalTeam.teamName}}</h3>
-                                            <ul class="watch-list">
-                                                <!-- <li><span>Watch</span></li>
-                                                <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on YouTube"><i class='bx bxl-youtube'></i></a></li>
-                                                <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on Twitch"><i class='bx bxl-twitch'></i></a></li>
-                                                <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on Vimeo"><i class='bx bxl-vimeo'></i></a></li> -->
-                                            </ul>
+                        <div *ngIf="isPvPTournament()">
+                            <ng-container>
+                                <ngtt-single-elimination-tree [tournament]="singleEliminationTournament" [matchTemplate]="matchTemplate">
+                                </ngtt-single-elimination-tree>
+                            </ng-container>
+                            <ng-template #matchTemplate let-match>
+                                <app-matchbracket [matches]="match"></app-matchbracket>
+                            </ng-template>
+                        </div>
+
+                        <div *ngIf="!isPvPTournament()">
+                            <div *ngFor="let match of tournamentMatches" class="single-matches-box">
+                                <div class="row align-items-center">
+                                    <div class="col-lg-5 col-md-12">
+                                        <div class="matches-team">
+                                    
+            
+                                            <div class="content">
+                                                <h3>{{match.matchLocalTeam.teamName}}</h3>
+                                                <ul class="watch-list">
+                                                  
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-        
-                                <div class="col-lg-2 col-md-12">
-                                    <div class="matches-result">
-                                        <ul>
-                                            <li>{{match.localTeamMatchScore}}</li>
-                                            <li>{{match.awayTeamMatchScore}}</li>
-                                        </ul>
-                                        <span class="date-time"><button (click)="passMatch(match.matchId)">View Match</button></span>
-                                    </div>
-                                </div>
-        
-                                <div class="col-lg-5 col-md-12">
-                                    <div class="matches-team right-image">
-                                        <!-- <img src="assets/img/team6.png" alt="image"> -->
-        
-                                        <div class="content">
-                                            <h3>{{match.matchAwayTeam.teamName}}</h3>
-                                            <ul class="watch-list">
-                                                <!-- <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on YouTube"><i class='bx bxl-youtube'></i></a></li>
-                                                <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on Twitch"><i class='bx bxl-twitch'></i></a></li>
-                                                <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on Vimeo"><i class='bx bxl-vimeo'></i></a></li>
-                                                <li><span>Watch</span></li> -->
+            
+                                    <div class="col-lg-2 col-md-12">
+                                        <div class="matches-result">
+                                            <ul>
+                                                <li>{{match.localTeamMatchScore}}</li>
+                                                <li>{{match.awayTeamMatchScore}}</li>
                                             </ul>
+                                            <span class="date-time"><button (click)="passMatch(match.matchId)">View Match</button></span>
+                                        </div>
+                                    </div>
+            
+                                    <div class="col-lg-5 col-md-12">
+                                        <div class="matches-team right-image">
+                                            
+            
+                                            <div class="content">
+                                                <h3>{{match.matchAwayTeam.teamName}}</h3>
+                                                <ul class="watch-list">
+                                                    
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -281,7 +287,7 @@
                     <div *ngIf="tournamentInactiveMatches.length === 0" style="vertical-align: middle;">
                         <h1 style="text-align: center;">No matches available</h1>
                     </div>
-                    <div *ngIf="isStartedTournament && tournamentInactiveMatches.length !== 0 && !isPvPTournament()">
+                    <div *ngIf="isStartedTournament && tournamentInactiveMatches.length !== 0 && isPvPTournament()">
                         <div class="single-matches-box" *ngFor="let match of tournamentInactiveMatches">
                             <div class="row align-items-center">
                                 <div class="col-lg-5 col-md-12">
@@ -330,7 +336,7 @@
                     </div>
                     <!-- TODO: League leaderboard -->
                     <!--
-                        <div *ngIf="isPvPTournament()">
+                        <div *ngIf="!isPvPTournament()">
                         </div>
                     -->
                 </div>

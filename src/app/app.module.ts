@@ -76,7 +76,8 @@ import { NgxMatDatetimePickerModule, NgxMatTimepickerModule } from '@angular-mat
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { NgxMatNativeDateModule } from '@angular-material-components/datetime-picker';
 import { MyTournamentsComponent } from './components/pages/my-tournaments/my-tournaments.component';
-
+import { NgTournamentTreeModule } from 'ng-tournament-tree';
+import { MatchbracketComponent } from './components/common/matchbracket/matchbracket.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -141,7 +142,8 @@ import { MyTournamentsComponent } from './components/pages/my-tournaments/my-tou
     ImageUploaderComponent,
 	TournamentCreationPageComponent,
 	TournamentCreationConfigPageComponent,
-	MyTournamentsComponent	
+	MyTournamentsComponent,
+	MatchbracketComponent	
   ],
   imports: [
     BrowserModule,
@@ -156,10 +158,11 @@ import { MyTournamentsComponent } from './components/pages/my-tournaments/my-tou
     MatChipsModule,
     MatFormFieldModule,
     NumericTextBoxModule,
-	NgxMatDatetimePickerModule,
-	NgxMatTimepickerModule,
-	MatDatepickerModule,
-	NgxMatNativeDateModule,
+	  NgxMatDatetimePickerModule,
+	  NgxMatTimepickerModule,
+	  MatDatepickerModule,
+    NgxMatNativeDateModule,
+    NgTournamentTreeModule
   ],
   providers: [],
   bootstrap: [AppComponent]

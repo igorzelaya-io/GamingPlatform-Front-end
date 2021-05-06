@@ -10,7 +10,7 @@
                             <!-- <img src="assets/img/team1.png" class="wow fadeInLeft" data-wow-delay="00ms" data-wow-duration="1500ms" alt="image"> -->
 
                             <div class="content">
-                            <h3>{{match.matchLocalTeam.teamName}}</h3>
+                            <h3 *ngIf="match">{{match.matchLocalTeam.teamName}}</h3>
                                 <ul class="watch-list">
                                     <!-- <li><span>Watch</span></li>
                                     <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on YouTube"><i class='bx bxl-youtube'></i></a></li>
@@ -24,8 +24,8 @@
                     <div class="col-lg-2 col-md-12">
                         <div class="matches-result">
                             <ul>
-                                <li>{{match.localTeamMatchScore}}</li>
-                                <li>{{match.awayTeamMatchScore}}</li>
+                                <li *ngIf="match">{{match.localTeamMatchScore}}</li>
+                                <li *ngIf="match">{{match.awayTeamMatchScore}}</li>
                             </ul>
                             
                             <!-- <span class="date-time">20TH May 2020, 23:00</span> -->
@@ -37,7 +37,7 @@
                             <!-- <img src="assets/img/team2.png" class="wow fadeInRight" data-wow-delay="00ms" data-wow-duration="1500ms" alt="image"> -->
 
                             <div class="content">
-                                <h3>{{match.matchAwayTeam.teamName}}</h3>
+                                <h3 *ngIf="match">{{match.matchAwayTeam.teamName}}</h3>
                                 <ul class="watch-list">
                                     <!-- <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on YouTube"><i class='bx bxl-youtube'></i></a></li>
                                     <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on Twitch"><i class='bx bxl-twitch'></i></a></li>
@@ -65,17 +65,19 @@
                                 <!-- <li>20 May 2020, 19:00</li> -->
                             </ul>
                         </div>
-                        <h3>{{match.matchLocalTeam.teamName}} vs {{match.matchAwayTeam.teamName}}</h3>
-                        <button *ngIf="isTeamAdmin" (click)="isTryingToSubmitResults()" [disabled]="isClickedUploadButton">Upload Results</button>
+                        <h3 *ngIf="match">{{match.matchLocalTeam.teamName}} vs {{match.matchAwayTeam.teamName}}</h3>
+                        <button *ngIf="isTeamAdmin && !this.match.uploaded === false" (click)="isTryingToSubmitResults()" [disabled]="isClickedUploadButton">Upload Results</button>
+                        <h3 *ngIf="isTeamAdmin && match.uploaded === true">Match results have already been uploaded. If these results are wrong, dispute this match.</h3>
+                        <button *ngIf="isTeamAdmin && match.uploaded === true">Dispute Match</button>
                         <div style="vertical-align: middle; margin-top: 50px;" *ngIf="isClickedUploadButton">
                             <p style="text-align: center; font-size: large;">Did you team win or lose this match ?</p>
                             <div class="container">
                                 <div class="row">
-                                    <div class="col-md" *ngIf="!isWinningUserTeam">
-                                        <button (click)="selectWonMatchOption()">Won</button>
+                                    <div class="col-md">
+                                        <button style="border: 3px solid black" #wonButton (click)="selectWonMatchOption()">Won</button>
                                     </div>
-                                    <div class="col-md" *ngIf="!isWinningOppTeam">
-                                        <button (click)="selectLostMatchOption()" >Lost</button>
+                                    <div class="col-md">
+                                        <button style="border: 3px solid black" #lostButton (click)="selectLostMatchOption()" >Lost</button>
                                     </div>
                                 </div>
                             </div>
@@ -89,13 +91,9 @@
                                                 type="number"
                                                 placeholder="Enter score"
                                                 required
+                                                min="0"
                                                 [formControl]="userTeamPointsScored"
                                             >
-                                    </div>
-                                    <div class="alert alert-danger" *ngIf="userTeamPointsScored.invalid && (userTeamPointsScored.dirty || userTeamPointsScored.touched)">
-                                        <div *ngIf="userTeamPointsScored.errors.required">
-                                            <p style="text-align: center; font-size: large;"> Enter match score to upload result.</p>
-                                        </div>
                                     </div>
                                     <div style="margin-top: 50px; vertical-align: middle;" class="col-md form-group">
                                         <p style="text-align: center; font-size: large;">Opponent Team Score</p>
@@ -104,13 +102,19 @@
                                             required
                                             placeholder="Enter opposite team score"
                                             type="number"
+                                            min="0"
                                             [formControl]="oppositeTeamPointsScored"
                                         >
                                     </div>
-                                    <div class="alert alert-danger" *ngIf="oppositeTeamPointsScored.invalid && (oppositeTeamPointsScored.dirty || oppositeTeamPointsScored.touched)">
-                                        <div *ngIf="oppositeTeamPointsScored.errors.required">
-                                            <p style="text-align: center; font-size: large;"> Enter opposite team match score to upload result.</p>
-                                        </div>
+                                </div>
+                                 <div *ngIf="userTeamPointsScored.invalid && (userTeamPointsScored.dirty || userTeamPointsScored.touched)">
+                                    <div class="alert alert-danger" *ngIf="userTeamPointsScored.errors.required">
+                                        <p style="text-align: center; font-size: large;"> Enter match score to upload result.</p>
+                                    </div>
+                                </div>
+                                <div *ngIf="oppositeTeamPointsScored.invalid && (oppositeTeamPointsScored.dirty || oppositeTeamPointsScored.touched)">
+                                    <div class="alert alert-danger" *ngIf="oppositeTeamPointsScored.errors.required">
+                                        <p style="text-align: center; font-size: large;"> Enter opposite team match score to upload result.</p>
                                     </div>
                                 </div>
 
