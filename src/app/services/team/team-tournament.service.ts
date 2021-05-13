@@ -9,6 +9,7 @@ import { TeamTournamentRequest } from '../../models/teamtournamentrequest';
 import { HttpHeaders } from '@angular/common/http';
 import { Match } from 'src/app/models/match';
 import { MatchTournamentRequest } from '../../models/matchtournamentrequest';
+import { TreeNodeRequest } from '../../models/treenoderequest';
 
 const TEAM_TOURNAMENT_API = '/teamtournamentsapi/teamTournaments';
 
@@ -85,6 +86,21 @@ export class TeamTournamentService {
     return this.httpClient.post<MessageResponse>(TEAM_TOURNAMENT_API + '/matches/fifa/save', matchTournamentRequest,
     {headers: new HttpHeaders( {'Authorization': 'Bearer ' + jwtToken})})
     .pipe(catchError(this.handleError('uploadMatchResult', {} as MessageResponse)));
+  }
+
+  public addCodMatchToTeams(matchTournamentRequest: MatchTournamentRequest): Observable<MessageResponse>{
+    return this.httpClient.post<MessageResponse>(TEAM_TOURNAMENT_API + '/matches/cod/add', matchTournamentRequest)
+    .pipe(catchError(this.handleError('addCodMatchToTeams', {} as MessageResponse)));
+  }
+
+  public addFifaMatchToTeams(matchTournamentRequest: MatchTournamentRequest): Observable<MessageResponse>{
+    return this.httpClient.post<MessageResponse>(TEAM_TOURNAMENT_API + '/matches/fifa/add', matchTournamentRequest)
+    .pipe(catchError(this.handleError('addFifaMatchToTeams', {} as MessageResponse)));
+  }
+
+  public addBracketToTournament(treeNodeRequest: TreeNodeRequest): Observable<MessageResponse>{
+    return this.httpClient.post<MessageResponse>(TEAM_TOURNAMENT_API + '/matches/bracket', treeNodeRequest)
+    .pipe(catchError(this.handleError('addBracketToTournament', {} as MessageResponse)));
   }
 
   public removeTeamFromFifaTournament(teamTournamentRequest: TeamTournamentRequest, jwtToken: string): Observable<MessageResponse> {

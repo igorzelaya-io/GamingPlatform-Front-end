@@ -1,6 +1,7 @@
 import { Team } from '../team';
 import { User } from '../user/user';
 import { Stack } from '../helpers/stack';
+import { TreeNode } from '../treenode';
 
 export class Tournament {
 
@@ -27,6 +28,7 @@ export class Tournament {
     tournamentLeaderboardForLeague: Array<Team>;
     isStartedTournament: boolean;
     tournamentDateInMilliseconds: number;
+    tournamentBracketTree: TreeNode;
     
     constructor(tournamentName?: string, tournamentStatus?: string, tournamentModerator?: User,
                 tournamentDate?: Date, tournamentTeams?: Array<Team>){

@@ -5,7 +5,7 @@ import { Tournament } from '../models/tournament/tournament';
 import { catchError, retry } from 'rxjs/operators';
 import { MessageResponse } from '../models/messageresponse';
 import { UserTournamentRequest } from '../models/user/user-tournament-request';
-import { Message } from '@angular/compiler/src/i18n/i18n_ast';
+import { TreeNodeRequest } from '../models/treenoderequest';
 
 const USER_TOURNAMENTS_API = '/usertournamentsapi/userTournaments';
 
@@ -50,6 +50,11 @@ export class UserTournamentService {
 	  }
     return this.httpClient.delete<MessageResponse>(USER_TOURNAMENTS_API + '/delete', httpOptions)
     .pipe(catchError(this.handleError('removeTournamentFromUserTournamentList', {} as MessageResponse)));
+  }
+
+  public addBracketToTournament(treeNodeRequest: TreeNodeRequest): Observable<MessageResponse>{
+    return this.httpClient.post<MessageResponse>(USER_TOURNAMENTS_API + '/matches/bracket', treeNodeRequest)
+    .pipe(catchError(this.handleError('addBracketToTournament', {} as MessageResponse)));
   }
 
   public addWToUserTournament(userTournamentRequest: UserTournamentRequest, jwtToken: string): Observable<MessageResponse>{

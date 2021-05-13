@@ -109,7 +109,7 @@ export class PopularLeaguesComponent implements OnInit {
   }
 
   public viewTournament(tournament: Tournament){
-	this.router.navigate(['tournament-details'], {queryParams: {tournamentId: tournament.tournamentId}});
+	this.router.navigate(['/tournament-details'], {queryParams: {tournamentId: tournament.tournamentId}});
   }
 
   public hasAdminRole(): void{

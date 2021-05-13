@@ -140,10 +140,10 @@ import { MatchbracketComponent } from './components/common/matchbracket/matchbra
     TeamInvitesPageComponent,
     ImageCropperComponent,
     ImageUploaderComponent,
-	TournamentCreationPageComponent,
-	TournamentCreationConfigPageComponent,
-	MyTournamentsComponent,
-	MatchbracketComponent	
+	  TournamentCreationPageComponent,
+	  TournamentCreationConfigPageComponent,
+	  MyTournamentsComponent,
+	  MatchbracketComponent	
   ],
   imports: [
     BrowserModule,

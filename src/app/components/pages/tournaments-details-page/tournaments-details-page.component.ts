@@ -13,9 +13,9 @@ import { Match } from 'src/app/models/match';
 import { UserService } from 'src/app/services/user.service';
 import { UserTournament } from 'src/app/models/user/user-tournament';
 import { NgttTournament } from 'ng-tournament-tree';
-import { NgttRound } from 'ng-tournament-tree';
-import { Stack } from 'src/app/models/helpers/stack';
-import { MatchesStyleOneComponent } from '../../common/matches-style-one/matches-style-one.component';
+import { TreeNode } from '../../../models/treenode';
+import { MatchTournamentRequest } from 'src/app/models/matchtournamentrequest';
+import { TreeNodeRequest } from 'src/app/models/treenoderequest';
 
 
 const monthNames = [ "January", "February", "March", "April", "May", "June",
@@ -79,7 +79,9 @@ export class TournamentsDetailsPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.arrangeTournamentMatchesToBracket();
-    this.userInspectingTournament = this.tokenService.getUser();
+    if(this.tokenService.loggedIn()){
+      this.userInspectingTournament = this.tokenService.getUser();
+    }
   	this.route.queryParams.subscribe(params => {
       this.tournamentService.getTournamentById(params['tournamentId'])
       .subscribe((data: Tournament) => {
@@ -352,11 +354,18 @@ export class TournamentsDetailsPageComponent implements OnInit {
       }
     });
   }
-  //This method belongs to match-details.
-  // getTeamMatchFromTournament(matchId: string, tournamentId: string){
-  //   this.teamTournamentService.getTeamMatchFromTournament(matchId, this.tournament.tournamentId)
-  //   .subscribe();
-  // }
+
+  addMatchToTeams(matchTournamentRequest: MatchTournamentRequest): void{
+    if(this.tournament.tournamentGame === 'Fifa'){
+      this.teamTournamentService.addFifaMatchToTeams(matchTournamentRequest)
+      .subscribe((data: MessageResponse) => {
+
+      }, err => {
+        console.error(err.error.message);
+      });
+    }
+  }
+
   passMatch(matchId: string){
     this.router.navigate(['/match-details'], { queryParams: {matchId: matchId, tournamentId: this.tournament.tournamentId}});
   }
@@ -365,13 +374,14 @@ export class TournamentsDetailsPageComponent implements OnInit {
     if(new Date().getTime() > new Date(this.tournament.tournamentDate).getTime()){
       if(!this.tournament.isStartedTournament){
         this.activateTournament();    
+        this.arrangeTournamentMatchesToBracket();
       }
       this.isStartedTournament = true;
       if(this.alreadyJoinedTournament){
         this.getAllUserActiveMatches();
       }
       if(this.isPvPTournament()){
-        //getTournamentBracket()
+        this.displayTournamentBracket();
         this.getAllActiveTournamentMatches();
         this.getAllTournamentInactiveMatches();
         return;
@@ -412,29 +422,184 @@ export class TournamentsDetailsPageComponent implements OnInit {
       }
       return numberOfRounds;
     }
+  }
 
+  public createMatchForTeams(awayTeam: Team, localTeam?: Team ): Match{
+    let match: Match = new Match();
+    if(localTeam){
+      match.matchLocalTeam = localTeam;
+      match.localTeamMatchScore = 0;
+      match.matchAwayTeam = awayTeam;
+      match.awayTeamMatchScore = 0;
+      match.matchTournament = this.tournament;
+      match.matchStatus = 'ACTIVE';
+      match.uploaded = false;
+      const matchTournamentRequest: MatchTournamentRequest = new MatchTournamentRequest();
+      matchTournamentRequest.matchTournamentMatch = match;
+      this.addMatchToTeams(matchTournamentRequest);
+      return match;
+    }
+    match.matchAwayTeam = awayTeam;
+    match.awayTeamMatchScore = 0;
+    match.matchTournament = this.tournament;
+    match.matchStatus = 'ACTIVE';
+    match.uploaded = false;
+    return match;
   }
 
   public arrangeTournamentMatchesToBracket(){
-    // let match: number = 1; 
-    // let team: number = match * 2;
-    // let numStack: Stack<number>;
-    // numStack.push(match);
-    // while(match < this.tournament.tournamentNumberOfTeams){
-    //   match *= 2;
-    //   team = match * 2;
-    //   numStack.push(match);
-    // }
-    // let autoTeams: number = team - this.tournament.tournamentNumberOfTeams;
-    // let roundOneMatches: number = numStack.pop() - autoTeams;
-    // console.log(roundOneMatches);
-    // let roundTwoMatches: number = autoTeams + numStack.pop();
-    // console.log(roundTwoMatches);
-    // while(!numStack.isEmpty()){
-    //   let roundN: number = numStack.pop();
-    //   console.log(roundN);
-    // }
+    let numberOfMatches: number = 1;
+    let numberOfTeamsInRound: number = 1;
+    let numberOfRounds: number = 1;
+    
+    while(numberOfTeamsInRound > this.tournament.tournamentNumberOfTeams){
+      numberOfMatches *= 2;
+      numberOfTeamsInRound = numberOfMatches * 2;
+      numberOfRounds++;
+    }
+    
+    numberOfRounds += 1;
+    const remainingTeamsInBracket: number = numberOfTeamsInRound - this.tournament.tournamentNumberOfTeams;
+    const roundOneNumberOfTeams: number = this.tournament.tournamentNumberOfTeams - remainingTeamsInBracket;
+    let roundTwoNumberOfTeams : number = roundOneNumberOfTeams / 2 + remainingTeamsInBracket; 
+    let roundOneNodes: TreeNode[] = [];
+    
+    for(let i = 0; i < roundOneNumberOfTeams / 2; i++){
+      let localTeam: Team = this.tournament.tournamentTeamBracketStack.pop();
+      let awayTeam: Team = this.tournament.tournamentTeamBracketStack.pop();
+      let match: Match = this.createMatchForTeams(awayTeam, localTeam);
+      let node: TreeNode = new TreeNode();
+      node.value = match;
+      roundOneNodes.push(node);
+    }
 
+
+    let roundTwoNodes: TreeNode[] = [];
+    let numberOfTeamsToPushInRoundTwo: number = roundTwoNumberOfTeams - roundOneNumberOfTeams / 2; 
+    let indexOfRoundOneNode: number = 0;
+    //roundTwoNumberOfTeams = roundTwoNumberOfTeams - numberOfTeamsToPushInRoundTwo;
+    let isPushedTeamIntoRoundTwo: boolean = false;
+    let isGreaterNumberOfTeams: boolean = roundOneNumberOfTeams < roundTwoNumberOfTeams ? true : false; 
+   
+    for(let j = 0; j < roundTwoNumberOfTeams / 2; j++){
+      
+      if(isGreaterNumberOfTeams){
+        if(!isPushedTeamIntoRoundTwo && numberOfTeamsToPushInRoundTwo !== 0 ){
+          let roundOneNode: TreeNode = roundOneNodes[indexOfRoundOneNode];
+          let roundTwoNode: TreeNode = new TreeNode();
+          let awayTeamInRoundTwo: Team = this.tournament.tournamentTeamBracketStack.pop();
+          let roundTwoMatch: Match = this.createMatchForTeams(awayTeamInRoundTwo);  
+          roundTwoNode.value = roundTwoMatch;
+          roundTwoNode.left = roundOneNode;
+          roundOneNodes[indexOfRoundOneNode].root = roundTwoNode;
+          numberOfTeamsToPushInRoundTwo--;
+          isPushedTeamIntoRoundTwo = true;
+          roundTwoNodes.push(roundTwoNode);
+          indexOfRoundOneNode++;
+        }
+        else if(isPushedTeamIntoRoundTwo && numberOfTeamsInRound){
+          let roundTwoNode: TreeNode = new TreeNode();
+          let awayTeamInRoundTwo: Team = this.tournament.tournamentTeamBracketStack.pop();
+          let localTeamInRoundTwo: Team = this.tournament.tournamentTeamBracketStack.pop();
+          let roundTwoMatch: Match = this.createMatchForTeams(awayTeamInRoundTwo, localTeamInRoundTwo); 
+          roundTwoNode.value = roundTwoMatch;
+          roundTwoNodes.push(roundTwoNode);
+          isPushedTeamIntoRoundTwo = false;
+        }
+      }
+      else{
+        let roundOneLeftNode: TreeNode = roundTwoNodes[indexOfRoundOneNode];
+        let roundOneRightNode: TreeNode = roundTwoNodes[indexOfRoundOneNode + 1];
+        let roundTwoNode: TreeNode = new TreeNode();
+        let match: Match = new Match();
+        roundTwoNode.value = match;
+        roundTwoNode.left = roundOneLeftNode;
+        roundTwoNode.right = roundOneRightNode;
+        roundOneLeftNode.root = roundTwoNode;
+        roundOneRightNode.root = roundTwoNode;
+        indexOfRoundOneNode += 2;
+        roundTwoNodes.push(roundTwoNode);
+      }
+    }
+    
+    let numberOfRoundsLeft: number = 0;
+    let numberOfTeamsInRoundTwoToDivide: number = roundTwoNumberOfTeams;
+    while(numberOfTeamsInRoundTwoToDivide !== 2){
+      roundTwoNumberOfTeams / 2;
+      numberOfRoundsLeft++;
+    }
+    const LAST_ROUND_NUMBER_DEPTH = 1;
+    numberOfRoundsLeft = numberOfRoundsLeft - LAST_ROUND_NUMBER_DEPTH;
+    
+
+    let roundTwoQuotient = 2;
+    let roundBeforeFinalNodes: TreeNode[] = [];
+    for(let i = 0; i < numberOfRoundsLeft; i++){
+      let roundXNumberOfTeams: number = roundTwoNumberOfTeams / roundTwoQuotient; 
+      let roundXNodes: TreeNode[] = [];
+      let indexOfRoundxNode: number = 0;
+    
+      if(i === 0){
+        for(let j = 0 ; j < roundXNumberOfTeams / 2; i++){
+          let roundXNode = new TreeNode();
+          const roundXMatch = new Match();
+          const roundTwoLeftNode = roundTwoNodes[indexOfRoundxNode];
+          const roundTwoRightNode = roundTwoNodes[indexOfRoundxNode + 1];
+          roundXNode.value = roundXMatch;
+          roundXNode.left = roundTwoLeftNode;
+          roundXNode.right = roundTwoRightNode;
+          roundTwoLeftNode.root = roundXNode;
+          roundTwoRightNode.root = roundXNode;
+          indexOfRoundxNode += 2;
+          roundXNodes.push(roundXNode);
+        }
+        roundBeforeFinalNodes = roundXNodes;
+        roundXNodes = [];
+        indexOfRoundxNode = 0;
+        roundTwoQuotient += 2;
+        continue;
+      }
+      for(let j = 0; j < roundXNumberOfTeams; j++){
+        let roundXNode: TreeNode = new TreeNode();
+        const roundXMatch: Match = new Match();
+        let roundBeforeLeftNode: TreeNode = roundBeforeFinalNodes[indexOfRoundxNode];
+        let roundBeforeRightNode: TreeNode = roundBeforeFinalNodes[indexOfRoundxNode + 1];
+        roundXNode.value = roundXMatch;
+        roundXNode.left = roundBeforeLeftNode;
+        roundXNode.right = roundBeforeRightNode;
+        roundBeforeLeftNode.root = roundXNode;
+        roundBeforeRightNode.root = roundXNode;
+        indexOfRoundxNode += 2;  
+        roundXNodes.push(roundXNode);
+      }
+      roundTwoQuotient += 2;
+      indexOfRoundxNode = 0;
+      roundBeforeFinalNodes = roundXNodes;
+      roundXNodes = [];
+    }
+    const finalMatch = new Match();
+    let roundBeforeFinalsLeftNode: TreeNode = roundBeforeFinalNodes[0];
+    let roundBeforeFinalsRightNode: TreeNode = roundBeforeFinalNodes[1];
+    let finalRound: TreeNode = new TreeNode();
+    finalRound.value = finalMatch;
+    finalRound.left = roundBeforeFinalsLeftNode;
+    finalRound.right = roundBeforeFinalsRightNode;
+    roundBeforeFinalsLeftNode.root = finalRound;
+    roundBeforeFinalsRightNode.root = finalRound;
+    const treeNodeRequest: TreeNodeRequest = new TreeNodeRequest(finalRound, this.tournament);
+    this.teamTournamentService.addBracketToTournament(treeNodeRequest)
+    .subscribe((data: MessageResponse) => {
+      
+    },
+    err => {
+      console.error(err.error.message); 
+    });
+
+    this.singleEliminationTournament  
+  }
+
+  public displayTournamentBracket(){
+    const tournamentBracketNode: TreeNode = this.tournament.tournamentBracketTree;
 
     this.singleEliminationTournament = {
       rounds: [
@@ -446,23 +611,6 @@ export class TournamentsDetailsPageComponent implements OnInit {
             },
             {
               teams: [{name: 'Team  C', score: 1}, {name: 'Team  D', score: 2}]
-            },
-            {
-              teams: [{name: 'Team  E', score: 1}, {name: 'Team  F', score: 2}]
-            },
-            {
-              teams: [{name: 'Team  G', score: 1}, {name: 'Team  H', score: 2}]
-            }, {
-              teams: [{name: 'Team  A', score: 1}, {name: 'Team  B', score: 2}]
-            },
-            {
-              teams: [{name: 'Team  C', score: 1}, {name: 'Team  D', score: 2}]
-            },
-            {
-              teams: [{name: 'Team  E', score: 1}, {name: 'Team  F', score: 2}]
-            },
-            {
-              teams: [{name: 'Team  G', score: 1}, {name: 'Team  H', score: 2}]
             }
           ]
         }, {
@@ -512,7 +660,5 @@ export class TournamentsDetailsPageComponent implements OnInit {
         }
       ]
     };
-
   }
-
 }

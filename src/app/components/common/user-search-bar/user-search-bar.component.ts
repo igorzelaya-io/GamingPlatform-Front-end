@@ -18,6 +18,7 @@ export class UserSearchBarComponent implements OnInit {
   allUsers: User[];
   
   autoCompleteList: User[];
+  
 
   @ViewChild('autocompleteInput') 
   autocompleteInput: ElementRef;
