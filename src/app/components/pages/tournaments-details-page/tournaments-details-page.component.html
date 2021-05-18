@@ -71,7 +71,8 @@
                 </li>
                 
                 <li *ngIf="!alreadyJoinedTournament">
-                	<button *ngIf="!isTryingToJoinTournament" (click)="isJoiningTournament()">
+                    <button *ngIf="isStartedTournament && isUserAdmin" (click)="startTournament()">Start Tournament</button>
+                    <button *ngIf="!isTryingToJoinTournament" (click)="isJoiningTournament()">
                 		Join Tournament
                     </button>
                     <div style="vertical-align: middle;" *ngIf="isTryingToJoinTournament">
@@ -152,22 +153,22 @@
             <div class="tab-content" id="myTabContent">
                 
                 <div class="tab-pane fade show active" id="all-matches" role="tabpanel">
-                    <div *ngIf="!isStartedTournament" style="vertical-align: middle;">
+                    <div *ngIf="!isActivatedTournament" style="vertical-align: middle;">
                         <h1 style="text-align: center">Tournament has not started</h1>
                     </div>
-                    <div *ngIf="!isStartedTournament && !alreadyJoinedTournament" style="vertical-align: middle;">
+                    <div *ngIf="!isActivatedTournament && !alreadyJoinedTournament" style="vertical-align: middle;">
                         <h1 style="text-align: center;">Join tournament to access matches</h1>
                     </div>
 
-                    <div *ngIf="isStartedTournament && !alreadyJoinedTournament" style="vertical-align: middle;">
+                    <div *ngIf="isActivatedTournament && !alreadyJoinedTournament" style="vertical-align: middle;">
                         <h1 style="text-align: center">You are not registered in this tournament</h1>
                     </div>
 
-                    <div *ngIf="userTeamActiveMatches.length === 0 && this.alreadyJoinedTournament && isStartedTournament" style="vertical-align: middle">
+                    <div *ngIf="userTeamActiveMatches.length === 0 && this.alreadyJoinedTournament && isActivatedTournament" style="vertical-align: middle">
                         <h1 style="text-align: center">You have no matches available</h1>
                     </div>
                         
-                        <div *ngIf="isStartedTournament && alreadyJoinedTournament && userTeamActiveMatches.length !== 0">
+                        <div *ngIf="isActivatedTournament && alreadyJoinedTournament && userTeamActiveMatches.length !== 0">
                             
                             <div *ngFor="let match of userTeamActiveMatches" class="single-matches-box">
                                 <div class="row align-items-center">
@@ -218,14 +219,14 @@
 
                 <div class="tab-pane fade" id="upcoming-matches" role="tabpanel">
                     
-                    <div *ngIf="!isStartedTournament" style="vertical-align: middle;">
+                    <div *ngIf="!isActivatedTournament" style="vertical-align: middle;">
                         <h1 style="text-align: center">Tournament has not started</h1>
                     </div>
 
                     <div *ngIf="tournamentMatches.length === 0" style="vertical-align: middle;">
                         <h1 style="text-align: center">No matches available</h1>
                     </div>
-                    <div *ngIf="this.isStartedTournament && tournamentMatches.length !== 0">
+                    <div *ngIf="this.isActivatedTournament && tournamentMatches.length !== 0">
                         <div *ngIf="isPvPTournament()">
                             <ng-container>
                                 <ngtt-single-elimination-tree [tournament]="singleEliminationTournament" [matchTemplate]="matchTemplate">

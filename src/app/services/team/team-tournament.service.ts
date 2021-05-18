@@ -88,14 +88,14 @@ export class TeamTournamentService {
     .pipe(catchError(this.handleError('uploadMatchResult', {} as MessageResponse)));
   }
 
-  public addCodMatchToTeams(matchTournamentRequest: MatchTournamentRequest): Observable<MessageResponse>{
-    return this.httpClient.post<MessageResponse>(TEAM_TOURNAMENT_API + '/matches/cod/add', matchTournamentRequest)
-    .pipe(catchError(this.handleError('addCodMatchToTeams', {} as MessageResponse)));
+  public addCodMatchToTeams(matchTournamentRequest: MatchTournamentRequest): Observable<Match>{
+    return this.httpClient.post<Match>(TEAM_TOURNAMENT_API + '/matches/cod/add', matchTournamentRequest)
+    .pipe(catchError(this.handleError('addCodMatchToTeams', {} as Match)));
   }
 
-  public addFifaMatchToTeams(matchTournamentRequest: MatchTournamentRequest): Observable<MessageResponse>{
-    return this.httpClient.post<MessageResponse>(TEAM_TOURNAMENT_API + '/matches/fifa/add', matchTournamentRequest)
-    .pipe(catchError(this.handleError('addFifaMatchToTeams', {} as MessageResponse)));
+  public addFifaMatchToTeams(matchTournamentRequest: MatchTournamentRequest): Observable<Match>{
+    return this.httpClient.post<Match>(TEAM_TOURNAMENT_API + '/matches/fifa/add', matchTournamentRequest)
+    .pipe(catchError(this.handleError('addFifaMatchToTeams', {} as Match)));
   }
 
   public addBracketToTournament(treeNodeRequest: TreeNodeRequest): Observable<MessageResponse>{
