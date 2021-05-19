@@ -15,6 +15,12 @@ import { UserTournament } from 'src/app/models/user/user-tournament';
 import { NgttTournament, NgttRound } from 'ng-tournament-tree';
 import { TreeNode } from '../../../models/treenode';
 import { MatchTournamentRequest } from 'src/app/models/matchtournamentrequest';
+import { BinaryTree } from 'src/app/models/binarytree';
+import { Stack } from 'src/app/models/helpers/stack';
+import { isFakeMousedownFromScreenReader } from '@angular/cdk/a11y';
+import { TreeRound } from 'src/app/models/treeround';
+import { TeamService } from 'src/app/services/team/team-service.service';
+import { Role } from 'src/app/models/role';
 
 const monthNames = [ "January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December" ];
@@ -394,7 +400,7 @@ export class TournamentsDetailsPageComponent implements OnInit {
           this.displayTournamentBracket();
           this.getAllActiveTournamentMatches();
           this.getAllTournamentInactiveMatches();
-          // this.displayTournamentBracket();
+          this.displayTournamentBracket();
           return;
         }
         //getTournamentLeaderboard
@@ -425,7 +431,8 @@ export class TournamentsDetailsPageComponent implements OnInit {
   }
 
   public isAdminUser(){
-    if(this.userInspectingTournament.userRoles.filter(userRole => userRole.authority === 'ADMIN').length !== 0){
+    let role: Role = this.userInspectingTournament.userRoles.filter(userRole => userRole.authority === 'ADMIN').find(userRole => userRole.authority === 'ADMIN');
+    if(role){
       this.isUserAdmin = true;
       return;
     }
@@ -476,11 +483,47 @@ export class TournamentsDetailsPageComponent implements OnInit {
   }
 
   public displayTournamentBracket(){
-    const tournamentBracketNode: TreeNode = this.tournament.tournamentBracketTree;
-    let roundOneRound: NgttRound[] = [];
+    let tournamentTeamBracketTree: BinaryTree = this.tournament.tournamentBracketTree;
+    if(tournamentTeamBracketTree){
+      const binaryTreeNumberOfRounds: number = tournamentTeamBracketTree.binaryTreeNumberOfRounds;
+      let singleEliminationTournamentRounds: NgttRound[] = [];
+      
+      for(let i = 0; i < binaryTreeNumberOfRounds; i++){
+        let roundX: TreeRound = tournamentTeamBracketTree.binaryTreeRounds[i];
+        let roundXNodes: TreeNode[] = roundX.treeRoundNodes;
+              
+        let ngRound: any = {
+          type: 'WinnerBracket',
+          matches: []
+        }
+        if(i === binaryTreeNumberOfRounds - 1){
+          ngRound.type = 'Final';
+        }
+        let matches = [];
+        for(let j = 0 ; j < roundXNodes.length; j++){
+          let match: Match = roundXNodes[i].value;
+          let ngMatch: any = {
+            teams:{}
+          };
+          if(match.matchAwayTeam){
+            ngMatch.teams = {name: `${match.matchAwayTeam.teamName}`, score: match.awayTeamMatchScore};
+          }
+          else{
+            ngMatch.teams = {name: 'Winning Team', score: 0};  
+          }
+          if(match.matchLocalTeam){
+            ngMatch.teams = {name: `${match.matchLocalTeam.teamName}`, score: match.localTeamMatchScore};
+          }
+          else{
+            ngMatch.teams = {name: 'Winning Team', score: 0};
+          }
+          matches.push(ngMatch);
+        }
+        ngRound.matches = matches;
+      } 
+      this.singleEliminationTournament.rounds = singleEliminationTournamentRounds;
+    }
     
-
-
     this.singleEliminationTournament = {
       rounds: [
         {
