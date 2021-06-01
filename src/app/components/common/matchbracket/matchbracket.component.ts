@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Input } from '@angular/core';
 import { Match } from '../../../models/match';
 import { Team } from '../../../models/team';
+import { BinaryTree } from 'src/app/models/binarytree';
 
 @Component({
   selector: 'app-matchbracket',
@@ -11,11 +12,12 @@ import { Team } from '../../../models/team';
 export class MatchbracketComponent implements OnInit {
 
   @Input() 
-  matches: any;
+  public matches: any;
 
   constructor() {
+  
   }
-
+  
   ngOnInit(): void {
     
   }  

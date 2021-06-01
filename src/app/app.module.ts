@@ -78,6 +78,11 @@ import { NgxMatNativeDateModule } from '@angular-material-components/datetime-pi
 import { MyTournamentsComponent } from './components/pages/my-tournaments/my-tournaments.component';
 import { NgTournamentTreeModule } from 'ng-tournament-tree';
 import { MatchbracketComponent } from './components/common/matchbracket/matchbracket.component';
+import { FieldformComponent } from './components/common/fieldform/fieldform.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
+import { FieldformConfirmationComponent } from './components/common/fieldform-confirmation/fieldform-confirmation.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -143,7 +148,9 @@ import { MatchbracketComponent } from './components/common/matchbracket/matchbra
 	  TournamentCreationPageComponent,
 	  TournamentCreationConfigPageComponent,
 	  MyTournamentsComponent,
-	  MatchbracketComponent	
+	  MatchbracketComponent,
+	  FieldformComponent,
+	  FieldformConfirmationComponent	
   ],
   imports: [
     BrowserModule,
@@ -162,7 +169,9 @@ import { MatchbracketComponent } from './components/common/matchbracket/matchbra
 	  NgxMatTimepickerModule,
 	  MatDatepickerModule,
     NgxMatNativeDateModule,
-    NgTournamentTreeModule
+    NgTournamentTreeModule,
+    MatButtonModule,
+    MatDialogModule
   ],
   providers: [],
   bootstrap: [AppComponent]

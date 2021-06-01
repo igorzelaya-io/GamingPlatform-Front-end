@@ -108,7 +108,7 @@ export class TeamService {
   }
 
   public updateTeamField(teamId: string, teamField: string, replaceValue: string, jwtToken: string): Observable<MessageResponse>{
-    return this.httpClient.put<MessageResponse>(TEAM_API + '/update?teamId=' + teamId + 'teamField=' + teamField + '?replaceValue=' + replaceValue,
+    return this.httpClient.put<MessageResponse>(TEAM_API + '/update?teamId=' + teamId + '&teamField=' + teamField + '&replaceValue=' + replaceValue,
      {teamId, teamField, replaceValue}, {headers: new HttpHeaders({'Authorization' : 'Bearer ' + jwtToken })})
     .pipe(catchError(this.handleError('updateTeamField', {} as MessageResponse)));
   }

@@ -15,6 +15,9 @@ export class Team {
     teamRequests: Array<TeamInviteRequest>;
     teamImage: FormData;
     imageToGet: ImageModel;
+    teamTotalLs: number;
+    teamTotalWs: number;
+    teamTotalPlays: number;
 
     constructor(teamId ?: string, teamCountry?: string, teamName?: string, 
                 teamStatus ?:string, teamUsers?: Array<User>, teamChallenges?: Array<Challenge>,

@@ -392,7 +392,8 @@ export class TournamentsDetailsPageComponent implements OnInit {
   evaluateTournamentDate(){
     if(new Date().getTime() > new Date(this.tournament.tournamentDate).getTime()){
       this.isStartedTournament = true;
-      if(this.isActivatedTournament){
+      if(this.tournament.startedTournament){
+        this.isActivatedTournament = true;
         if(this.alreadyJoinedTournament){
           this.getAllUserActiveMatches();
         }
@@ -432,7 +433,7 @@ export class TournamentsDetailsPageComponent implements OnInit {
 
   public isAdminUser(){
     let role: Role = this.userInspectingTournament.userRoles.filter(userRole => userRole.authority === 'ADMIN').find(userRole => userRole.authority === 'ADMIN');
-    if(role){
+    if(role || this.tournament.tournamentModerator.userName === this.userInspectingTournament.userName){
       this.isUserAdmin = true;
       return;
     }
@@ -483,46 +484,46 @@ export class TournamentsDetailsPageComponent implements OnInit {
   }
 
   public displayTournamentBracket(){
-    let tournamentTeamBracketTree: BinaryTree = this.tournament.tournamentBracketTree;
-    if(tournamentTeamBracketTree){
-      const binaryTreeNumberOfRounds: number = tournamentTeamBracketTree.binaryTreeNumberOfRounds;
-      let singleEliminationTournamentRounds: NgttRound[] = [];
+    // let tournamentTeamBracketTree: BinaryTree = this.tournament.tournamentBinaryTree;
+    // if(tournamentTeamBracketTree){
+    //   const binaryTreeNumberOfRounds: number = tournamentTeamBracketTree.binaryTreeNumberOfRounds;
+    //   let singleEliminationTournamentRounds: NgttRound[] = [];
       
-      for(let i = 0; i < binaryTreeNumberOfRounds; i++){
-        let roundX: TreeRound = tournamentTeamBracketTree.binaryTreeRounds[i];
-        let roundXNodes: TreeNode[] = roundX.treeRoundNodes;
+    //   for(let i = 0; i < binaryTreeNumberOfRounds; i++){
+    //     let roundX: TreeRound = tournamentTeamBracketTree.binaryTreeRounds[i];
+    //     let roundXNodes: TreeNode[] = roundX.treeRoundNodes;
               
-        let ngRound: any = {
-          type: 'WinnerBracket',
-          matches: []
-        }
-        if(i === binaryTreeNumberOfRounds - 1){
-          ngRound.type = 'Final';
-        }
-        let matches = [];
-        for(let j = 0 ; j < roundXNodes.length; j++){
-          let match: Match = roundXNodes[i].value;
-          let ngMatch: any = {
-            teams:{}
-          };
-          if(match.matchAwayTeam){
-            ngMatch.teams = {name: `${match.matchAwayTeam.teamName}`, score: match.awayTeamMatchScore};
-          }
-          else{
-            ngMatch.teams = {name: 'Winning Team', score: 0};  
-          }
-          if(match.matchLocalTeam){
-            ngMatch.teams = {name: `${match.matchLocalTeam.teamName}`, score: match.localTeamMatchScore};
-          }
-          else{
-            ngMatch.teams = {name: 'Winning Team', score: 0};
-          }
-          matches.push(ngMatch);
-        }
-        ngRound.matches = matches;
-      } 
-      this.singleEliminationTournament.rounds = singleEliminationTournamentRounds;
-    }
+    //     let ngRound: any = {
+    //       type: 'WinnerBracket',
+    //       matches: []
+    //     }
+    //     if(i === binaryTreeNumberOfRounds - 1){
+    //       ngRound.type = 'Final';
+    //     }
+    //     let matches = [];
+    //     for(let j = 0 ; j < roundXNodes.length; j++){
+    //       let match: Match = roundXNodes[i].value;
+    //       let ngMatch: any = {
+    //         teams:{}
+    //       };
+    //       if(match.matchAwayTeam){
+    //         ngMatch.teams = {name: `${match.matchAwayTeam.teamName}`, score: match.awayTeamMatchScore};
+    //       }
+    //       else{
+    //         ngMatch.teams = {name: 'Winning Team', score: 0};  
+    //       }
+    //       if(match.matchLocalTeam){
+    //         ngMatch.teams = {name: `${match.matchLocalTeam.teamName}`, score: match.localTeamMatchScore};
+    //       }
+    //       else{
+    //         ngMatch.teams = {name: 'Winning Team', score: 0};
+    //       }
+    //       matches.push(ngMatch);
+    //     }
+    //     ngRound.matches = matches;
+    //   } 
+    //   this.singleEliminationTournament.rounds = singleEliminationTournamentRounds;
+    //}
     
     this.singleEliminationTournament = {
       rounds: [
@@ -530,37 +531,37 @@ export class TournamentsDetailsPageComponent implements OnInit {
           type: 'Winnerbracket',
           matches: [
             {
-              teams: [{name: 'Team  A', score: 1}, {name: 'Team  B', score: 2}]
+              teams: [{name: 'Uzi Gang', score: 0}, {name: 'Tentacion Ga', score: 0}]
             },
             {
-              teams: [{name: 'Team  C', score: 1}, {name: 'Team  D', score: 2}]
-            }
+              teams: [{name: 'Juice Gang', score: 0}, {name: 'Travis Gang', score: 0}]
+            },
           ]
         }, {
           type: 'Winnerbracket',
           matches: [
             {
-              teams: [{name: 'Team  A', score: 1}, {name: 'Team  B', score: 2}]
+              teams: [{name: 'Lil baby gang', score: 0}, {name: 'Winning Team', score: 0}]
             },
             {
-              teams: [{name: 'Team  C', score: 1}, {name: 'Team  D', score: 2}]
+              teams: [{name: 'Kanye gang', score: 0}, {name: 'Savage Gang', score: 0}]
             },
             {
-              teams: [{name: 'Team  E', score: 1}, {name: 'Team  F', score: 2}]
+              teams: [{name: 'Cole gang', score: 0}, {name: 'Winning Team', score: 0}]
             },
             {
-              teams: [{name: 'Team  G', score: 1}, {name: 'Team  H', score: 2}]
-            }
+              teams: [{name: 'Woo Gang', score: 0}, {name: 'Dababy Gang', score: 0}]
+            },
           ]
         },
         {
           type: 'Winnerbracket',
           matches: [
             {
-              teams: [{name: 'Team  B', score: 1}, {name: 'Team  D', score: 2}]
+              teams: [{name: 'Winning Team', score: 0}, {name: 'Winning Team', score: 0}]
             },
             {
-              teams: [{name: 'Team  F', score: 1}, {name: 'Team  H', score: 2}]
+              teams: [{name: 'Winning Team', score: 0}, {name: 'Winning Team', score: 0}]
             }
           ]
         },
@@ -570,12 +571,12 @@ export class TournamentsDetailsPageComponent implements OnInit {
             {
               teams: [
                 {
-                  name: 'Team  D',
-                  score: 1
+                  name: 'Winning Team',
+                  score: 0
                 },
                 {
-                  name: 'Team  H',
-                  score: 2
+                  name: 'Winning Team',
+                  score: 0
                 }
               ]
             }

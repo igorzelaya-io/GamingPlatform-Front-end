@@ -69,7 +69,7 @@
                     <span>{{tournament.tournamentEntryFee}}</span>
                     Tournament Points Entry Fee
                 </li>
-                <button *ngIf="isStartedTournament && isUserAdmin" (click)="startTournament()">Start Tournament</button>
+                <button *ngIf="isStartedTournament && isUserAdmin && !isActivatedTournament" (click)="startTournament()">Start Tournament</button>
                 <li *ngIf="!alreadyJoinedTournament">
                     
                     <button *ngIf="!isTryingToJoinTournament" (click)="isJoiningTournament()">
@@ -89,8 +89,8 @@
                                 <div class="row">
                                    <div class="col-sm" style="vertical-align:middle">
                                         <img
-                                            src="assets/d1images/anonymoususer-big.png"
-                                            style="border: solid red 2px"
+                                            src="assets/d1images/anonymousteam.png"
+                                            style="border: solid red 2px" 
                                         >
                                    </div>
                                    <div class="col-sm" style="vertical-align:middle">
@@ -228,8 +228,9 @@
                     </div>
                     <div *ngIf="this.isActivatedTournament && tournamentMatches.length !== 0">
                         <div *ngIf="isPvPTournament()">
+                            <!-- <app-matchbracket [tournamentBracketTree]="tournament.tournamentBinaryTree"></app-matchbracket> -->
                             <ng-container>
-                                <ngtt-single-elimination-tree [tournament]="singleEliminationTournament" [matchTemplate]="matchTemplate">
+                            <ngtt-single-elimination-tree [tournament]="singleEliminationTournament" [matchTemplate]="matchTemplate">
                                 </ngtt-single-elimination-tree>
                             </ng-container>
                             <ng-template #matchTemplate let-match>

@@ -59,8 +59,8 @@ export class UserService {
 
   public updateUserField(userId: string, userField: string, replaceValue:string, jwtToken: string ): Observable<MessageResponse>{
     return this.httpClient.put<MessageResponse>(USER_API + '/users/update?userId=' + userId
-                                        + '?userField='+ userField
-                                        + '?replaceValue=' + replaceValue,
+                                        + '&userField='+ userField
+                                        + '&replaceValue=' + replaceValue,
     {headers: new HttpHeaders({'Authorization': 'Bearer ' + jwtToken})})
     .pipe(catchError(this.handleError('updateUserTokens', {} as MessageResponse)));
   }
@@ -73,7 +73,7 @@ export class UserService {
 
   public deleteUserField(userId: string, userField: string, jwtToken: string): Observable<MessageResponse>{
     return this.httpClient.delete<MessageResponse>(USER_API + '/delete?userId=' + userId
-                                          + '?userField=' + userField, 
+                                          + '&userField=' + userField, 
     {headers: new HttpHeaders({'Authorization': 'Bearer ' + jwtToken})})
     .pipe(catchError(this.handleError('updateUserTokens', {} as MessageResponse)));
   }
@@ -82,6 +82,12 @@ export class UserService {
     return this.httpClient.post<MessageResponse>(USER_API + '/tokens/add', userTokenRequest,
     {headers: new HttpHeaders({'Authorization': 'Bearer ' + jwtToken})})
     .pipe(catchError(this.handleError('updateUserTokens', {} as MessageResponse)));
+  }
+
+  public banPlayer(userId: string, jwtToken: string): Observable<MessageResponse>{
+    return this.httpClient.post<MessageResponse>(USER_API + '/ban?userId=' + userId,
+    {headers: new HttpHeaders({'Authorization': 'Bearer ' + jwtToken})})
+    .pipe(catchError(this.handleError('banPlayer', {} as MessageResponse)));
   }
 
   public addImageToUser(user: User, imageModel: ImageModel): Observable<void>{

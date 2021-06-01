@@ -35,7 +35,7 @@ export class MyTeamsPageComponent implements OnInit {
   getAllUserTeams(){
     this.userTeamService.getAllUserTeams(this.user.userId)
     .subscribe((data: Team[]) => {
-      if(data && data.length && Object.keys(data).length !== 0){
+      if(data && data.length){
 		    this.isEmpty = false;
 	  	  this.userTeams = data;
         return;
@@ -55,13 +55,11 @@ export class MyTeamsPageComponent implements OnInit {
 
   passTeam(team: Team){
     if(this.tokenService.loggedIn()){
-		  this.router.navigate(['/team-details'], {queryParams: { team: JSON.stringify(team)}});
+		  this.router.navigate(['/team-details'], {queryParams: { teamId: team.teamId }});
 	  }
   }
 
   passUser(user: User){
-    if(this.tokenService.loggedIn()){
-      this.router.navigate(['/player-details'], {queryParams: { user: JSON.stringify(user)}});
-    }
+    this.router.navigate(['/player-details'], {queryParams: {userId: user.userId}});
   }
 }

@@ -5,7 +5,10 @@
         <div class="page-title-content">
             <!-- <img src="assets/img/team-member1.jpg" class="player-image" alt="image"> -->
             <br>
-        <h1 title="{{user.userName}}">{{user.userName}}</h1>
+            <h1 title="{{user.userName}}">{{user.userName}}</h1>
+            <button mat-button (click)="openDialogUserName()" style="background-color: #1a0000;">
+                <i class="fas fa-edit" style="font-size: 20px; color: red"></i>
+            </button>
         </div>
     </div>
 </section>
@@ -13,10 +16,18 @@
 <section class="player-details-area ptb-100">
     <div class="container">
         <div class="player-details-desc">
-            <span class="sub-title">{{user.userRealName}}</span>
+            <div class="row">
+                <div class="col-lg-3 col-md-12" style="vertical-align: middle;">
+                    <span class="sub-title">{{user.userRealName}}</span>
+                </div>
+                <div class="col-lg-3 col-md-12" style="vertical-align: middle; margin-right: 1000px; margin-bottom: 50px;">
+                    <button mat-button (click)="openDialogUserRealName()" style="background-color: #1a0000;">
+                        <i class="fas fa-edit" style="font-size: 20px; color: red"></i>
+                    </button>
+                </div>
+            </div>
             <h3>About the player</h3>
             <p>...</p>
-
             <ul class="player-meta">
                 <li>
                     <div class="icon">
@@ -40,6 +51,13 @@
                     </div>
                     L's
                     <span>{{user.userTotalLs}}</span>
+                </li>
+                <li>
+                    <div class="icon">
+                        <button mat-button (click)="openConfirmationDialogForDeletion()" style="background-color: #1a0000; margin-bottom: 40px;">
+                            <i style="font-size: 20px; color: red" class="fas fa-trash"></i>
+                        </button>                    
+                    </div>
                 </li>
 
                 <!-- <li>

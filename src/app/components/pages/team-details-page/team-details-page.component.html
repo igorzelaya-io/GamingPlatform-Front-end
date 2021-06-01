@@ -3,9 +3,12 @@
 <section class="page-title-area page-title-bg1">
     <div class="container">
         <div class="page-title-content">
-            <img class="small-image" src="assets/img/team-member1.jpg" alt="image">
+            <!-- <img class="small-image" src="assets/img/team-member1.jpg" alt="image"> -->
             <br>
             <h1 title="{{team.teamName}}">{{team.teamName}}</h1>
+            <button *ngIf="isAdminUser" mat-button (click)="openDialogForTeamName()" style="background-color: #1a0000;">
+                <i class="fas fa-edit" style="font-size: 20px; color: red"></i>
+            </button>
         </div>
     </div>
 </section>
@@ -14,14 +17,14 @@
     <div class="container">
         <div class="team-details-desc">
             <h3>About the Team</h3>
-            <p>Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget.</p>
+            <p>....</p>
             
             <ul class="team-meta">
                 <li>
                     <div class="icon">
                         <i class="flaticon-medal"></i>
                     </div>
-                    <span>01</span>
+                    <span>{{team.teamTotalWs}}</span>
                     Wins
                 </li>
 
@@ -29,27 +32,41 @@
                     <div class="icon">
                         <i class="flaticon-fall"></i>
                     </div>
-                    <span>01</span>
+                    <span>{{team.teamTotalLs}}</span>
                     Loses
                 </li>
 
-                <li>
+                <!-- <li>
                     <div class="icon">
                         <i class="flaticon-game"></i>
                     </div>
                     <span>00</span>
                     Draws
-                </li>
+                </li> -->
 
                 <li>
                     <div class="icon">
                         <i class="flaticon-teamwork"></i>
                     </div>
-                    <span>02</span>
+                    <span>{{team.teamTotalPlays}}</span>
                     Plays
                 </li>
 
-                <li>
+                <li *ngIf="isAdminUser">
+                    <div class="icon">
+                        <button mat-button (click)="openConfirmationDialogForDeletion()" style="background-color: #1a0000; margin-bottom: 40px;">
+                            <i style="font-size: 20px; color: red" class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </li>
+
+                <li *ngIf="isPartOfTeam"> 
+                    <div class="icon">
+                        <button (click)="openConfirmationDialog(this.userInspectingTeam)" style="margin-bottom:40px;">Exit Team</button>
+                    </div>
+                </li>
+
+                <!-- <li>
                     <div class="icon">
                         <i class="flaticon-network"></i>
                     </div>
@@ -60,27 +77,30 @@
                         <a href="#" target="_blank"><i class="bx bxl-youtube"></i></a>
                     </div>
                     Follow
-                </li>
+                </li> -->
             </ul>
 
             <div class="player-list">
                 <h3>Gamestar</h3>
                 
                 <div class="row">
-                    <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="col-lg-3 col-md-4 col-sm-6" *ngFor="let user of teamUsers">
+                        <div *ngIf="isAdminUser">
+                            <button (click)="openConfirmationDialog(user)">Remove</button>
+                        </div>
                         <div class="single-team-member">
-                            <img src="assets/img/team-member1.jpg" alt="image">
+                            <img src="assets/d1images/anonymoususer-big.png" alt="image">
 
                             <div class="content">
-                                <h3>Sarah Taylor</h3>
-                                <span>Sarah3s</span>
+                                <h3>{{user.userRealName}}</h3>
+                                <span>{{user.userName}}</span>
                             </div>
 
-                            <a routerLink="/single-player" class="link-btn"></a>
+                            <a (click)="viewUser(user)" class="link-btn"></a>
                         </div>
                     </div>
 
-                    <div class="col-lg-3 col-md-4 col-sm-6">
+                    <!-- <div class="col-lg-3 col-md-4 col-sm-6">
                         <div class="single-team-member">
                             <img src="assets/img/team-member2.jpg" alt="image">
 
@@ -169,7 +189,7 @@
 
                             <a routerLink="/single-player" class="link-btn"></a>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
 

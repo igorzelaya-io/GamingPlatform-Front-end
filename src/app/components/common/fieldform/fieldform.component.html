@@ -1,0 +1,29 @@
+<div mat-dialog-content>
+    <p>What do you want to change it to ?</p>
+    <div class="form-group">
+        <mat-form-field>
+            <mat-label>Editing: {{data.field}}</mat-label>
+            <input matInput 
+                required
+                type="text"
+                maxlength="64"
+                [formControl]="txtValue"
+            >
+            
+        </mat-form-field>
+    </div>
+    <div *ngIf="isChargedChange">
+        <p style="text-align: center; font-size: small;">*This update requires {{data.chargeFee}} tokens</p>
+    </div>
+    <div *ngIf="txtValue.invalid && (txtValue.dirty || txtValue.touched)">
+        <div *ngIf="txtValue.errors.required" style="vertical-align: middle;">
+            <p class="alert alert-danger" style="text-align: center;">
+                Replace value for this field is required.
+            </p>
+        </div>
+    </div>
+    <div mat-dialog-actions>
+        <button mat-button (click)="onNoClick()">Cancel</button>
+        <button mat-button (click)="confirm()" [disabled]="txtValue.invalid && hasEnoughTokens">Confirm</button>
+    </div>
+</div>

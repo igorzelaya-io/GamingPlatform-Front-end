@@ -26,9 +26,9 @@ export class Tournament {
     tournamentMatchesNumber: string;
     tournamentTeamBracketStack: Stack<Team>;
     tournamentLeaderboardForLeague: Array<Team>;
-    isStartedTournament: boolean;
+    startedTournament: boolean;
     tournamentDateInMilliseconds: number;
-    tournamentBracketTree: BinaryTree;
+    tournamentBinaryTree: BinaryTree;
     
     constructor(tournamentName?: string, tournamentStatus?: string, tournamentModerator?: User,
                 tournamentDate?: Date, tournamentTeams?: Array<Team>){

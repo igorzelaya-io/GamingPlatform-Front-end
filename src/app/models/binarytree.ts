@@ -1,13 +1,18 @@
-import { TreeRound } from './treeround';
+import { TreeNode } from "./treenode";
 
 export class BinaryTree {
     
-    binaryTreeRounds: TreeRound[];
-    binaryTreeNumberOfRounds: number;
+    private _root: TreeNode;
 
-    constructor(binaryTreeRounds?: TreeRound[], binaryTreeNumberOfRounds?: number){
-        this.binaryTreeRounds = binaryTreeRounds;
-        this.binaryTreeNumberOfRounds = binaryTreeNumberOfRounds;
+    public get root(): TreeNode{
+       return this._root; 
     }
 
+    public set root(root: TreeNode){
+        this._root = root;   
+    }
+
+    constructor(){
+        this._root = null;    
+    }
 }
