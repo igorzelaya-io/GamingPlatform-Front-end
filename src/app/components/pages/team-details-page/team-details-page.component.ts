@@ -163,5 +163,4 @@ export class TeamDetailsPageComponent implements OnInit {
       console.error(err);
     });
   }
-
 }

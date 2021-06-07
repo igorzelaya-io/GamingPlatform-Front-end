@@ -16,7 +16,7 @@
         <div *ngIf="!isEmpty" class="row">
             
             <div *ngFor="let invite of teamInvites" class="col-lg-6 col-md-6">
-                <div class="single-blog-post-box">
+                <div class="single-blog-post-box" *ngIf="hasPendingStatus(invite)">
                     <div class="post-image">
                         <a routerLink="/single-blog">
                             <img src="assets/img/main-blog-img2.jpg" alt="image"> 

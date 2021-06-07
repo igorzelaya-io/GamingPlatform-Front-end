@@ -1,3 +1,4 @@
+
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { TeamService } from '../../../services/team/team-service.service';
@@ -12,6 +13,16 @@ import { TeamCreationRequest } from '../../../models/teamcreationrequest';
 import { Router } from '@angular/router';
 import { MessageResponse } from 'src/app/models/messageresponse';
 import { UserTeamService } from 'src/app/services/user-team.service';
+import { CountryService } from '../../../services/country.service';
+
+export interface Country{
+  
+  code: string;
+  code3: string;
+  name: string;
+  number: string;
+
+}
 
 @Component({
   selector: 'app-team-creation-page',
@@ -37,8 +48,8 @@ export class TeamCreationPageComponent implements OnInit {
 
   errorMessage: string = ' ';
 
-  countryInfo: any[] = [];
-  countriesUrl = 'https://raw.githubusercontent.com/sagarshirbhate/Country-State-City-Database/master/Contries.json';
+  countryInfo: Country[] = [];
+  countriesUrl = 'https://github.com/dr5hn/countries-states-cities-database/blob/master/countries.json';
 
   isSuccessfulRegister = false;
   isSignUpFailed = false;
@@ -52,7 +63,7 @@ export class TeamCreationPageComponent implements OnInit {
 
   constructor(private teamService: TeamService,
               private userService: UserService,
-              private httpClient: HttpClient,
+              private countryService: CountryService,
 			        private tokenService: TokenStorageService,
 			        private formBuilder: FormBuilder,
               private router: Router) {
@@ -81,7 +92,7 @@ export class TeamCreationPageComponent implements OnInit {
     this.isClicked = true;
     this.team.teamName = this.txtName.value;
     this.team.teamEmail = this.txtEmail.value;
-     this.team.teamCountry = this.txtCountry.value;
+    this.team.teamCountry = this.txtCountry.value;
     this.team.teamModerator = this.tokenService.getUser();
 	  this.teamCreationRequest.teamToRegister = this.team; 
     this.teamCreationRequest.teamModerator = this.tokenService.getUser();
@@ -197,14 +208,8 @@ export class TeamCreationPageComponent implements OnInit {
     });
   }
 
-  public getCountries(){
-    this.allCountries().subscribe(
-      data => {
-        this.countryInfo = data.Countries;
-      },
-      err => {
-        console.log(err);
-      });
+  public getCountries(): void{  
+    this.countryInfo = this.countryService.getCountriesData();
   }
 
   changeCountry(event: any){
@@ -213,9 +218,9 @@ export class TeamCreationPageComponent implements OnInit {
 	  });
   }
 
-  allCountries(): Observable<any> {
-    return this.httpClient.get<any>(this.countriesUrl);
-  }
+  // allCountries(): Observable<any> {
+  //   return this.httpClient.get<any>(this.countriesUrl);
+  // }
 
   get txtName(){
 	  return this.teamForm.get('txtName') as FormControl;	

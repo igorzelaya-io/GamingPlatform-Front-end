@@ -70,4 +70,15 @@ export class UserTeamService {
 	  {headers: new HttpHeaders({'Authorization': 'Bearer ' + jwtToken})})
     .pipe(catchError(this.handleError('declineUserTeamRequest', {} as MessageResponse)));
   }
+
+  public deleteUserTeamRequest(userTeamRequest: TeamInviteRequest, jwtToken: string): Observable<MessageResponse>{
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Authorization': 'Bearer ' + jwtToken,
+      }),
+      body: userTeamRequest
+    };
+    return this.httpClient.delete<MessageResponse>(USER_TEAMS_REQUEST_API + '/delete', httpOptions)
+    .pipe(catchError(this.handleError('deleteUserTeamRequest', {} as MessageResponse)));
+  }
 }

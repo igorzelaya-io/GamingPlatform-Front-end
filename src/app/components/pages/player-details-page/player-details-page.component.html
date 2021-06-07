@@ -63,7 +63,7 @@
                 </li>
                 <li *ngIf="isAdmin">
                     <div class="icon">
-                        <button (click)="openConfirmationDialogForBanning()" style="margin-bottom: 40px;">Ban player</button>
+                        <button mat-button (click)="openConfirmationDialogForBanning()" style="margin-bottom: 40px; background-color: red;">Ban player</button>
                     </div>
                 </li>
 
@@ -149,6 +149,61 @@
             <div class="partner-list">
                 <app-partner></app-partner>
             </div> -->
+        </div>
+    </div>
+    <div class="container" style="margin-top: 20px; vertical-align: middle;">
+        <div class="row">
+            <div class="col-sm">
+                <div class="text"> 
+                    User Teams
+                </div>
+                <div *ngIf="user.userTeams.length === 0 || !user.userTeams">
+                    <h3>No Teams</h3>
+                </div>
+                <mat-list style="color: red;" class="mat-content" *ngIf="user.userTeams.length > 0">
+                    <mat-list-item style="background-color: red;" *ngFor="let team of user.userTeams">
+                        <img matListAvatar src="assets/d1images/anonymousteam.png">
+                        <h2 style="color: black;" matLine>{{team.teamName}}</h2>
+                        <p matLine>
+                            <span>{{team.teamCountry}} | <a (click)="viewTeamModerator(team.teamModerator.userId)">{{team.teamModerator.userName}}</a></span>
+                        </p>
+                        <button mat-icon-button [matMenuTriggerFor]="teamsMenu">
+                            <mat-icon>
+                                more_vert
+                            </mat-icon>
+                        </button>
+                        <mat-divider></mat-divider>
+                        <mat-menu #teamsMenu="matMenu" style="color: red;">
+                            <button mat-menu-item (click)="viewTeam(team.teamId)">
+                                View Team
+                            </button>
+                            <button mat-menu-item (click)="viewTeamModerator(team.teamModerator.userId)">
+                                View Team Leader
+                            </button>
+                        </mat-menu>
+                    </mat-list-item>
+                </mat-list>
+            </div>
+            <div class="col-sm">
+                <div class="text">
+                    User Tournaments
+                </div>
+                <div *ngIf="isEmptyTournaments">
+                    <h3>No tournaments available</h3>
+                </div>
+                <div *ngIf="!isEmptyTournaments">
+                    <div *ngFor="let tournament of userTournaments; index as i">
+                        <div class="single-stream-schedule-box">
+                            <span class="date">{{allTournamentMonths[i]}} {{allTournamentYears[i]}}</span>
+                            <div class="content">
+                                <span class="time">{{tournament.tournamentGame}}</span>
+                                <h3><a (click)="viewTournamentDetails(tournament)"></a>{{tournament.tournamentName}}</h3>
+                            </div>
+                            <a (click)="viewTournamentDetails(tournament)" class="link-btn" target="_blank"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </section>

@@ -82,6 +82,10 @@ import { FieldformComponent } from './components/common/fieldform/fieldform.comp
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { FieldformConfirmationComponent } from './components/common/fieldform-confirmation/fieldform-confirmation.component';
+import { MatListModule } from '@angular/material/list';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatMenuModule } from '@angular/material/menu';
 
 @NgModule({
   declarations: [
@@ -171,7 +175,11 @@ import { FieldformConfirmationComponent } from './components/common/fieldform-co
     NgxMatNativeDateModule,
     NgTournamentTreeModule,
     MatButtonModule,
-    MatDialogModule
+    MatDialogModule,
+    MatListModule,
+    MatDividerModule,
+    MatToolbarModule,
+    MatMenuModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

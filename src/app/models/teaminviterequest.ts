@@ -6,7 +6,7 @@ export class TeamInviteRequest {
     teamRequest: Team;
     requestedUser: User;
     requestTime: Date;
-    teamInviteRequestStatus: string;
+    requestStatus: string;
     
     constructor(teamRequest?: Team, requestedUser?: User, requestTime?: Date){
         this.teamRequest = teamRequest;

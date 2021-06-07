@@ -65,7 +65,7 @@ export class UserTournamentService {
   
   public addLToUserTournament(userTournamentRequest: UserTournamentRequest, jwtToken: string): Observable<MessageResponse>{
     return this.httpClient.post<MessageResponse>(USER_TOURNAMENTS_API + '/matches/addL', userTournamentRequest,
-    {headers: new HttpHeaders({'Authorization': 'Bearer '+ jwtToken })})
+     {headers: new HttpHeaders({'Authorization': 'Bearer '+ jwtToken })})
     .pipe(catchError(this.handleError('addLToUserTournament', {} as MessageResponse)));
   }
 

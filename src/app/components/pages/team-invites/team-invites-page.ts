@@ -42,18 +42,39 @@ export class TeamInvitesPageComponent implements OnInit {
     .subscribe((data: TeamInviteRequest[]) => {
       if(data.length){
 		    this.teamInvites = data;
-		    this.isEmpty = false;
+        if(this.evaluateLength(data)){
+          return;
+        }
+        this.isEmpty = false;
         return;
-      }	
-        console.log(data);
+      }
+      this.isEmpty = true;	
     },
     err => {
       console.error(err.error.message);
     });
   }
 
+  private evaluateLength(teamInviteRequests: TeamInviteRequest[]): boolean{
+    if(teamInviteRequests.length === 1){
+      const teamInviteRequest = teamInviteRequests[0]['requestStatus'];
+      if(teamInviteRequest === 'ACCEPTED' || teamInviteRequest === 'INVALID' || teamInviteRequest === 'DECLINED'){
+        this.isEmpty = true;
+        return true;
+      }
+    }
+    return false;
+  }
+
   passTeam(teamInvite: TeamInviteRequest){
     this.router.navigate(['/team-details'], {queryParams: {teamId: teamInvite.teamRequest.teamId}});
+  }
+
+  public hasPendingStatus(teamInviteRequest: TeamInviteRequest): boolean{
+    if(teamInviteRequest.requestStatus === 'PENDING'){
+      return true;
+    }
+    return false;
   }
 
   acceptUserTeamInviteRequest(teamInviteRequest: TeamInviteRequest){

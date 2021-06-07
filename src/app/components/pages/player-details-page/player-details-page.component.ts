@@ -1,18 +1,25 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from '../../../models/user/user';
 import { TokenStorageService } from 'src/app/services/token-storage.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { FieldformComponent } from '../../common/fieldform/fieldform.component';
 import { UserService } from 'src/app/services/user.service';
 import { MessageResponse } from 'src/app/models/messageresponse';
 import { FieldformConfirmationComponent } from '../../common/fieldform-confirmation/fieldform-confirmation.component';
+import { Tournament } from 'src/app/models/tournament/tournament';
+import { UserTournamentService } from 'src/app/services/user-tournament.service';
+import { Challenge } from 'src/app/models/challenge';
+import { TeamInviteRequest } from 'src/app/models/teaminviterequest';
 
 export interface DialogData{
   field: string;
   replaceValueString: string;
   chargeFee?: number;
 }
+
+const monthNames = [ "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December" ];
 
 @Component({
   selector: 'app-player-details-page',
@@ -23,7 +30,16 @@ export class PlayerDetailsPageComponent implements OnInit {
 
   isAdmin = false;
   user: User;
-
+  
+  userTournaments: Tournament[];
+  userChallenges: Challenge[];
+  userTeamInvites: TeamInviteRequest[];
+  isEmptyTournaments: boolean = false;
+  isEmptyChallenges: boolean = false;
+  isEmptyInvites: boolean = false;
+  allTournamentYears: number[];
+  allTournamentMonths: string[];
+  
   userInspectingUser: User;
   replaceValueString: string;
 
@@ -33,9 +49,16 @@ export class PlayerDetailsPageComponent implements OnInit {
   constructor(private tokenService: TokenStorageService,
               private route: ActivatedRoute,
               public dialog: MatDialog,
-              private userService: UserService) {
+              private userService: UserService,
+              private router: Router,
+              private userTournamentService: UserTournamentService) {
     this.user = new User();
     this.userInspectingUser = new User();
+    this.userTournaments = [];
+    this.userChallenges = [];
+    this.allTournamentYears = [];
+    this.allTournamentMonths = [];
+    
   }
   
   ngOnInit(): void {
@@ -49,9 +72,6 @@ export class PlayerDetailsPageComponent implements OnInit {
     if(this.userInspectingUser.userRoles.filter(userRole => userRole.authority === 'ADMIN')){
       this.isAdmin = true;
     }
-    // else if(this.userInspectingUser.userName === this.user.userName){
-    //   this.isAdmin = true;
-    // }
   }
 
   public openConfirmationDialogForBanning(){
@@ -142,6 +162,7 @@ export class PlayerDetailsPageComponent implements OnInit {
       if(data){
         this.user = data;
         isSuccessfulUserGet = true;
+        
       }
     }, err => {
       console.error(err);
@@ -150,8 +171,51 @@ export class PlayerDetailsPageComponent implements OnInit {
       if(isSuccessfulUserGet && this.tokenService.loggedIn()){
         this.userInspectingUser = this.tokenService.getUser();
         this.evaluateRole();
+        this.getAllTournamentsFromUser(this.user.userId);
       }
     }); 
   }
+
+  public getAllTournamentsFromUser(userId: string): void{
+    this.userTournamentService.getAllTournamentsFromUser(userId)
+    .subscribe((data: Tournament[]) => {
+      if(data && data.length != 0){
+        this.userTournaments = data;
+        this.getAllTournamentYears(data);
+        this.getAllTournamentMonths(data);
+        return;
+      }
+      this.isEmptyTournaments = true;
+    },
+    err => {
+      console.error(err);
+      this.isEmptyTournaments = true; 
+    });
+  }
+
+  public getAllTournamentYears(tournaments: Tournament[]){
+    for(let i = 0; i < tournaments.length; i++){
+      this.allTournamentYears.push(new Date(tournaments[i].tournamentDate).getFullYear());
+    }
+  }
+
+  public getAllTournamentMonths(tournaments: Tournament[]){
+    for(let i = 0; i < tournaments.length; i++){
+      this.allTournamentMonths.push(monthNames[new Date(tournaments[i].tournamentDate).getMonth()] + ' ' + tournaments[i].tournamentDate.toString().slice(8, 10));
+    }
+  }
+
+  public viewTeam(teamId: string) : void{
+    this.router.navigate(['/team-details'], { queryParams: {teamId: teamId}});
+  }
+
+  public viewTeamModerator(userId: string): void{
+    this.router.navigate(['/player-details'], {queryParams: {userId: userId}});
+  }
+
+  public viewTournamentDetails(tournament: Tournament): void{
+    this.router.navigate(['/tournament-details'], {queryParams: { tournamentId: tournament.tournamentId} });
+  }
+
 
 }

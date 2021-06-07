@@ -8,6 +8,16 @@ import { MessageResponse } from 'src/app/models/messageresponse';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { FieldformComponent } from '../../common/fieldform/fieldform.component';
 import { FieldformConfirmationComponent } from '../../common/fieldform-confirmation/fieldform-confirmation.component';
+import { UserTournament } from 'src/app/models/user/user-tournament';
+import { UserTournamentService } from 'src/app/services/user-tournament.service';
+import { Tournament } from 'src/app/models/tournament/tournament';
+import { TeamInviteRequest } from 'src/app/models/teaminviterequest';
+import { AuthenticationService } from 'src/app/services/authentication.service';
+import { UserLoginRequest } from 'src/app/models/user/userloginrequest';
+import { UserTeamService } from 'src/app/services/user-team.service';
+import { Challenge } from 'src/app/models/challenge';
+import { UserChallengesService } from '../../../services/userchallenges.service';
+
 
 export interface DialogData{
   
@@ -16,6 +26,9 @@ export interface DialogData{
   chargeFee?: number;
 
 }
+
+const monthNames = [ "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December" ];
 
 @Component({
   selector: 'app-account-details',
@@ -26,24 +39,40 @@ export interface DialogData{
 export class AccountDetailsComponent implements OnInit {
 
   user: User;
-  userTeams: Array<Team>;
-
+  userTournaments: Tournament[];
+  userChallenges: Challenge[];
+  userTeamInvites: TeamInviteRequest[];
+  isEmptyInvites: boolean = false;
+  allTournamentYears: number[];
+  allTournamentMonths: string[];
+  isEmptyTournaments: boolean = false;
+  isEmptyChallenges: boolean = false;
   isSuccessfulUpdate: boolean = false;
 
-  replaceValueString: string;
+  replaceValueString: string;  
 
   constructor(private tokenService: TokenStorageService,
               private userService: UserService,
-              public dialog: MatDialog) {
-  		this.user = new User();
-		  this.userTeams = new Array<Team>();	
-  }
+              private userTournamentService: UserTournamentService,
+              public dialog: MatDialog,
+              private router: Router,
+              private userTeamService: UserTeamService,
+              private userChallengeService: UserChallengesService) {
+      this.user = new User();
+      this.userTournaments = [];
+      this.userChallenges = [];
+      this.allTournamentYears = [];
+      this.allTournamentMonths = [];
+    }
   
 
   ngOnInit(): void {
     this.user = this.tokenService.getUser();
-    
+    this.getAllTournamentsFromUser(this.user.userId);
+    this.getAllTeamInvites();
+    this.getUserChallenges(this.user.userId);
   }
+  
   
   public openConfirmationDialogForDeletion(){
     const dialogRef = this.dialog.open(FieldformConfirmationComponent);
@@ -51,6 +80,25 @@ export class AccountDetailsComponent implements OnInit {
       if(result){
         this.deleteUser();
       }
+    });
+  }
+
+  public openConfirmationDialogForInviteDeletion(teamInviteRequest: TeamInviteRequest){
+    const dialogRef = this.dialog.open(FieldformConfirmationComponent);
+    dialogRef.afterClosed()
+      .subscribe((result: any) => {
+        if(result){
+          this.deleteUserTeamInvite(teamInviteRequest);
+        }
+      });
+  }
+
+  public deleteUserTeamInvite(teamInviteRequest: TeamInviteRequest): void{
+    this.userTeamService.deleteUserTeamRequest(teamInviteRequest, this.tokenService.getToken())
+    .subscribe((data: MessageResponse) => {
+      console.log(data);
+    }, err => {
+      console.error(err);
     });
   }
   
@@ -92,6 +140,7 @@ export class AccountDetailsComponent implements OnInit {
     });
   }
 
+  //update jwt userName in localstorage after replacing userName.
   public updateUserStringField(userId: string, userField: string, replaceValue: string){
     this.userService.updateUserField(userId, userField, replaceValue, this.tokenService.getToken())
     .subscribe((data: MessageResponse) => {
@@ -106,6 +155,9 @@ export class AccountDetailsComponent implements OnInit {
     () => {
       if(this.isSuccessfulUpdate){
         this.changeUserFieldInStorage(userField, replaceValue);
+        if(userField === 'userName'){
+          this.changeUserTokenInStorage();
+        }
       }
     });
   }
@@ -114,9 +166,91 @@ export class AccountDetailsComponent implements OnInit {
     const userInStorage: User = this.tokenService.getUser();
     userInStorage[`${userField}`] = replaceValue;
     this.tokenService.saveUser(userInStorage);
-    window.location.reload();
   }
 
+  public changeUserTokenInStorage(){
+    this.tokenService.signOut();
+    this.router.navigate(['/']);
+  }
+
+  public viewTeam(teamId: string) : void{
+    this.router.navigate(['/team-details'], { queryParams: {teamId: teamId}});
+  }
+
+  public viewTeamModerator(userId: string): void{
+    this.router.navigate(['/player-details'], {queryParams: {userId: userId}});
+  }
+
+  public viewTournamentDetails(tournament: Tournament): void{
+    this.router.navigate(['/tournament-details'], {queryParams: { tournamentId: tournament.tournamentId} });
+  }
+
+  public getAllTournamentsFromUser(userId: string): void{
+    this.userTournamentService.getAllTournamentsFromUser(userId)
+    .subscribe((data: Tournament[]) => {
+      if(data && data.length != 0){
+        this.userTournaments = data;
+        this.getAllTournamentYears(data);
+        this.getAllTournamentMonths(data);
+        return;
+      }
+      this.isEmptyTournaments = true;
+    },
+    err => {
+      console.error(err);
+      this.isEmptyTournaments = true; 
+    });
+  }
+
+  public getAllTournamentYears(tournaments: Tournament[]){
+    for(let i = 0; i < tournaments.length; i++){
+      this.allTournamentYears.push(new Date(tournaments[i].tournamentDate).getFullYear());
+    }
+  }
+
+  public getAllTournamentMonths(tournaments: Tournament[]){
+    for(let i = 0; i < tournaments.length; i++){
+      this.allTournamentMonths.push(monthNames[new Date(tournaments[i].tournamentDate).getMonth()] + ' ' + tournaments[i].tournamentDate.toString().slice(8, 10));
+    }
+  }
+
+  public getAllTeamInvites(){
+    this.userTeamService.getAllUserTeamRequests(this.user.userId)
+    .subscribe((data: TeamInviteRequest[]) => {
+      if(data && data.length > 0){
+        this.userTeamInvites = data;
+        console.log(data);
+        return;
+      }
+      this.isEmptyInvites = true;
+    }, err => {
+      console.error(err);
+      this.isEmptyInvites = true;
+    });
+  }
+
+  public getUserChallenges(userId: string): void{
+   this.userChallengeService.getAllUserChallenges(userId)
+   .subscribe((data: Challenge[]) => {
+     if(data && data.length != 0){
+      this.userChallenges = data;
+      return;
+     }
+     this.isEmptyChallenges = true;
+   }, err => {
+     console.error(err);
+     this.isEmptyChallenges = true;
+   }); 
+  }
+
+  public getUserTransactions(){
+    //TODO
+  }
+
+  public navigateToInvites(){
+    this.router.navigate(['/team-invites']);
+  }
+  
   calculateUserWinLossRatio(){
     //TODO: 
   }

@@ -29,6 +29,11 @@
 		"secure":"false",
 		"logLevel":"debug"
 	},
+	"/userchallengesapi/userChallenges":{
+		"target":"http://localhost:8080",
+		"secure":"false",
+		"logLevel":"debug"
+	},
 	"/challengesapi":{
 		"target":"http://localhost:8081",
 		"secure":"false",

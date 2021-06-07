@@ -17,13 +17,21 @@ import { TreeNode } from '../../../models/treenode';
 import { MatchTournamentRequest } from 'src/app/models/matchtournamentrequest';
 import { BinaryTree } from 'src/app/models/binarytree';
 import { Stack } from 'src/app/models/helpers/stack';
-import { isFakeMousedownFromScreenReader } from '@angular/cdk/a11y';
 import { TreeRound } from 'src/app/models/treeround';
 import { TeamService } from 'src/app/services/team/team-service.service';
 import { Role } from 'src/app/models/role';
-
+import { MatDialog } from '@angular/material/dialog';
+import { FieldformConfirmationComponent } from '../../common/fieldform-confirmation/fieldform-confirmation.component';
+import { FieldformComponent } from '../../common/fieldform/fieldform.component';
 const monthNames = [ "January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December" ];
+
+export interface DialogData{
+  replaceValueString: string,
+  field: string,
+  chargeFee?: string;
+}
+
 
 @Component({
   selector: 'app-tournaments-details-page',
@@ -76,7 +84,8 @@ export class TournamentsDetailsPageComponent implements OnInit {
               private userTeamService: UserTeamService, 
               private teamTournamentService: TeamTournamentService,
               private tournamentService: TournamentService,
-              private userService: UserService) {
+              private userService: UserService,
+              public dialog: MatDialog) {
 	  this.tournament = new Tournament();
     this.userTeamsAvailableToJoinTournaments  = [];
     this.userTeamEnrolledInTournament = new Team();
@@ -484,47 +493,6 @@ export class TournamentsDetailsPageComponent implements OnInit {
   }
 
   public displayTournamentBracket(){
-    // let tournamentTeamBracketTree: BinaryTree = this.tournament.tournamentBinaryTree;
-    // if(tournamentTeamBracketTree){
-    //   const binaryTreeNumberOfRounds: number = tournamentTeamBracketTree.binaryTreeNumberOfRounds;
-    //   let singleEliminationTournamentRounds: NgttRound[] = [];
-      
-    //   for(let i = 0; i < binaryTreeNumberOfRounds; i++){
-    //     let roundX: TreeRound = tournamentTeamBracketTree.binaryTreeRounds[i];
-    //     let roundXNodes: TreeNode[] = roundX.treeRoundNodes;
-              
-    //     let ngRound: any = {
-    //       type: 'WinnerBracket',
-    //       matches: []
-    //     }
-    //     if(i === binaryTreeNumberOfRounds - 1){
-    //       ngRound.type = 'Final';
-    //     }
-    //     let matches = [];
-    //     for(let j = 0 ; j < roundXNodes.length; j++){
-    //       let match: Match = roundXNodes[i].value;
-    //       let ngMatch: any = {
-    //         teams:{}
-    //       };
-    //       if(match.matchAwayTeam){
-    //         ngMatch.teams = {name: `${match.matchAwayTeam.teamName}`, score: match.awayTeamMatchScore};
-    //       }
-    //       else{
-    //         ngMatch.teams = {name: 'Winning Team', score: 0};  
-    //       }
-    //       if(match.matchLocalTeam){
-    //         ngMatch.teams = {name: `${match.matchLocalTeam.teamName}`, score: match.localTeamMatchScore};
-    //       }
-    //       else{
-    //         ngMatch.teams = {name: 'Winning Team', score: 0};
-    //       }
-    //       matches.push(ngMatch);
-    //     }
-    //     ngRound.matches = matches;
-    //   } 
-    //   this.singleEliminationTournament.rounds = singleEliminationTournamentRounds;
-    //}
-    
     this.singleEliminationTournament = {
       rounds: [
         {
@@ -584,5 +552,47 @@ export class TournamentsDetailsPageComponent implements OnInit {
         }
       ]
     };
+  }
+
+  public openDialogForFieldString(field: string){
+    const dialogRef = this.dialog.open(FieldformComponent, {
+      width: '400px',
+      data: {field: `${field}`, replaceValueString: undefined}
+    });
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if(result.replaceValueString){
+        this.updateTournamentFieldString(field, result.replaceValueString);
+      }
+    });
+  }
+
+  public updateTournamentFieldString(field: string, replaceValue: string){
+    this.tournament[field] = replaceValue;
+    this.tournamentService.updateTournament(this.tournament, this.tokenService.getToken())
+    .subscribe((data: MessageResponse) => {
+
+    },
+    err => {
+      console.error(err);
+    });
+  }
+
+  public openConfirmationDialogForDeletion(){
+    const dialogRef = this.dialog.open(FieldformConfirmationComponent);
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if(result){
+        this.deleteTournament(); 
+      }      
+    });
+  }
+
+  public deleteTournament(){
+    this.tournamentService.deleteTournament(this.tournament.tournamentId, this.tokenService.getToken())
+    .subscribe((data: MessageResponse) => {
+
+    },
+    err => {
+      console.error(err);
+    });
   }
 }

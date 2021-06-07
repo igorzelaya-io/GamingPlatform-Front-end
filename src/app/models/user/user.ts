@@ -3,6 +3,7 @@ import { ImageModel } from '../imagemodel';
 import { UserTournament } from '../user/user-tournament';
 import { Role } from '../role';
 import { TeamInviteRequest } from '../teaminviterequest';
+import { UserChallenge } from '../user/userchallenge';
 
 export class User {
 	userId: string;
@@ -22,13 +23,14 @@ export class User {
 	userImage: FormData;
 	userGetImage: ImageModel;
 	userTournaments: Array<UserTournament>;
+	userChallenges: UserChallenge[];
 	userTotalWs: number;
 	userTotalLs: number;
 
 	constructor(userRealName?: string, userName?: string, userPassword?: string,
 		userEmail?: string, userCountry?: string, userBirthDate?: any,
 		userRoles?: Array<Role>) {
-			
+					
 		this.userRealName = userRealName;
 		this.userName = userName;
 		this.userPassword = userPassword;

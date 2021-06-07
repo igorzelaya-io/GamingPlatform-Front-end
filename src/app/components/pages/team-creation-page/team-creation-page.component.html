@@ -48,8 +48,8 @@
                         <div class="form-group">
                             <label>Country</label>
                             <select class="form-control" formControlName="txtCountry" (change)="changeCountry($event)">
-                                <option value="" disabled>Select Country</option>
-                                <option *ngFor="let country of countryInfo" value="{{country.CountryName}}">{{country.CountryName}}</option>
+                                <option value="0" disabled>--Select Country--</option>
+                                <option *ngFor="let country of countryInfo" value="{{country.name}}">{{country.name}}</option>
                             </select>    
                         </div>
                     </form>

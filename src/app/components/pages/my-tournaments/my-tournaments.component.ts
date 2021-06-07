@@ -48,11 +48,11 @@ export class MyTournamentsComponent implements OnInit {
 			return;
 		}
 		this.isEmpty = true;
-		},
-		err => {
-			console.error(err.error.message);
-			this.isEmpty = true;	
-		});
+	},
+	err => {
+		console.error(err.error.message);
+		this.isEmpty = true;	
+	});
   }
 
   getAllTournamentYears(tournaments: Tournament[]){
