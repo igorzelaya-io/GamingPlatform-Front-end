@@ -1,0 +1,24 @@
+<div mat-dialog-content style="background-color: #1a0000 !important">
+    <p style="color: red;">Choose a Date</p>
+    <div class="form-group">
+        <mat-label style="color: red">Editing Date</mat-label>
+            <mat-form-field style="margin-left: 40px;">
+                <input matInput [ngxMatDatetimePicker]="tournamentDateTimeElement" 
+                    placeholder="Choose a date"
+                    style="color: red;"                     		
+                >
+                <mat-datepicker-toggle matSuffix style="color: red" [for]="tournamentDateTimeElement">				      
+                </mat-datepicker-toggle>
+                
+                <ngx-mat-datetime-picker #tournamentDateTimeElement [showSpinners]="true" [showSeconds]="true"
+                    [stepHour]="1" [stepMinute]="10" style="color: red"
+                >				      		                        	
+                </ngx-mat-datetime-picker>
+            
+            </mat-form-field>           
+    </div>
+    <div mat-dialog-actions>
+        <button mat-button (click)="onNoClick()" style="background-color: red; margin: 10px">Cancel</button>
+        <button mat-button (click)="confirm()" style="background-color: red; margin: 10px">Confirm</button>
+    </div>
+</div>

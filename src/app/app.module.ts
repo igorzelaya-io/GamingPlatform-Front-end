@@ -86,6 +86,9 @@ import { MatListModule } from '@angular/material/list';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatMenuModule } from '@angular/material/menu';
+import { FieldformNumericComponent } from './components/common/fieldform-numeric/fieldform-numeric.component';
+import { FieldformDateComponent } from './components/common/fieldform-date/fieldform-date.component';
+import { FieldformCountryComponent } from './components/common/fieldform-country/fieldform-country.component';
 
 @NgModule({
   declarations: [
@@ -154,7 +157,10 @@ import { MatMenuModule } from '@angular/material/menu';
 	  MyTournamentsComponent,
 	  MatchbracketComponent,
 	  FieldformComponent,
-	  FieldformConfirmationComponent	
+	  FieldformConfirmationComponent,
+	  FieldformNumericComponent,
+	  FieldformDateComponent,
+	  FieldformCountryComponent	
   ],
   imports: [
     BrowserModule,

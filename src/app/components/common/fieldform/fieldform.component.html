@@ -1,19 +1,19 @@
-<div mat-dialog-content>
-    <p>What do you want to change it to ?</p>
+<div mat-dialog-content style="background-color: #1a0000 !important">
+    <p style="color: red">What do you want to change it to ?</p>
     <div class="form-group">
-        <mat-form-field>
+        <mat-form-field color="red">
             <mat-label>Editing: {{data.field}}</mat-label>
             <input matInput 
                 required
                 type="text"
-                maxlength="64"
                 [formControl]="txtValue"
+                style="color: red"
             >
             
         </mat-form-field>
     </div>
     <div *ngIf="isChargedChange">
-        <p style="text-align: center; font-size: small;">*This update requires {{data.chargeFee}} tokens</p>
+        <p style="text-align: center; font-size: small; color: red">*This update requires {{data.chargeFee}} tokens</p>
     </div>
     <div *ngIf="txtValue.invalid && (txtValue.dirty || txtValue.touched)">
         <div *ngIf="txtValue.errors.required" style="vertical-align: middle;">
@@ -23,7 +23,7 @@
         </div>
     </div>
     <div mat-dialog-actions>
-        <button mat-button (click)="onNoClick()">Cancel</button>
-        <button mat-button (click)="confirm()" [disabled]="txtValue.invalid && hasEnoughTokens">Confirm</button>
+        <button mat-button (click)="onNoClick()" style="background-color: red; margin: 10px">Cancel</button>
+        <button mat-button (click)="confirm()" style="background-color: red; margin: 10px" [disabled]="txtValue.invalid && hasEnoughTokens">Confirm</button>
     </div>
 </div>

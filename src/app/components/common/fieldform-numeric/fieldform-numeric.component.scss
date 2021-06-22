@@ -1,0 +1,25 @@
+.e-input-group.e-control-wrapper:not(.e-success):not(.e-warning):not(.e-error):not(.e-float-icon-left), .e-float-input.e-control-wrapper:hover:not(.e-success):not(.e-warning):not(.e-error):not(.e-disabled):not(.e-float-icon-left) {
+  border-color: #cc0000;
+  color: #cc0000;
+}
+  
+.e-control-wrapper.e-numeric.e-float-input.e-style .e-float-line::before {
+    background: #cc0000;
+}
+.e-control-wrapper.e-numeric.e-float-input.e-style .e-float-line::after {
+    background-color: #cc0000;
+    color: #cc0000;
+    background: #cc0000 ;
+}
+.e-numeric .e-input-group-icon.e-spin-up:before {
+    content: "\e823";
+    color:#cc0000;
+}
+.e-numeric .e-input-group-icon.e-spin-down:before {
+    content: "\e934";
+    color: #cc0000;
+}
+.e-control-wrapper.e-numeric.e-float-input.e-style .e-float-text.e-label-top {
+    color: #cc0000 ;
+    font-size: medium ;
+}

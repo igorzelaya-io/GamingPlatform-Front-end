@@ -23,6 +23,10 @@ import { Role } from 'src/app/models/role';
 import { MatDialog } from '@angular/material/dialog';
 import { FieldformConfirmationComponent } from '../../common/fieldform-confirmation/fieldform-confirmation.component';
 import { FieldformComponent } from '../../common/fieldform/fieldform.component';
+import { FieldformNumericComponent } from '../../common/fieldform-numeric/fieldform-numeric.component';
+import { FieldformDateComponent } from '../../common/fieldform-date/fieldform-date.component';
+import { FieldformCountryComponent } from '../../common/fieldform-country/fieldform-country.component';
+
 const monthNames = [ "January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December" ];
 
@@ -30,6 +34,26 @@ export interface DialogData{
   replaceValueString: string,
   field: string,
   chargeFee?: string;
+}
+
+export interface DialogDataNumeric{
+  replaceValueNumeric: number;
+  field: string;
+  format: string;
+  min: number;
+  value: number;
+  step: number;
+  chargeFee?: number;
+}
+
+export interface DialogDataDate{
+  replaceValueDate: Date;
+  alreadySelectedDate: Date;
+  isValid: boolean;
+}
+
+export interface DialogDataCountry{
+  replaceValueCountry: string;
 }
 
 
@@ -96,10 +120,6 @@ export class TournamentsDetailsPageComponent implements OnInit {
 
   ngOnInit(): void {
     // this.arrangeTournamentMatchesToBracket();
-    if(this.tokenService.loggedIn()){
-      this.userInspectingTournament = this.tokenService.getUser();
-      this.isAdminUser();
-    }
   	this.route.queryParams.subscribe(params => {
       this.tournamentService.getTournamentById(params['tournamentId'])
       .subscribe((data: Tournament) => {
@@ -114,41 +134,53 @@ export class TournamentsDetailsPageComponent implements OnInit {
         this.getAllTournamentDates();
         this.isAlreadyPartOfTournament();
         this.evaluateTournamentDate();    
+        if(this.tokenService.loggedIn()){
+           this.userInspectingTournament = this.tokenService.getUser();
+           this.isAdminUser();
+       }
       });
     });
   }
 
   public isJoiningTournament(): void{
-   if(this.userInspectingTournament.userTokens >= this.tournament.tournamentEntryFee){
-      this.isTryingToJoinTournament = true;  
-      this.getAllUserTeamsAvailable();
+    if(this.tokenService.loggedIn()){
+      if(this.userInspectingTournament.userTokens >= this.tournament.tournamentEntryFee){
+        this.isTryingToJoinTournament = true;  
+        this.getAllUserTeamsAvailable();
+        return;
+      }
+      this.isFailedTournamentJoin = true;
+      this.errorMessage = 'Not enough tokens to join tournament.';
       return;
     }
-    this.isFailedTournamentJoin = true;
-    this.errorMessage = 'Not enough tokens to join tournament.';
+    this.router.navigate(['/login']);
   }
 
   public joinTournament(){
-    if(this.selectedTeamToJoinTournamentWith){
-      if(this.selectedTeamToJoinTournamentWith.teamModerator.userName !== this.userInspectingTournament.userName){
-        this.isFailedTournamentJoin = true;
-        this.errorMessage = 'Only Team Creator is allowed to join with this team.';
-        this.isClickedJoinButton = false;
+    if(this.tokenService.loggedIn()){
+      if(this.selectedTeamToJoinTournamentWith){
+        if(this.selectedTeamToJoinTournamentWith.teamModerator.userName !== this.userInspectingTournament.userName){
+          this.isFailedTournamentJoin = true;
+          this.errorMessage = 'Only Team Creator is allowed to join with this team.';
+          this.isClickedJoinButton = false;
+          return;
+        }
+        const teamTournamentRequest = new TeamTournamentRequest(this.tournament, this.selectedTeamToJoinTournamentWith); 
+        
+        if(this.tournament.tournamentGame === 'Fifa'){
+          this.addTeamToFifaTournament(teamTournamentRequest);    
+          return; 
+        }
+  
+        this.addTeamToCodTournament(teamTournamentRequest);       
         return;
       }
-      const teamTournamentRequest = new TeamTournamentRequest(this.tournament, this.selectedTeamToJoinTournamentWith); 
-      
-      if(this.tournament.tournamentGame === 'Fifa'){
-        this.addTeamToFifaTournament(teamTournamentRequest);    
-        return; 
-      }
-
-      this.addTeamToCodTournament(teamTournamentRequest);       
+      this.isFailedTournamentJoin = true;
+      this.errorMessage  = 'A team must be selected to join tournament';
+      this.isClickedJoinButton = false;
       return;
     }
-    this.isFailedTournamentJoin = true;
-    this.errorMessage  = 'A team must be selected to join tournament';
-    this.isClickedJoinButton = false;
+    this.router.navigate(['/login']);
   }
 
   public removeTeamFromTournament(): void{
@@ -397,7 +429,6 @@ export class TournamentsDetailsPageComponent implements OnInit {
     this.router.navigate(['/match-details'], { queryParams: {matchId: matchId, tournamentId: this.tournament.tournamentId}});
   }
 
-  
   evaluateTournamentDate(){
     if(new Date().getTime() > new Date(this.tournament.tournamentDate).getTime()){
       this.isStartedTournament = true;
@@ -418,6 +449,15 @@ export class TournamentsDetailsPageComponent implements OnInit {
     }
   }
 
+  openConfirmationDialogForTournamentInitialization(){
+    const dialogRef = this.dialog.open(FieldformConfirmationComponent);
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if(result){
+        this.startTournament();
+      }
+    });
+  } 
+  
   startTournament(){
     if(new Date().getTime() > new Date(this.tournament.tournamentDate).getTime()){
       if(this.isStartedTournament && !this.isActivatedTournament){
@@ -442,9 +482,11 @@ export class TournamentsDetailsPageComponent implements OnInit {
 
   public isAdminUser(){
     let role: Role = this.userInspectingTournament.userRoles.filter(userRole => userRole.authority === 'ADMIN').find(userRole => userRole.authority === 'ADMIN');
-    if(role || this.tournament.tournamentModerator.userName === this.userInspectingTournament.userName){
-      this.isUserAdmin = true;
-      return;
+    if(role){
+      if(this.tournament.tournamentModerator.userName === this.userInspectingTournament.userName){
+        this.isUserAdmin = true;
+        return;
+      }
     }
     this.isUserAdmin = false;
   }
@@ -554,9 +596,49 @@ export class TournamentsDetailsPageComponent implements OnInit {
     };
   }
 
+  openDialogForPrizePool(){
+    this.openDialogForNumericField('tournamentCashPrize', 'c2', 0, 0, 25);
+  }
+
+  openDialogForLimitNumberOfTeams(){
+    this.openDialogForNumericField('tournamentLimitNumberOfTeams', '###.##', 2, 2, 1);
+  }
+
+  openDialogForEntryFee(){
+    this.openDialogForNumericField('tournamentEntryFee', '###', 0, 0, 50);
+  }
+
+  public openDialogForNumericField(field: string, format: string, min: number, value: number, step: number, chargeFee?: number){
+    const dialogRef = this.dialog.open(FieldformNumericComponent, {
+      width: '400px',
+      data: {field: field, replaceValueNumeric: undefined, format: format, min: min, value: value, step: step}
+    });
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if(result){
+        this.updateTournamentNumericField(field, result);
+      }
+    });
+  }
+
+  public updateTournamentNumericField(field: string, replaceValueNumeric: number){
+    this.tournament[field] = replaceValueNumeric;
+    this.tournamentService.updateTournament(this.tournament, this.tokenService.getToken())
+    .subscribe((data: MessageResponse) => {
+
+    },
+    err => console.error(err),
+    () => {
+      window.location.reload();
+    });
+  }
+
+  public openDialogForDescription(){
+    this.openDialogForFieldString('tournamentDescription');
+  }
+
   public openDialogForFieldString(field: string){
     const dialogRef = this.dialog.open(FieldformComponent, {
-      width: '400px',
+      width: '350px',
       data: {field: `${field}`, replaceValueString: undefined}
     });
     dialogRef.afterClosed().subscribe((result: any) => {
@@ -577,6 +659,40 @@ export class TournamentsDetailsPageComponent implements OnInit {
     });
   }
 
+  public openDialogForDate(){
+    const dialogRef = this.dialog.open(FieldformDateComponent, {
+      width: '350px',
+      data: {replaceValue: undefined, alreadySelectedDate: this.tournament.tournamentDate, isValid: false}
+    });
+    dialogRef.afterClosed().subscribe((result: DialogDataDate) => {
+      if(result.replaceValueDate && result.isValid){
+        this.tournament['tournamentDate'] = result.replaceValueDate;
+        this.tournamentService.updateTournament(this.tournament, this.tokenService.getToken())
+        .subscribe((data: MessageResponse) => {
+
+        },
+        err => {
+          console.error(err);
+        },
+        () => {
+          window.location.reload();
+        });
+      }
+    });
+  }
+
+  public openDialogForCountry(){
+    const dialogRef = this.dialog.open(FieldformCountryComponent,{
+      width: '350px',
+      data: { replaceValueCountry: undefined}
+    });
+    dialogRef.afterClosed().subscribe((result: DialogDataCountry) => {
+      if(result){
+        this.updateTournamentFieldString('tournamentRegion', result.replaceValueCountry);
+      }
+    });
+  }
+
   public openConfirmationDialogForDeletion(){
     const dialogRef = this.dialog.open(FieldformConfirmationComponent);
     dialogRef.afterClosed().subscribe((result: any) => {
@@ -587,12 +703,15 @@ export class TournamentsDetailsPageComponent implements OnInit {
   }
 
   public deleteTournament(){
-    this.tournamentService.deleteTournament(this.tournament.tournamentId, this.tokenService.getToken())
+    this.tournamentService.deleteTournament(this.tournament, this.tokenService.getToken())
     .subscribe((data: MessageResponse) => {
 
     },
     err => {
       console.error(err);
+    },
+    () => {
+      this.router.navigate(['/tournaments']);
     });
   }
 }

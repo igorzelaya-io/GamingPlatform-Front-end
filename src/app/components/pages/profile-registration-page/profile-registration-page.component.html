@@ -68,13 +68,13 @@
                             <div class="row">
                                 <div class="col-lg-3 col-md-12">
                                     <div class="form-group">
-                                            <input
-                                                class="form-control"
-                                                required 
-                                                maxlength="2"
-                                                placeholder="Day" 
-                                                formControlName="day"					
-                                            >					  
+                                        <input
+                                            class="form-control"
+                                            required 
+                                            maxlength="2"
+                                            placeholder="Day" 
+                                            formControlName="day"					
+                                        >					  
                                     </div>
                                     <div class="alert alert-danger" *ngIf="day.invalid && (day.dirty || day.touched)">
                                         <div *ngIf="day.errors?.required">
@@ -121,8 +121,8 @@
                         <div class="form-group" [formGroup]="countryBirthDateForm">
                             <label>Country</label>
                             <select class="form-control" formControlName="country" (change)="updateCountry($event)">
-                                <option value="" disabled>Select Country</option>
-                                <option *ngFor="let country of countryInfo" value="{{country.CountryName}}">{{country.CountryName}}</option>
+                                <option value="0" disabled>Select Country</option>
+                                <option *ngFor="let country of countryInfo" value="{{country.name}}">{{country.name}}</option>
                             </select>    
                         </div>
                     </form>

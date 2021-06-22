@@ -15,7 +15,7 @@ export class Tournament {
     tournamentDate: Date;
     tournamentGameMode: string;
     tournamentPlatforms: string;
-    tournamentCashPrice: number;
+    tournamentCashPrize: number;
     tournamentEntryFee: number;
     tournamentRegion: string;
     tournamentFormat: string;

@@ -4,9 +4,9 @@ export class D1Transaction {
     transactionId: string;
     transactionService: D1Service;
     transactionAmountCharge: number;
-    transactionTime: string;
+    transactionTime: Date;
 
-    constructor(transactionId?: string, transactionService?: D1Service, transactionAmountCharge?: number, transactionTime ?: string){
+    constructor(transactionId?: string, transactionService?: D1Service, transactionAmountCharge?: number, transactionTime ?: Date){
         this.transactionId = transactionId;
         this.transactionService = transactionService;
         this.transactionAmountCharge = transactionAmountCharge;

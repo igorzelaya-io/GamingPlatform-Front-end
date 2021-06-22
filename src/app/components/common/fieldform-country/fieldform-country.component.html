@@ -1,0 +1,15 @@
+<div mat-dialog-content style="background-color: #1a0000 !important">
+    <p style="color: red">What do you want to change it to ?</p>
+    <div class="form-group">
+        <mat-label style="color: red">Editing: Country</mat-label>
+        <select class="form-control" [formControl]="selectedCountry" (change)="updateCountry($event)">
+            <option value="0" disabled>--Select Country--</option>
+            <option *ngFor="let country of countryInfo" value="{{country.name}}">{{country.name}}</option>
+        </select>
+    </div>
+    
+    <div mat-dialog-actions>
+        <button mat-button (click)="onNoClick()" style="background-color: red; margin: 10px">Cancel</button>
+        <button mat-button (click)="confirm()" style="background-color: red; margin: 10px">Confirm</button>
+    </div>
+</div>

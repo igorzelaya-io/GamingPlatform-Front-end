@@ -1,0 +1,27 @@
+<div mat-dialog-content style="background-color: #1a0000 !important">
+    <p style="color: red;">What do you want to change it to ? </p>
+    <div class="form-group">
+        <mat-label style="color: red">Editing: {{data.field}}</mat-label>
+        <ejs-numerictextbox matInput format="{{data.format}}"
+                    [min]="data.min"
+                    [step]="data.step" 
+                    [value]="data.value"
+                    [formControl]="txtField"        
+        >
+        </ejs-numerictextbox>
+    </div>
+    <div *ngIf="isChargedChange">
+        <p style="text-align: center; font-size: small; color: red">*This update requires {{data.chargeFee}} tokens</p>
+    </div>
+    <div *ngIf="txtField.invalid && (txtField.dirty || txtField.touched)">
+        <div *ngIf="txtField.errors.required" style="vertical-align: middle;">
+            <p class="alert alert-danger" style="text-align: center;">
+                Replace value for this field is required.
+            </p>
+        </div>
+    </div>
+    <div mat-dialog-actions>
+        <button mat-button (click)="onNoClick()" style="background-color: red; margin: 10px">Cancel</button>
+        <button mat-button (click)="confirm()" style="background-color: red; margin: 10px" [disabled]="txtField.invalid && hasEnoughTokens">Confirm</button>
+    </div>
+</div>

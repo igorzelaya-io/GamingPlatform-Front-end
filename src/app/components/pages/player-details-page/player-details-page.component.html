@@ -61,7 +61,7 @@
                         </button>                    
                     </div>
                 </li>
-                <li *ngIf="isAdmin">
+                <li *ngIf="isAdmin && this.userInspectingUser.userId !== this.user.userId">
                     <div class="icon">
                         <button mat-button (click)="openConfirmationDialogForBanning()" style="margin-bottom: 40px; background-color: red;">Ban player</button>
                     </div>
@@ -157,10 +157,10 @@
                 <div class="text"> 
                     User Teams
                 </div>
-                <div *ngIf="user.userTeams.length === 0 || !user.userTeams">
+                <div *ngIf="!user || !user.userTeams || !user.userTeams.length">
                     <h3>No Teams</h3>
                 </div>
-                <mat-list style="color: red;" class="mat-content" *ngIf="user.userTeams.length > 0">
+                <mat-list style="color: red;" class="mat-content" *ngIf="user || user.userTeams.length">
                     <mat-list-item style="background-color: red;" *ngFor="let team of user.userTeams">
                         <img matListAvatar src="assets/d1images/anonymousteam.png">
                         <h2 style="color: black;" matLine>{{team.teamName}}</h2>
@@ -205,6 +205,72 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+                <div class="col-sm">
+                    <div class="text">User Challenges</div>
+                    <div *ngIf="isEmptyChallenges">
+                        <h3>No challenges available</h3>
+                    </div>
+                    <!-- Display challenges -->
+                </div>
+                <div class="col-sm" *ngIf="isAdmin">
+                    <div class="text">User Team Invites</div>
+                    <div *ngIf="isEmptyInvites">
+                        <h3>No Team Invites available</h3>
+                    </div>
+                    <mat-list style="color: red;" class="mat-content" *ngIf="!isEmptyInvites">
+                        <mat-list-item style="background-color: red" *ngFor="let userTeamRequest of userTeamInvites">
+                            <h2 style="color: black" matLine><a (click)="viewTeam(userTeamRequest.teamRequest.teamId)">{{userTeamRequest.teamRequest.teamName}}</a></h2>
+                            <p matLine>
+                                <span>{{userTeamRequest.teamRequest.teamCountry}}</span>
+                                &nbsp;
+                                <span style="margin: 10px 0; display: inline-block; color: white;">{{userTeamRequest.requestStatus}}</span>
+                            </p>
+                            <button mat-icon-button [matMenuTriggerFor]="teamInvitesMenu">
+                                <mat-icon>
+                                    more_vert
+                                </mat-icon>
+                            </button>
+                            <mat-divider></mat-divider>
+                            <mat-menu #teamInvitesMenu="matMenu" style="color: red;">
+                                <button *ngIf="this.userInspectingUser.userId === this.user.userId" mat-menu-item (click)="navigateToInvites()">
+                                    View pending invites
+                                </button>
+                                <button mat-menu-item (click)="openConfirmationDialogForInviteDeletion(userTeamRequest)">
+                                    Delete invite
+                                </button>
+                            </mat-menu>
+                        </mat-list-item>
+                    </mat-list>
+                </div>
+                <div class="col-sm" *ngIf="isAdmin">
+                    <div class="text">User Transactions</div>
+                    <div *ngIf="isEmptyTransactions">
+                        <h3>No transactions available</h3>
+                    </div>
+                    <mat-list style="color: red;" class="mat-content" *ngIf="!isEmptyTransactions">
+                        <mat-list-item style="background-color: red" *ngFor="let transaction of userTransactions">
+                            <h2 style="color: black" matLine>{{transaction.transactionService.serviceName}}</h2>
+                            <p matLine>
+                                <span style="color: green;">{{transaction.transactionService.serviceChargeAmount}}</span>
+                                &nbsp;
+                                <span style="margin: 10px; display: inline-block; color: white;">{{transaction.transactionTime}}</span>
+                            </p>
+                            <button mat-icon-button [matMenuTriggerFor]="userTransactionsMenu">
+                                <mat-icon>
+                                    more_vert
+                                </mat-icon>
+                            </button>
+                            <mat-divider></mat-divider>
+                            <mat-menu #userTransactionsMenu="matMenu" style="color: red;">
+                                <button mat-menu-item (click)="openConfirmationDialogForTransactionDeletion(transaction)">
+                                    Delete invite
+                                </button>
+                            </mat-menu>
+                        </mat-list-item>
+                    </mat-list>
+                </div>
+            </div>
     </div>
 </section>
 

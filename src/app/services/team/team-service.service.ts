@@ -83,10 +83,15 @@ export class TeamService {
     .pipe(catchError(this.handleError('sendTeamInvite', {} as MessageResponse)));
   }
 
-  public deleteTeam(teamId: string, jwtToken: string): Observable<MessageResponse>{
-    return this.httpClient.delete<MessageResponse>(TEAM_API + '/delete?teamId=' + teamId,
-	  {headers: new HttpHeaders({'Authorization' : 'Bearer ' + jwtToken })})
-    .pipe(catchError(this.handleError('deleteTeam', {} as MessageResponse)));
+  public deleteTeam(team: Team, jwtToken: string): Observable<MessageResponse>{
+    const httpOptions = {
+      headers: new HttpHeaders({'Authorization' : 'Bearer ' + jwtToken}),
+      body: team
+    };
+    return this.httpClient.delete<MessageResponse>(TEAM_API + '/delete', httpOptions)
+    .pipe(
+      catchError(this.handleError('deleteTeam', {} as MessageResponse))
+    );
   }
 
   public banTeam(teamId: string, jwtToken: string): Observable<MessageResponse>{

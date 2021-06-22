@@ -60,7 +60,7 @@
                     </div>
                 </li>
 
-                <li *ngIf="isPartOfTeam"> 
+                <li *ngIf="isPartOfTeam && this.userInspectingTeam.userName !== this.team.teamModerator.userName"> 
                     <div class="icon">
                         <button (click)="openConfirmationDialog(this.userInspectingTeam)" style="margin-bottom:40px;">Exit Team</button>
                     </div>
@@ -89,8 +89,11 @@
                             <button (click)="openConfirmationDialog(user)">Remove</button>
                         </div>
                         <div class="single-team-member">
-                            <img src="assets/d1images/anonymoususer-big.png" alt="image">
-
+                            <img 
+                                src="assets/d1images/anonymoususer-big.png" 
+                                alt="image"
+                                style="width: 150px; height: 150px;"
+                            >
                             <div class="content">
                                 <h3>{{user.userRealName}}</h3>
                                 <span>{{user.userName}}</span>
@@ -99,97 +102,6 @@
                             <a (click)="viewUser(user)" class="link-btn"></a>
                         </div>
                     </div>
-
-                    <!-- <div class="col-lg-3 col-md-4 col-sm-6">
-                        <div class="single-team-member">
-                            <img src="assets/img/team-member2.jpg" alt="image">
-
-                            <div class="content">
-                                <h3>Merv Adrian</h3>
-                                <span>Zelda3s</span>
-                            </div>
-
-                            <a routerLink="/single-player" class="link-btn"></a>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-3 col-md-4 col-sm-6">
-                        <div class="single-team-member">
-                            <img src="assets/img/team-member3.jpg" alt="image">
-
-                            <div class="content">
-                                <h3>Carla Gentry</h3>
-                                <span>3s.King</span>
-                            </div>
-
-                            <a routerLink="/single-player" class="link-btn"></a>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-3 col-md-4 col-sm-6">
-                        <div class="single-team-member">
-                            <img src="assets/img/team-member4.jpg" alt="image">
-
-                            <div class="content">
-                                <h3>Liam Oliver</h3>
-                                <span>Junior.Zelda</span>
-                            </div>
-
-                            <a routerLink="/single-player" class="link-btn"></a>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-3 col-md-4 col-sm-6">
-                        <div class="single-team-member">
-                            <img src="assets/img/team-member5.jpg" alt="image">
-
-                            <div class="content">
-                                <h3>Emma Olivia</h3>
-                                <span>King.Zelda</span>
-                            </div>
-
-                            <a routerLink="/single-player" class="link-btn"></a>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-3 col-md-4 col-sm-6">
-                        <div class="single-team-member">
-                            <img src="assets/img/team-member6.jpg" alt="image">
-
-                            <div class="content">
-                                <h3>Elijah William</h3>
-                                <span>Zelda</span>
-                            </div>
-
-                            <a routerLink="/single-player" class="link-btn"></a>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-3 col-md-4 col-sm-6">
-                        <div class="single-team-member">
-                            <img src="assets/img/team-member8.jpg" alt="image">
-
-                            <div class="content">
-                                <h3>Kylo Jennar</h3>
-                                <span>Zelda.Kylo</span>
-                            </div>
-
-                            <a routerLink="/single-player" class="link-btn"></a>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-3 col-md-4 col-sm-6">
-                        <div class="single-team-member">
-                            <img src="assets/img/team-member7.jpg" alt="image">
-
-                            <div class="content">
-                                <h3>Lucas Luiz</h3>
-                                <span>luiz.zelda</span>
-                            </div>
-
-                            <a routerLink="/single-player" class="link-btn"></a>
-                        </div>
-                    </div> -->
                 </div>
             </div>
 
@@ -253,6 +165,122 @@
             <!-- <div class="partner-list">
                 <app-partner></app-partner>
             </div> -->
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm">
+                        <div class="text" style="font-size: 22px; margin-top: 80px">
+                            Call of Duty Tournaments
+                        </div>
+                        <div *ngIf="isEmptyCodTournaments">
+                            <h4>No Tournaments available</h4>
+                        </div>
+                        <div *ngIf="!isEmptyCodTournaments">
+                            <div *ngFor="let tournament of teamCodTournaments; index as i">
+                                <div class="single-stream-schedule-box">
+                                    <span class="date">{{allCodTournamentMonths[i]}} {{allCodTournamentYears[i]}}</span>
+                                    <div class="content">
+                                        <span class="time">{{tournament.tournamentGame}}</span>
+                                        <h3><a (click)="viewTournamentDetails(tournament)">{{tournament.tournamentName}}</a></h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm">
+                        <div class="text" style="font-size: 22px; margin-top: 80px">
+                            Fifa Tournaments
+                        </div>
+                        <div *ngIf="isEmptyFifaTournaments">
+                            <h4>No tournaments available</h4>
+                        </div>
+                        <div *ngIf="!isEmptyFifaTournaments">
+                            <div *ngFor="let tournament of teamFifaTournaments; index as i">
+                                <div class="single-stream-schedule-box">
+                                    <span class="date">{{allFifaTournamentMonths[i]}} {{allFifaTournamentYears[i]}}</span>
+                                    <div class="content">
+                                        <span class="time">{{tournament.tournamentGame}}</span>
+                                        <h3><a (click)="viewTournamentDetails(tournament)">{{tournament.tournamentName}}</a></h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+               <div class="row">
+                    <div class="col-sm">
+                        <div class="register-form">
+                            <form>
+                                <div class="text" style="font-size: 22px; margin-top: 50px;">
+                                    Invite Users
+                                </div>
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="form-group col-sm">
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                placeholder="Search by username here...."
+                                                [formControl]="txtUserToSearch"
+                                                style="width: 350px;"
+                                            >
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <button #searchButton (click)="getUserByUserName()" class="form-group" style="width: 350px">
+                                            Search
+                                        </button>
+                                    </div>
+                                    <br>
+                                </div>
+                                <div style="margin-top: 90px" class="container">
+                                    <div class="row">
+                                        <div class="col-sm" style="vertical-align: middle;" *ngIf="!isUserFound && (txtUserToSearch.dirty || txtUserToSearch.touched)">
+                                            <h4>User not found.</h4>
+                                        </div>
+                                        <div class="col-sm" *ngIf="isUserFound">
+                                            <img
+                                                src="assets/d1images/anonymoususer-big.png"
+                                                style="border: solid red 2px; width: 200px; height: 150px"
+                                            >
+                                        </div>
+                                        <div class="col-sm" *ngIf="isUserFound">
+                                            <h3 style="text-align: center">{{userFound.userName}}</h3>
+                                            <p style="text-align: center">{{userFound.userRealName}}</p>
+                                            <p style="text-align: center">{{userFound.userCountry}}</p>
+                                        </div>    
+                                        <div class="col-sm" *ngIf="isUserFound">
+                                            <button [disabled]="isClickedInviteButton" (click)="openConfirmationDialogForTeamInvite()">
+                                                Invite
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                 <div class="text" *ngIf="isSuccesfulInvite">
+                                    Invite sent successfully
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-sm">
+                        <div class="text" style="font-size: 22px; margin-top: 50px;">
+                            Team invites
+                        </div>
+                        <div *ngIf="!team.teamRequests || team.teamRequests.length === 0">
+                            <h4>No team invites</h4>
+                        </div>
+                        <mat-list style="color: red;" class="mat-content" *ngIf="team.teamRequests && team.teamRequests.length > 0">
+                            <mat-list-item style="background-color: red;" *ngFor="let invite of team.teamRequests">
+                                <h2 style="color: black;" matLine><a (click)="viewUserDetails(invite.requestedUser)">{{invite.requestedUser.userName}}</a></h2>
+                                <p matLine>
+                                    <span>{{invite.requestedUser.userCountry}}</span>
+                                    &nbsp;
+                                    <span style="margin: 10px; display: inline-block; color: white">{{invite.requestStatus}}</span>
+                                </p>
+                            </mat-list-item>
+                        </mat-list>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </section>

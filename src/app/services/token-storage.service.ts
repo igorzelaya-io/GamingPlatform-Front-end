@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { User } from '../models/user/user';
 import { D1Service } from '../models/d1service';
 import { Role }from '../models/role';
+import { Team } from '../models/team';
 
 const TOKEN_KEY = 'auth-token';
 const USER_KEY = 'auth-user';
@@ -46,6 +47,12 @@ export class TokenStorageService {
   public addTokensToSavedUser(d1service: D1Service): void{
     const user: User = this.getUser();
     user.userTokens = user.userTokens + d1service.serviceGivingAmount;
+    this.saveUser(user);
+  }
+
+  public addTeamToSavedUser(team: Team): void{
+    const user: User = this.getUser();
+    user.userTeams.push(team);
     this.saveUser(user);
   }
 

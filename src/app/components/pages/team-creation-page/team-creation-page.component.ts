@@ -79,7 +79,6 @@ export class TeamCreationPageComponent implements OnInit {
 		  txtName: ['', [Validators.required]],
 		  txtEmail: ['',[Validators.required]],
 		  txtCountry: ['', [Validators.required]]
-  
     });
 
   }
@@ -113,12 +112,12 @@ export class TeamCreationPageComponent implements OnInit {
 		  if(this.isSuccessfulRegister || !this.isSignUpFailed){
         this.sendTeamInviteToEachUser();
         this.tokenService.addTeamAdminRoleToSavedUser();
+        this.tokenService.addTeamToSavedUser(this.team);
       }
     });
   }
 
   public sendTeamInviteToEachUser(){
-
     this.usersToInvite.forEach(userToInvite => {
 		   this.teamInviteRequestUsersToInvite.push(new TeamInviteRequest(this.team, userToInvite))
     });

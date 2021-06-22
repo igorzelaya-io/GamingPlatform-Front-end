@@ -9,6 +9,8 @@ import { SharedService } from '../../../services/helpers/shared-service';
 import { Renderer2 } from '@angular/core';
 import { TokenStorageService } from 'src/app/services/token-storage.service';
 import { NgxMatDatetimePicker } from '@angular-material-components/datetime-picker';
+import { _DisposeViewRepeaterStrategy } from '@angular/cdk/collections';
+import { CountryService } from 'src/app/services/country.service';
 
 
 
@@ -55,7 +57,6 @@ export class TournamentCreationPageComponent implements OnInit {
   entryAndPriceForm: FormGroup;
 
   countryInfo: any[] = [];
-  countriesUrl: string = 'https://raw.githubusercontent.com/sagarshirbhate/Country-State-City-Database/master/Contries.json'; 
  
   isSuccessfulTournamentInformationSubmission = false;
   isClicked = false;
@@ -66,7 +67,8 @@ export class TournamentCreationPageComponent implements OnInit {
 			  private renderer: Renderer2,
 			  private sharedService: SharedService,
 			  @Inject(FormBuilder) private builder: FormBuilder,
-			  private tokenService: TokenStorageService) {
+			  private tokenService: TokenStorageService,
+			  private countryService: CountryService) {
     this.txtName = new FormControl();
     this.txtPlatforms = new FormControl();
 	this.txtDescription = new FormControl();
@@ -102,39 +104,26 @@ export class TournamentCreationPageComponent implements OnInit {
 
   ngOnInit(): void {
 	this.tournamentModerator = this.tokenService.getUser();
-  	this.getCountries();
+  	this.getAllCountries();
    }
 
-  getAllCountries(): Observable<any>{
-	return this.httpClient.get<any>(this.countriesUrl);	
+  getAllCountries(){
+	this.countryInfo = this.countryService.getCountriesData();
   }
 
   public onSubmit(): void{
    	this.tournament.tournamentName = this.txtName.value;
 	this.tournament.tournamentDescription = this.txtDescription.value;
-	this.tournament.tournamentCashPrice = this.cashPrice.value;
+	this.tournament.tournamentCashPrize = this.cashPrice.value;
 	this.tournament.tournamentEntryFee = this.entryFee.value;
 	this.tournament.tournamentRegion = this.tournamentCountry.value;
 	this.tournament.tournamentPlatforms = this.tournamentPlatform.valueOf();
 	this.tournament.tournamentDate = this.tournamentDateElement._selected;
-	//this.tournament.tournamentDateInMilliseconds = this.tournamentDateElement._selected.getTime();										
 	this.tournament.tournamentModerator = this.tournamentModerator;
 	this.tournament.tournamentLimitNumberOfTeams = this.limitNumberOfTeams.value;
 	this.tournament.tournamentGame = this.tournamentGame;
 	this.tournament.tournamentCodGameMode = this.tournamentCodGameMode;
 	this.router.navigate(['/tournament-creation-config'], {queryParams: { tournament: JSON.stringify(this.tournament)}}); 
-  }
-
-
-  getCountries(){
-	this.getAllCountries()
-	.subscribe((data: any) => {
-		console.log(data);
-		this.countryInfo = data.Countries;
-	},
-	(err: any) => {
-		console.error(err);
-	});
   }
 
   public selectPcTournamentPlatformElement(){

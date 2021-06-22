@@ -6,6 +6,8 @@ import {retry, catchError } from 'rxjs/operators';
 import { ImageModel } from '../models/imagemodel';
 import { MessageResponse } from '../models/messageresponse';
 import { UserTokenRequest } from '../models/usertokenrequest';
+import { D1Transaction } from '../models/d1transaction';
+import { JwtResponse } from '../models/jwtresponse';
 
 const USER_API = '/userapi';
 
@@ -51,6 +53,24 @@ export class UserService {
     .pipe(catchError(this.handleError('getAllUsers', [])));
   }
 
+  public getAllUserTransactions(userId: string, jwtToken: string): Observable<D1Transaction[]>{
+    return this.httpClient.get<D1Transaction[]>(USER_API + '/users/transactions?userId=' + userId,
+    {headers: new HttpHeaders({'Authorization': 'Bearer ' + jwtToken})})
+    .pipe(
+      retry(1),
+      catchError(this.handleError('getAllUserTransactions', []))
+    );
+  }
+
+  public getUserTransaction(userId: string, transactionId: string): Observable<D1Transaction>{
+    return this.httpClient.get<D1Transaction>(USER_API + '/users/transactions?userId=' + userId + '&transactionId=' + transactionId,
+      {headers: new HttpHeaders({'Authorization': 'Bearer ' + JwtResponse})})
+      .pipe(
+        retry(1),
+        catchError(this.handleError('getUserTransaction', {} as D1Transaction))
+      );
+  }
+
   public updateUser(user: User, jwtToken: string): Observable<MessageResponse>{
       return this.httpClient.put<MessageResponse>(USER_API + '/users/update', user,
       {headers: new HttpHeaders({'Authorization': 'Bearer ' + jwtToken})})
@@ -66,7 +86,7 @@ export class UserService {
   }
 
   public deleteUser(userId: string, jwtToken: string):Observable<MessageResponse>{
-    return this.httpClient.delete<MessageResponse>(USER_API + '/delete?userId=' + userId,
+    return this.httpClient.delete<MessageResponse>(USER_API + '/users/delete?userId=' + userId,
     {headers: new HttpHeaders({'Authorization': 'Bearer ' + jwtToken})})
     .pipe(catchError(this.handleError('updateUserTokens', {} as MessageResponse)));
   }
@@ -76,6 +96,14 @@ export class UserService {
                                           + '&userField=' + userField, 
     {headers: new HttpHeaders({'Authorization': 'Bearer ' + jwtToken})})
     .pipe(catchError(this.handleError('updateUserTokens', {} as MessageResponse)));
+  }
+
+  public deleteUserTransaction(userId: string, transactionId: string, jwtToken: string): Observable<MessageResponse>{
+    return this.httpClient.delete<MessageResponse>(USER_API + '/users/transactions/delete?userId=' + userId + '&transactionId=' + transactionId,
+    {headers: new HttpHeaders({ 'Authorization': 'Bearer ' + jwtToken})})
+    .pipe(
+      catchError(this.handleError('deleteUserTransaction', {} as MessageResponse))
+    );
   }
 
   public updateUserTokens(userTokenRequest: UserTokenRequest, jwtToken: string): Observable<MessageResponse>{

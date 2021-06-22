@@ -10,6 +10,10 @@ import { UserTeamService } from 'src/app/services/user-team.service';
 import { MessageResponse } from 'src/app/models/messageresponse';
 import { FieldformConfirmationComponent } from '../../common/fieldform-confirmation/fieldform-confirmation.component';
 import { FieldformComponent } from '../../common/fieldform/fieldform.component';
+import { TeamTournamentService } from 'src/app/services/team/team-tournament.service';
+import { TeamInviteRequest } from 'src/app/models/teaminviterequest';
+import { FormControl } from '@angular/forms';
+import { UserService } from 'src/app/services/user.service';
 
 export interface DialogData{
   field: string,
@@ -18,6 +22,8 @@ export interface DialogData{
 
 }
 
+const monthNames = [ "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December" ];
 
 @Component({
   selector: 'app-team-details-page',
@@ -27,22 +33,52 @@ export interface DialogData{
 export class TeamDetailsPageComponent implements OnInit {
 
   team: Team;
+
+  teamCodTournaments: Tournament[];
+  isEmptyCodTournaments: boolean = false;
+  
+  teamFifaTournaments: Tournament[];
+  isEmptyFifaTournaments: boolean = false;
+
   userInspectingTeam: User;
   isAdminUser: boolean = false;
   isPartOfTeam: boolean = false;
 
+  allCodTournamentYears: number[];
+  allCodTournamentMonths: string[];
+
+  allFifaTournamentYears: number[];
+  allFifaTournamentMonths: string[];
+
   replaceValueString: string;
-  teamTournament: Tournament[] = [];
   teamUsers: User[] = [];
+
+  txtUserToSearch: FormControl;
+  userFound: User;
+  isClickedSearchButton: boolean = false;
+  isClickedInviteButton: boolean = false;
+  isUserFound: boolean = false;
+  isSuccesfulInvite: boolean = false;
+  
 
   constructor(private route: ActivatedRoute,
               private teamService: TeamService,
               private tokenService: TokenStorageService,
               private userTeamService: UserTeamService,
               public dialog: MatDialog,
-              private router: Router) {
+              private router: Router,
+              private teamTournamentService: TeamTournamentService,
+              private userService: UserService) {
     this.team = new Team();
     this.userInspectingTeam = new User();
+    this.allCodTournamentMonths = [];
+    this.allCodTournamentYears = [];
+    this.allFifaTournamentMonths = [];
+    this.allFifaTournamentYears = [];
+    this.teamCodTournaments = [];
+    this.teamFifaTournaments = [];
+    this.txtUserToSearch = new FormControl();
+    this.userFound = new User();
   }
 
   
@@ -80,6 +116,8 @@ export class TeamDetailsPageComponent implements OnInit {
       if(this.tokenService.loggedIn() && isSuccessfulGet){
         this.userInspectingTeam = this.tokenService.getUser();
         this.evaluateUserRoles();
+        this.getAllTeamCodTournaments();
+        this.getAllTeamFifaTournaments();
       }
     });
   }
@@ -155,12 +193,151 @@ export class TeamDetailsPageComponent implements OnInit {
   }
 
   public deleteTeam(){
-    this.teamService.deleteTeam(this.team.teamId, this.tokenService.getToken())
+    let successfulDelete: boolean = false;
+    this.teamService.deleteTeam(this.team, this.tokenService.getToken())
     .subscribe((data: MessageResponse) => {
+      successfulDelete = true;
+    },
+    err => {
+      console.error(err);
+    },
+    () => {
+      if(successfulDelete){
+        this.removeTeamFromLocalStorage();
+        this.router.navigate(['/my-teams']);
+      }
+    });
+  }
+
+  public getAllTeamCodTournaments(){
+    this.teamTournamentService.getAllCodTournamentsFromTeam(this.team.teamId)
+    .subscribe((data: Tournament[]) => {
+      if(data && data.length){
+        this.teamCodTournaments = data;
+        this.getAllCodTournamentYears(data);
+        this.getAllCodTournamentMonths(data);
+        return;
+      }
+      this.isEmptyCodTournaments = true;
+    }, err => {
+      console.error(err);
+      this.isEmptyCodTournaments = true;
+    });
+  }
+
+  public getAllTeamFifaTournaments(){
+    this.teamTournamentService.getAllFifaTournamentsFromTeam(this.team.teamId)
+    .subscribe((data: Tournament[]) => {
+      if(data && data.length){
+        this.teamFifaTournaments = data;
+        this.getAllFifaTournamentYears(data);
+        this.getAllFifaTournamentMonths(data);
+        return; 
+      }
+      this.isEmptyFifaTournaments = true;
+    }, err => {
+      console.error(err);
+      this.isEmptyFifaTournaments = true;
+    });
+  }
+
+  public getAllCodTournamentYears(tournaments: Tournament[]){
+    for(let i = 0; i < tournaments.length; i++){
+      this.allCodTournamentYears.push(new Date(tournaments[i].tournamentDate).getFullYear());
+    }
+  }
+
+  public getAllCodTournamentMonths(tournaments: Tournament[]){
+    for(let i = 0; i < tournaments.length; i++){
+      this.allCodTournamentMonths.push(monthNames[new Date(tournaments[i].tournamentDate).getMonth()] + ' ' + tournaments[i].tournamentDate.toString().slice(8, 10));
+    }
+  }
+
+  public getAllFifaTournamentYears(tournaments: Tournament[]){
+    for(let i = 0; i < tournaments.length; i++){
+      this.allFifaTournamentYears.push(new Date(tournaments[i].tournamentDate).getFullYear());
+    }
+  }
+
+  public getAllFifaTournamentMonths(tournaments: Tournament[]){
+    for(let i = 0; i < tournaments.length; i++){
+      this.allFifaTournamentMonths.push(monthNames[new Date(tournaments[i].tournamentDate).getMonth()] + ' ' + tournaments[i].tournamentDate.toString().slice(8, 10));
+    }
+  }
+
+  removeTeamFromLocalStorage(){
+    let userTeams:Team[] = this.userInspectingTeam.userTeams;
+    this.userInspectingTeam.userTeams = userTeams.filter(team => team.teamId !== this.team.teamId);
+    this.tokenService.saveUser(this.userInspectingTeam);
+  }
+
+  viewTournamentDetails(tournament: Tournament): void{
+    this.router.navigate(['/tournament-details'], {queryParams: { tournamentId: tournament.tournamentId}});
+  }
+
+  getUserByUserName(){
+    if(!this.txtUserToSearch.value){
+      return;
+    }
+    this.userService.getUserByUserName(this.txtUserToSearch.value)
+    .subscribe((data: User) => {
+      if(data && Object.keys(data).length){
+        this.userFound = data;
+        this.isUserFound = true;
+        this.isClickedSearchButton = true;
+        return;
+      }
+      this.isUserFound = false;
+      this.isClickedSearchButton = false;
 
     },
     err => {
       console.error(err);
+      this.isUserFound = false;
+      this.isClickedSearchButton = false;
     });
   }
+
+  
+  openConfirmationDialogForTeamInvite(){
+    const dialogRef = this.dialog.open(FieldformConfirmationComponent);
+    dialogRef.afterClosed()
+    .subscribe((result: any) => {
+      if(result){
+        this.inviteUser();    
+      }
+    });
+  }
+
+  public inviteUser(){
+    let teamInviteRequest: TeamInviteRequest = new TeamInviteRequest();
+    teamInviteRequest.requestedUser = this.userFound;
+    teamInviteRequest.teamRequest = this.team;
+    this.teamService.sendTeamInvite(teamInviteRequest, this.tokenService.getToken())
+    .subscribe((data: MessageResponse) => {
+      this.isSuccesfulInvite = true;
+    },
+    err => {
+      console.error(err.error.message);
+    },
+    () => {
+      if(this.isSuccesfulInvite){
+        window.location.reload();
+      }
+    });
+  }
+
+  viewUserDetails(user: User){
+    this.router.navigate(['/player-details'], { queryParams: { userId: user.userId}});
+  }
+
+  openConfirmationForInviteDeletion(): void{
+    const dialogRef = this.dialog.open(FieldformConfirmationComponent);
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if(result){
+
+      }
+    });
+  } 
+
 }

@@ -11,6 +11,9 @@ import { Tournament } from 'src/app/models/tournament/tournament';
 import { UserTournamentService } from 'src/app/services/user-tournament.service';
 import { Challenge } from 'src/app/models/challenge';
 import { TeamInviteRequest } from 'src/app/models/teaminviterequest';
+import { UserTeamService } from 'src/app/services/user-team.service';
+import { D1Transaction } from '../../../models/d1transaction';
+import { UserChallengesService } from 'src/app/services/userchallenges.service';
 
 export interface DialogData{
   field: string;
@@ -34,6 +37,8 @@ export class PlayerDetailsPageComponent implements OnInit {
   userTournaments: Tournament[];
   userChallenges: Challenge[];
   userTeamInvites: TeamInviteRequest[];
+  userTransactions: D1Transaction[];
+  isEmptyTransactions: boolean = false;
   isEmptyTournaments: boolean = false;
   isEmptyChallenges: boolean = false;
   isEmptyInvites: boolean = false;
@@ -51,7 +56,9 @@ export class PlayerDetailsPageComponent implements OnInit {
               public dialog: MatDialog,
               private userService: UserService,
               private router: Router,
-              private userTournamentService: UserTournamentService) {
+              private userTournamentService: UserTournamentService,
+              private userTeamService: UserTeamService,
+              private userChallengeService: UserChallengesService) {
     this.user = new User();
     this.userInspectingUser = new User();
     this.userTournaments = [];
@@ -71,6 +78,8 @@ export class PlayerDetailsPageComponent implements OnInit {
   public evaluateRole(){
     if(this.userInspectingUser.userRoles.filter(userRole => userRole.authority === 'ADMIN')){
       this.isAdmin = true;
+      this.getAllTeamInvites();
+      this.getAllTournamentsFromUser(this.user.userId);
     }
   }
 
@@ -83,6 +92,25 @@ export class PlayerDetailsPageComponent implements OnInit {
     });
   }
 
+  public openConfirmationDialogForInviteDeletion(teamInviteRequest: TeamInviteRequest){
+    const dialogRef = this.dialog.open(FieldformConfirmationComponent);
+    dialogRef.afterClosed()
+      .subscribe((result: any) => {
+        if(result){
+          this.deleteUserTeamInvite(teamInviteRequest);
+        }
+      });
+  }
+
+  public deleteUserTeamInvite(teamInviteRequest: TeamInviteRequest): void{
+    this.userTeamService.deleteUserTeamRequest(teamInviteRequest, this.tokenService.getToken())
+    .subscribe((data: MessageResponse) => {
+      console.log(data);
+    }, err => {
+      console.error(err);
+    });
+  }
+  
   public banPlayer(){
     this.userService.banPlayer(this.user.userId, this.tokenService.getToken())
     .subscribe((data: MessageResponse) => {
@@ -102,6 +130,7 @@ export class PlayerDetailsPageComponent implements OnInit {
     });
   }
 
+  
   public deleteUserById(){
     this.userService.deleteUser(this.user.userId, this.tokenService.getToken())
     .subscribe((data: MessageResponse) => {
@@ -172,6 +201,8 @@ export class PlayerDetailsPageComponent implements OnInit {
         this.userInspectingUser = this.tokenService.getUser();
         this.evaluateRole();
         this.getAllTournamentsFromUser(this.user.userId);
+        this.getAllChallengesFromUser();
+        this.getAllTransactionsFromUser();
       }
     }); 
   }
@@ -205,6 +236,67 @@ export class PlayerDetailsPageComponent implements OnInit {
     }
   }
 
+  public getAllTeamInvites(){
+    this.userTeamService.getAllUserTeamRequests(this.user.userId)
+    .subscribe((data: TeamInviteRequest[]) => {
+      if(data && data.length > 0){
+        this.userTeamInvites = data;
+        return;
+      }
+      this.isEmptyInvites = true;
+    }, err => {
+      console.error(err);
+      this.isEmptyInvites = true;
+    });
+  }
+
+  public getAllChallengesFromUser(){
+    this.userChallengeService.getAllUserChallenges(this.user.userId)
+    .subscribe((data: Challenge[]) => {
+      if(data && data.length){
+        this.userChallenges = data;
+        return;
+      }
+      this.isEmptyChallenges = true;
+    },
+    err => {
+      console.error(err);
+      this.isEmptyChallenges = true;
+    });
+  }
+
+  public getAllTransactionsFromUser(){
+    this.userService.getAllUserTransactions(this.user.userId, this.tokenService.getToken())
+    .subscribe((data: D1Transaction[]) => {
+      if(data && data.length){
+        this.userTransactions = data;
+        return; 
+      }
+      this.isEmptyTransactions = true; 
+    }, err => {
+      console.error(err);
+      this.isEmptyTransactions = true;
+    });
+  }
+
+  public deleteTransactionFromUser(transactionId: string): void{
+    this.userService.deleteUserTransaction(this.user.userId, transactionId, this.tokenService.getToken())
+    .subscribe((data: MessageResponse) => {
+
+    },
+    err => console.error(err));
+  }
+
+  public openConfirmationDialogForTransactionDeletion(transactionToDelete: D1Transaction){
+    const dialogRef = this.dialog.open(FieldformConfirmationComponent);
+    dialogRef.afterClosed()
+      .subscribe((result: any) => {
+        if(result){
+          this.deleteTransactionFromUser(transactionToDelete.transactionId);
+        }
+      });
+  }
+
   public viewTeam(teamId: string) : void{
     this.router.navigate(['/team-details'], { queryParams: {teamId: teamId}});
   }
@@ -217,5 +309,8 @@ export class PlayerDetailsPageComponent implements OnInit {
     this.router.navigate(['/tournament-details'], {queryParams: { tournamentId: tournament.tournamentId} });
   }
 
+  public navigateToInvites(){
+    this.router.navigate(['/team-invites']);
+  }
 
 }

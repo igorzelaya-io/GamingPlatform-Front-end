@@ -17,6 +17,7 @@ import { UserLoginRequest } from 'src/app/models/user/userloginrequest';
 import { UserTeamService } from 'src/app/services/user-team.service';
 import { Challenge } from 'src/app/models/challenge';
 import { UserChallengesService } from '../../../services/userchallenges.service';
+import { D1Transaction } from 'src/app/models/d1transaction';
 
 
 export interface DialogData{
@@ -42,11 +43,13 @@ export class AccountDetailsComponent implements OnInit {
   userTournaments: Tournament[];
   userChallenges: Challenge[];
   userTeamInvites: TeamInviteRequest[];
+  userTransactions: D1Transaction[];
   isEmptyInvites: boolean = false;
   allTournamentYears: number[];
   allTournamentMonths: string[];
   isEmptyTournaments: boolean = false;
   isEmptyChallenges: boolean = false;
+  isEmptyTransactions: boolean = false;
   isSuccessfulUpdate: boolean = false;
 
   replaceValueString: string;  
@@ -63,7 +66,8 @@ export class AccountDetailsComponent implements OnInit {
       this.userChallenges = [];
       this.allTournamentYears = [];
       this.allTournamentMonths = [];
-    }
+      this.userTransactions = [];
+  }
   
 
   ngOnInit(): void {
@@ -71,6 +75,7 @@ export class AccountDetailsComponent implements OnInit {
     this.getAllTournamentsFromUser(this.user.userId);
     this.getAllTeamInvites();
     this.getUserChallenges(this.user.userId);
+    this.getUserTransactions();
   }
   
   
@@ -86,7 +91,7 @@ export class AccountDetailsComponent implements OnInit {
   public openConfirmationDialogForInviteDeletion(teamInviteRequest: TeamInviteRequest){
     const dialogRef = this.dialog.open(FieldformConfirmationComponent);
     dialogRef.afterClosed()
-      .subscribe((result: any) => {
+    .subscribe((result: any) => {
         if(result){
           this.deleteUserTeamInvite(teamInviteRequest);
         }
@@ -97,18 +102,26 @@ export class AccountDetailsComponent implements OnInit {
     this.userTeamService.deleteUserTeamRequest(teamInviteRequest, this.tokenService.getToken())
     .subscribe((data: MessageResponse) => {
       console.log(data);
-    }, err => {
+    }, 
+    err => {
       console.error(err);
     });
   }
   
   public deleteUser(){
+    let isSuccessfulDelete: boolean = false; 
     this.userService.deleteUser(this.user.userId, this.tokenService.getToken())
     .subscribe((response:MessageResponse) => {
+        isSuccessfulDelete = true;
         console.log(response);
       },
-      err => console.error(err.error.message)
-    );
+      err => console.error(err.error.message),
+      () => {
+        if(isSuccessfulDelete){
+          this.tokenService.signOut();
+          this.router.navigate(['/']);
+        }
+      });
   }
 
   public openDialogUserName(){
@@ -237,14 +250,23 @@ export class AccountDetailsComponent implements OnInit {
       return;
      }
      this.isEmptyChallenges = true;
-   }, err => {
+   }, 
+   err => {
      console.error(err);
      this.isEmptyChallenges = true;
    }); 
   }
 
   public getUserTransactions(){
-    //TODO
+    this.userService.getAllUserTransactions(this.user.userId, this.tokenService.getToken())
+    .subscribe((data: D1Transaction[]) => {
+      if(data && data.length){
+        this.userTransactions = data;
+        return;
+      }
+      this.isEmptyTransactions = true;
+    },
+    err => console.error(err));
   }
 
   public navigateToInvites(){

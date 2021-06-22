@@ -34,8 +34,10 @@ export class FieldformComponent implements OnInit {
   }
 
   public confirm(){
-    this.data.replaceValueString = this.txtValue.value;
-    this.dialogRef.close(this.data);
+    if(this.hasEnoughTokens){
+      this.data.replaceValueString = this.txtValue.value;
+      this.dialogRef.close(this.data);
+    }
   }
 
   public onNoClick(): void{
