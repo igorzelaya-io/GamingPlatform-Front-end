@@ -1,3 +1,4 @@
+
 <app-navbar-style-one></app-navbar-style-one>
 
 <section class="page-title-area page-title-bg1">
@@ -276,14 +277,8 @@
                     </div>
                     <div *ngIf="this.isActivatedTournament && tournamentMatches.length !== 0">
                         <div *ngIf="isPvPTournament()">
-                            <!-- <app-matchbracket [tournamentBracketTree]="tournament.tournamentBinaryTree"></app-matchbracket> -->
-                            <ng-container>
-                            <ngtt-single-elimination-tree [tournament]="singleEliminationTournament" [matchTemplate]="matchTemplate">
-                                </ngtt-single-elimination-tree>
-                            </ng-container>
-                            <ng-template #matchTemplate let-match>
-                                <app-matchbracket [matches]="match"></app-matchbracket>
-                            </ng-template>
+                            
+                            <!-- TODO: BRACKETS -->
                         </div>
 
                         <div *ngIf="!isPvPTournament()">

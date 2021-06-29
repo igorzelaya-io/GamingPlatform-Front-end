@@ -12,7 +12,6 @@ import { TournamentService } from 'src/app/services/tournament/tournament.servic
 import { Match } from 'src/app/models/match';
 import { UserService } from 'src/app/services/user.service';
 import { UserTournament } from 'src/app/models/user/user-tournament';
-import { NgttTournament, NgttRound } from 'ng-tournament-tree';
 import { TreeNode } from '../../../models/treenode';
 import { MatchTournamentRequest } from 'src/app/models/matchtournamentrequest';
 import { BinaryTree } from 'src/app/models/binarytree';
@@ -66,7 +65,6 @@ export interface DialogDataCountry{
 
 export class TournamentsDetailsPageComponent implements OnInit {
 
-  public singleEliminationTournament: NgttTournament;
 
   tournament: Tournament;
   tournamentYear: number;
@@ -533,65 +531,7 @@ export class TournamentsDetailsPageComponent implements OnInit {
   }
 
   public displayTournamentBracket(){
-    this.singleEliminationTournament = {
-      rounds: [
-        {
-          type: 'Winnerbracket',
-          matches: [
-            {
-              teams: [{name: 'Uzi Gang', score: 0}, {name: 'Tentacion Ga', score: 0}]
-            },
-            {
-              teams: [{name: 'Juice Gang', score: 0}, {name: 'Travis Gang', score: 0}]
-            },
-          ]
-        }, {
-          type: 'Winnerbracket',
-          matches: [
-            {
-              teams: [{name: 'Lil baby gang', score: 0}, {name: 'Winning Team', score: 0}]
-            },
-            {
-              teams: [{name: 'Kanye gang', score: 0}, {name: 'Savage Gang', score: 0}]
-            },
-            {
-              teams: [{name: 'Cole gang', score: 0}, {name: 'Winning Team', score: 0}]
-            },
-            {
-              teams: [{name: 'Woo Gang', score: 0}, {name: 'Dababy Gang', score: 0}]
-            },
-          ]
-        },
-        {
-          type: 'Winnerbracket',
-          matches: [
-            {
-              teams: [{name: 'Winning Team', score: 0}, {name: 'Winning Team', score: 0}]
-            },
-            {
-              teams: [{name: 'Winning Team', score: 0}, {name: 'Winning Team', score: 0}]
-            }
-          ]
-        },
-        {
-          type: 'Final',
-          matches: [
-            {
-              teams: [
-                {
-                  name: 'Winning Team',
-                  score: 0
-                },
-                {
-                  name: 'Winning Team',
-                  score: 0
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    };
+   
   }
 
   openDialogForPrizePool(){
