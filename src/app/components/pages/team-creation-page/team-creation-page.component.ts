@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
 import { MessageResponse } from 'src/app/models/messageresponse';
 import { UserTeamService } from 'src/app/services/user-team.service';
 import { CountryService } from '../../../services/country.service';
-import { ImageCroppedEvent } from 'ngx-image-cropper';
+//import { ImageCroppedEvent } from 'ngx-image-cropper';
 
 export interface Country{
   
@@ -93,9 +93,9 @@ export class TeamCreationPageComponent implements OnInit {
     this.selectedImageFile = event;
   }
   
-  cropImage(e: ImageCroppedEvent){
-    this.cropImagePreview = e.base64;
-  }
+  // cropImage(e: ImageCroppedEvent){
+  //   this.cropImagePreview = e.base64;
+  // }
 
   onSubmit(){
     this.isClicked = true;

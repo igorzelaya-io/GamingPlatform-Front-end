@@ -72,11 +72,10 @@ import { ImageUploaderComponent } from './components/common/image-uploader/image
 import { TournamentCreationPageComponent } from './components/pages/tournament-creation-page/tournament-creation-page';
 import { NumericTextBoxModule } from '@syncfusion/ej2-angular-inputs';
 import { TournamentCreationConfigPageComponent } from './components/pages/tournament-creation-config-page/tournament-creation-config-page';
-import { NgxMatDatetimePickerModule, NgxMatTimepickerModule } from '@angular-material-components/datetime-picker';
+//import { NgxMatDatetimePickerModule, NgxMatTimepickerModule } from '@angular-material-components/datetime-picker';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { NgxMatNativeDateModule } from '@angular-material-components/datetime-picker';
+//import { NgxMatNativeDateModule } from '@angular-material-components/datetime-picker';
 import { MyTournamentsComponent } from './components/pages/my-tournaments/my-tournaments.component';
-import { NgTournamentTreeModule } from 'ng-tournament-tree';
 import { MatchbracketComponent } from './components/common/matchbracket/matchbracket.component';
 import { FieldformComponent } from './components/common/fieldform/fieldform.component';
 import { MatButtonModule } from '@angular/material/button';
@@ -91,7 +90,7 @@ import { FieldformDateComponent } from './components/common/fieldform-date/field
 import { FieldformCountryComponent } from './components/common/fieldform-country/fieldform-country.component';
 import { FieldformPasswordComponent } from './components/common/fieldform-password/fieldform-password.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { ImageCropperModule } from 'ngx-image-cropper';
+// import { ImageCropperModule } from 'ngx-image-cropper';
 
 @NgModule({
   declarations: [
@@ -179,11 +178,10 @@ import { ImageCropperModule } from 'ngx-image-cropper';
     MatChipsModule,
     MatFormFieldModule,
     NumericTextBoxModule,
-	  NgxMatDatetimePickerModule,
-	  NgxMatTimepickerModule,
+	  //NgxMatDatetimePickerModule,
+	  //NgxMatTimepickerModule,
 	  MatDatepickerModule,
-    NgxMatNativeDateModule,
-    NgTournamentTreeModule,
+   // NgxMatNativeDateModule,
     MatButtonModule,
     MatDialogModule,
     MatListModule,
@@ -191,7 +189,7 @@ import { ImageCropperModule } from 'ngx-image-cropper';
     MatToolbarModule,
     MatMenuModule,
     FontAwesomeModule,
-    ImageCropperModule
+    //ImageCropperModule
   ],
   providers: [],
   bootstrap: [AppComponent]
