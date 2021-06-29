@@ -5,6 +5,7 @@ import { UserAuthRequest } from '../models/user/userauthrequest';
 import { UserLoginRequest } from '../models/user/userloginrequest';
 import { MessageResponse} from '../models/messageresponse';
 import { JwtResponse } from '../models/jwtresponse';
+import { UserPasswordChangeRequest } from '../models/userpasswordchangerequest';
 
 const AUTH_API_ENDPOINT = '/auth';
 
@@ -27,5 +28,14 @@ export class AuthenticationService {
 
   public signup(userAuthRequest: UserAuthRequest): Observable<MessageResponse>{
     return this.httpClient.post<MessageResponse>(AUTH_API_ENDPOINT + '/register', userAuthRequest, httpOptions);
+  }
+
+  public updateUserPassword(userPasswordChange: UserPasswordChangeRequest, jwtToken: string): Observable<MessageResponse>{
+    return this.httpClient.post<MessageResponse>(AUTH_API_ENDPOINT + '/changePass', userPasswordChange,
+    { headers: new HttpHeaders(
+        {
+          'Authorization': 'Bearer ' + jwtToken
+        })
+    });
   }
 }

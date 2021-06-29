@@ -330,6 +330,10 @@ export class TournamentCreationConfigPageComponent implements OnInit {
 		this.tournamentMatchesNumber = 'Best of 5';
 	}
 
+	public goBack(){
+		this.router.navigate(['/tournament-creation']);
+	}
+
 	private isRedBorder(elementToEvaluate: ElementRef): boolean {
 		if (elementToEvaluate.nativeElement.style.border === '3px solid red') {
 			return true;

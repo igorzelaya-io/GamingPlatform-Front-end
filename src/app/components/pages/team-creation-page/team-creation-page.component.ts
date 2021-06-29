@@ -14,6 +14,7 @@ import { Router } from '@angular/router';
 import { MessageResponse } from 'src/app/models/messageresponse';
 import { UserTeamService } from 'src/app/services/user-team.service';
 import { CountryService } from '../../../services/country.service';
+import { ImageCroppedEvent } from 'ngx-image-cropper';
 
 export interface Country{
   
@@ -59,7 +60,8 @@ export class TeamCreationPageComponent implements OnInit {
 
   teamCreationRequest: TeamCreationRequest;
 
-  selectedImageFile: File;
+  selectedImageFile: any;
+  cropImagePreview: any;
 
   constructor(private teamService: TeamService,
               private userService: UserService,
@@ -85,6 +87,14 @@ export class TeamCreationPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.getCountries();
+  }
+
+  public onFileChange(event: any){
+    this.selectedImageFile = event;
+  }
+  
+  cropImage(e: ImageCroppedEvent){
+    this.cropImagePreview = e.base64;
   }
 
   onSubmit(){
@@ -140,10 +150,6 @@ export class TeamCreationPageComponent implements OnInit {
   
   clickedButton(): void{
     this.isClicked = true;
-  }
-
-  public onFileChanged(event){
-    this.selectedImageFile = event.target.files[0];
   }
 
   public getTeamByName(teamName: string): void{

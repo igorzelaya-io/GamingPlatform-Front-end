@@ -42,35 +42,34 @@ export class ProfileAuthenticationPageComponent implements OnInit {
   public onSubmit(){
     this.userToLogin.userName = this.txtUserName.value;
   	this.userToLogin.userPassword = this.txtPassword.value;
-	  this.authenticationService.login(this.userToLogin).subscribe(
-      (data: JwtResponse) => {
-        if (data != null){
-		      this.tokenService.saveToken(data.token);				
-		      this.tokenService.saveUserId(data.id);		            
-          console.log(data);
-		     this.isLoggedIn = true;
-		       return;
-		    }
+    this.authenticationService.login(this.userToLogin)
+    .subscribe((data: JwtResponse) => {
+      if (data != null){
+        this.tokenService.saveToken(data.token);				
+        this.tokenService.saveUserId(data.id);		            
+        console.log(data);
+        this.isLoggedIn = true;
+        return;
+		  }
+      this.isLoginFailed = true;
+    },
+    err => {
+      console.error(err.error.error);
+      if(err.error.status === 401){
         this.isLoginFailed = true;
-      },
-      err => {
-        console.error(err.error.error);
-		if(err.error.status === 401){
-			this.isLoginFailed = true;
-			this.isClicked = false;
-			this.errorMessage = 'Username or password is incorrect.';
-			return;
-		}
-        this.isLoginFailed = true;
-		this.isClicked = false;
-        this.errorMessage = err.error.message;
-      },
-	 () => {
-		if(this.isLoggedIn){
-			this.addUserToStorage();			
-		}	
-	 }
-    );
+        this.isClicked = false;
+        this.errorMessage = 'Username or password is incorrect.';
+        return;
+      }
+      this.isLoginFailed = true;
+      this.isClicked = false;
+      this.errorMessage = err.error.message;
+    },
+	  () => {
+		  if(this.isLoggedIn){
+			  this.addUserToStorage();			
+		  }	
+	  });
   }
 
   public addUserToStorage(){

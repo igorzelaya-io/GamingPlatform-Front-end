@@ -18,6 +18,7 @@ import { UserTeamService } from 'src/app/services/user-team.service';
 import { Challenge } from 'src/app/models/challenge';
 import { UserChallengesService } from '../../../services/userchallenges.service';
 import { D1Transaction } from 'src/app/models/d1transaction';
+import { FieldformPasswordComponent } from '../../common/fieldform-password/fieldform-password.component';
 
 
 export interface DialogData{
@@ -26,6 +27,10 @@ export interface DialogData{
   field: string;
   chargeFee?: number;
 
+}
+
+export interface DialogDataPassword{
+  isSuccessfulUpdate: boolean;
 }
 
 const monthNames = [ "January", "February", "March", "April", "May", "June",
@@ -149,6 +154,19 @@ export class AccountDetailsComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result: any) => {
       if(result.replaceValueString){
         this.updateUserStringField(this.user.userId, result.field, result.replaceValueString);
+      }
+    });
+  }
+
+  public openDialogForPasswordUpdate(){
+    const dialogRef = this.dialog.open(FieldformPasswordComponent,{
+      width: '350px',
+      data: {isSuccessfulUpdate: undefined}
+    });
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if(result || result.isSuccessfulUpdate){
+        this.tokenService.signOut();
+        this.router.navigate(['/login']);
       }
     });
   }

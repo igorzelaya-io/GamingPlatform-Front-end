@@ -89,6 +89,9 @@ import { MatMenuModule } from '@angular/material/menu';
 import { FieldformNumericComponent } from './components/common/fieldform-numeric/fieldform-numeric.component';
 import { FieldformDateComponent } from './components/common/fieldform-date/fieldform-date.component';
 import { FieldformCountryComponent } from './components/common/fieldform-country/fieldform-country.component';
+import { FieldformPasswordComponent } from './components/common/fieldform-password/fieldform-password.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { ImageCropperModule } from 'ngx-image-cropper';
 
 @NgModule({
   declarations: [
@@ -160,7 +163,8 @@ import { FieldformCountryComponent } from './components/common/fieldform-country
 	  FieldformConfirmationComponent,
 	  FieldformNumericComponent,
 	  FieldformDateComponent,
-	  FieldformCountryComponent	
+	  FieldformCountryComponent,
+	  FieldformPasswordComponent	
   ],
   imports: [
     BrowserModule,
@@ -186,6 +190,8 @@ import { FieldformCountryComponent } from './components/common/fieldform-country
     MatDividerModule,
     MatToolbarModule,
     MatMenuModule,
+    FontAwesomeModule,
+    ImageCropperModule
   ],
   providers: [],
   bootstrap: [AppComponent]

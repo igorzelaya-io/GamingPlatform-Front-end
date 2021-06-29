@@ -100,7 +100,31 @@
 		                      		<button (click)="removeUserFromPendingInvites()">Cancel Invite</button>
 		                      	</div>
 		                      	                        	
-	                        </div>
+                            </div>
+                            <div class="row">
+                                <label>Select File for Team Image</label>
+                                <div class="col-sm">
+                                    <input
+                                        type="file"
+                                        (change)="onFileChange($event)"
+                                    >
+                                </div>
+                                <div class="col-sm">
+                                    <image-cropper 
+                                        [imageChangedEvent]="selectedImageFile"
+                                        [maintainAspectRatio]="true"
+                                        [aspectRatio]="4 / 4"
+                                        [resizeToWidth]="256"
+                                        format="png"
+                                        (imageCropped)="cropImage($event)"
+                                    >
+                                    </image-cropper>
+                                </div>
+                                <label>Image Preview</label>
+                                <div class="col-sm">
+                                    <img [src]="cropImagePreview"/>
+                                </div>
+                            </div>
                         </div>
                         <button type="submit" (click)="onSubmit()" 
                             [disabled]="txtName.invalid || txtEmail.invalid || txtCountry.invalid || isClicked">

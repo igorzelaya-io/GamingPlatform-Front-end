@@ -482,11 +482,9 @@ export class TournamentsDetailsPageComponent implements OnInit {
 
   public isAdminUser(){
     let role: Role = this.userInspectingTournament.userRoles.filter(userRole => userRole.authority === 'ADMIN').find(userRole => userRole.authority === 'ADMIN');
-    if(role){
-      if(this.tournament.tournamentModerator.userName === this.userInspectingTournament.userName){
-        this.isUserAdmin = true;
-        return;
-      }
+    if(role || this.userInspectingTournament.userName === this.tournament.tournamentModerator.userName){
+      this.isUserAdmin = true;
+      return;
     }
     this.isUserAdmin = false;
   }
