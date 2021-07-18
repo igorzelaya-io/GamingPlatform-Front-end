@@ -3,11 +3,13 @@
 <section class="page-title-area page-title-bg1">
     <div class="container">
         <div class="page-title-content">
-            <!-- <img src="assets/img/team-member1.jpg" class="cover-player-image" alt="image"> -->
+            <div *ngIf="userImage">
+                <img [src]="userImage" class="cover-player-image" alt="image" style="width: 250px; height: 250px;">
+            </div>
             <br>
             <h1 title="{{user.userName}}">{{user.userName}}</h1>
             <button mat-button *ngIf="isAdmin" (click)="openDialogUserName()" style="background-color: #1a0000;">
-                <i class="fas fa-edit" style="font-size: 20px; color: red"></i>
+                <i class="bi bi-pencil-square" style="font-size: 20px; color: red"></i>
             </button>
         </div>
     </div>
@@ -22,7 +24,7 @@
                 </div>
                 <div class="col-lg-3 col-md-12" style="vertical-align: middle; margin-right: 1000px; margin-bottom: 50px;">
                     <button mat-button (click)="openDialogUserRealName()" style="background-color: #1a0000;">
-                        <i class="fas fa-edit" style="font-size: 20px; color: red"></i>
+                        <i class="bi bi-pencil-square" style="font-size: 20px; color: red"></i>
                     </button>
                 </div>
                     
@@ -57,7 +59,7 @@
                 <li *ngIf="isAdmin">
                     <div class="icon">
                         <button mat-button (click)="openConfirmationDialogForDeletion()" style="background-color: #1a0000; margin-bottom: 40px;">
-                            <i style="font-size: 20px; color: red" class="fas fa-trash"></i>
+                            <i style="font-size: 20px; color: red" class="bi bi-trash-fill"></i>
                         </button>                    
                     </div>
                 </li>

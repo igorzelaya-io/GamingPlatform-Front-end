@@ -104,7 +104,7 @@ export class TournamentService {
 
   public updateTournament(tournament: Tournament, jwtToken: string): Observable<MessageResponse>{
     return this.httpClient.put<MessageResponse>(TOURNAMENTS_API + '/update', tournament,
-	{headers: new HttpHeaders( { 'Authorization': 'Bearer ' + jwtToken})})
+	  {headers: new HttpHeaders( { 'Authorization': 'Bearer ' + jwtToken})})
     .pipe(catchError(this.handleError('updateTournament', {} as MessageResponse)));
   }
 

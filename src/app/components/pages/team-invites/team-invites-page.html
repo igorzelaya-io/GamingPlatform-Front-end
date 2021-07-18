@@ -15,28 +15,57 @@
         </div>  
         <div *ngIf="!isEmpty" class="row">
             
-            <div *ngFor="let invite of teamInvites" class="col-lg-6 col-md-6">
-                <div class="single-blog-post-box" *ngIf="hasPendingStatus(invite)">
-                    <div class="post-image">
-                        <a routerLink="/single-blog">
-                            <img src="assets/img/main-blog-img2.jpg" alt="image"> 
-                        </a>
+            <div *ngIf="teamInvitesWithImage.length > 0">
+                <div *ngFor="let teamInvite of teamInvitesWithImage; index as i" class="col-md">
+                    <div class="single-blog-post-box" *ngIf="hasPendingStatus(teamInvite)">
+                        <div class="post-image">
+                            <a (click)="passTeam(teamInvite)">
+                                <img [src]="teamImages[i]" alt="image"> 
+                            </a>
+                        </div>
+                        <div class="post-content">
+                            <ul class="post-meta">
+                            <li>By <a (click)="passUser(teamInvite.teamRequest.teamModerator.userId)">{{teamInvite.teamRequest.teamModerator.userName}}</a></li>
+                            <li><a (click)="passTeam(teamInvite)">{{teamInvite.teamRequest.teamName}}</a></li>
+                            <li>{{teamInvite.teamRequest.teamCountry}}</li>
+                            </ul>
+                            <a (click)="passTeam(teamInvite.teamRequest)" class="read-more-btn">View Team<i class="flaticon-null"></i></a>
+                        </div>
+                        <div style="vertical-align: middle;">
+                            <button style="text-align: center" (click)="acceptUserTeamInviteRequest(teamInvite)">
+                                Accept
+                            </button>
+                            <button style="text-align: middle" (click)="declineUserTeamInviteRequests(teamInvite)">
+                                Decline
+                            </button>
+                        </div>
                     </div>
-                    <div class="post-content">
-                        <ul class="post-meta">
-                        <li>By <a routerLink="/blog-1">{{invite.teamRequest.teamModerator.userName}}</a></li>
-                        <li>{{invite.teamRequest.teamName}}</li>
-                        <li>{{invite.teamRequest.teamCountry}}</li>
-                        </ul>
-                        <a (click)="passTeam(invite.teamRequest)" class="read-more-btn">View Team<i class="flaticon-null"></i></a>
-                    </div>
-                    <div style="vertical-align: middle;">
-	                    <button style="text-align: center" (click)="acceptUserTeamInviteRequest(invite)">
-	                        Accept
-	                    </button>
-	                    <button style="text-align: middle" (click)="declineUserTeamInviteRequests(invite)">
-	                    	Decline
-	                    </button>
+                </div>
+            </div>
+            <div *ngIf="teamInvitesWithoutImage">
+                <div *ngFor="let teamInvite of teamInvitesWithoutImage" class="col-lg-6 col-md-6">
+                    <div class="single-blog-post-box" *ngIf="hasPendingStatus(teamInvite)">
+                        <div class="post-image">
+                            <a routerLink="/single-blog">
+                                <img src="assets/d1images/anonymousteam.png" alt="image"> 
+                            </a>
+                        </div>
+                        <div class="post-content">
+                            <ul class="post-meta">
+                            <li>By <a routerLink="/blog-1">{{teamInvite.teamRequest.teamModerator.userName}}</a></li>
+                            <li>{{teamInvite.teamRequest.teamName}}</li>
+                            <li>{{teamInvite.teamRequest.teamCountry}}</li>
+                            </ul>
+                            <a (click)="passTeam(teamInvite.teamRequest)" class="read-more-btn">View Team<i class="flaticon-null"></i></a>
+                        </div>
+                        <div style="vertical-align: middle;">
+                            <button style="text-align: center" (click)="acceptUserTeamInviteRequest(teamInvite)">
+                                Accept
+                            </button>
+                            <button style="text-align: middle" (click)="declineUserTeamInviteRequests(teamInvite)">
+                                Decline
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

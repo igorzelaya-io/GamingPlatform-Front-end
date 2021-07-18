@@ -14,6 +14,7 @@ import { TeamTournamentService } from 'src/app/services/team/team-tournament.ser
 import { TeamInviteRequest } from 'src/app/models/teaminviterequest';
 import { FormControl } from '@angular/forms';
 import { UserService } from 'src/app/services/user.service';
+import { ImageModel } from 'src/app/models/imagemodel';
 
 export interface DialogData{
   field: string,
@@ -50,17 +51,25 @@ export class TeamDetailsPageComponent implements OnInit {
   allFifaTournamentYears: number[];
   allFifaTournamentMonths: string[];
 
+  teamImage: string;
+
   replaceValueString: string;
+  
   teamUsers: User[] = [];
+  teamUsersWithImage: User[] = [];
+  teamUsersWithoutImage: User[] = [];
+
+  teamUsersImage: string[] = [];
 
   txtUserToSearch: FormControl;
   userFound: User;
+  userFoundImage: string;
+
   isClickedSearchButton: boolean = false;
   isClickedInviteButton: boolean = false;
   isUserFound: boolean = false;
   isSuccesfulInvite: boolean = false;
   
-
   constructor(private route: ActivatedRoute,
               private teamService: TeamService,
               private tokenService: TokenStorageService,
@@ -107,6 +116,7 @@ export class TeamDetailsPageComponent implements OnInit {
       if(data && Object.keys(data)){
         this.team = data;
         this.teamUsers = this.team.teamUsers;
+        this.evaluateTeamUsersImages();
         isSuccessfulGet = true;
       }
     },
@@ -119,6 +129,45 @@ export class TeamDetailsPageComponent implements OnInit {
         this.getAllTeamCodTournaments();
         this.getAllTeamFifaTournaments();
       }
+      if(this.team.hasImage){
+        this.getTeamImage();
+      }
+    });
+  }
+
+  evaluateTeamUsersImages(){
+    if(this.teamUsers){
+      for(let i = 0; i < this.teamUsers.length; i++){
+        const currUser: User = this.teamUsers[i];
+        if(currUser.hasImage){
+          this.getUserImageResult(currUser.userId);
+          this.teamUsersWithImage.push(currUser);
+        }
+        else{
+          this.teamUsersWithoutImage.push(currUser);
+        }
+      }
+    }
+  }
+  
+  getUserImageResult(userId: string ): void{
+    this.userService.getUserImage(userId)
+    .subscribe((data: ImageModel) => {
+      if(data){
+        this.teamUsersImage.push(data.imageBytes);
+      }
+    });
+  }
+
+  getTeamImage(){
+    this.teamService.getTeamImage(this.team.teamId)
+    .subscribe((data: ImageModel) => {
+      if(data){
+        this.teamImage = data.imageBytes;
+      }
+    },
+    err => {
+      console.error(err);
     });
   }
 
@@ -168,7 +217,6 @@ export class TeamDetailsPageComponent implements OnInit {
       }
     });
   }
-
   
   public removeUserFromTeam(user: User){
     this.userTeamService.exitTeam(user.userId, this.team.teamId, this.tokenService.getToken())
@@ -266,7 +314,7 @@ export class TeamDetailsPageComponent implements OnInit {
   }
 
   removeTeamFromLocalStorage(){
-    let userTeams:Team[] = this.userInspectingTeam.userTeams;
+    let userTeams: Team[] = this.userInspectingTeam.userTeams;
     this.userInspectingTeam.userTeams = userTeams.filter(team => team.teamId !== this.team.teamId);
     this.tokenService.saveUser(this.userInspectingTeam);
   }
@@ -285,6 +333,9 @@ export class TeamDetailsPageComponent implements OnInit {
         this.userFound = data;
         this.isUserFound = true;
         this.isClickedSearchButton = true;
+        if(data.hasImage){
+          this.getUserImage(data.userId)
+        }
         return;
       }
       this.isUserFound = false;
@@ -298,6 +349,14 @@ export class TeamDetailsPageComponent implements OnInit {
     });
   }
 
+  getUserImage(userId: string){
+    this.userService.getUserImage(userId)
+    .subscribe((data: ImageModel) => {
+      if(data){
+        this.userFoundImage = data.imageBytes;
+      }
+    }, err => console.error(err));
+  }
   
   openConfirmationDialogForTeamInvite(){
     const dialogRef = this.dialog.open(FieldformConfirmationComponent);
@@ -331,13 +390,13 @@ export class TeamDetailsPageComponent implements OnInit {
     this.router.navigate(['/player-details'], { queryParams: { userId: user.userId}});
   }
 
-  openConfirmationForInviteDeletion(): void{
-    const dialogRef = this.dialog.open(FieldformConfirmationComponent);
-    dialogRef.afterClosed().subscribe((result: any) => {
-      if(result){
+  // openConfirmationForInviteDeletion(): void{
+  //   const dialogRef = this.dialog.open(FieldformConfirmationComponent);
+  //   dialogRef.afterClosed().subscribe((result: any) => {
+  //     if(result){
 
-      }
-    });
-  } 
+  //     }
+  //   });
+  // } 
 
 }

@@ -1,7 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
 @import './app/components/common/matchbracket/matchbracket.component.scss';
-@import '~ng-tournament-tree/styles/ngtt-single-elimination-styles.scss';
-//@import '~ng-tournament-tree/styles/ngtt-styles';
 @import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
 @import '../node_modules/@syncfusion/ej2-base/styles/material.css';
 @import '../node_modules/@syncfusion/ej2-buttons/styles/material.css';
@@ -10,6 +8,8 @@
 @import '../node_modules/@syncfusion/ej2-splitbuttons/styles/material.css';
 @import '../node_modules/@syncfusion/ej2-angular-inputs/styles/material.css';
 @import url('https://fonts.googleapis.com/css?family=Roboto:400,700|Material+Icons');
+@import "~bootstrap-icons/font/bootstrap-icons.css";
+
 @font-face {
     font-family: VerminVibes;
     src: url(assets/fonts/Vermin-Vibes-V.ttf.eot);

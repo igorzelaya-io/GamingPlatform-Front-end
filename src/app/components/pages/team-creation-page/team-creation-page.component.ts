@@ -1,8 +1,6 @@
-
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { TeamService } from '../../../services/team/team-service.service';
-import { HttpClient } from '@angular/common/http';
 import { Observable, forkJoin } from 'rxjs';
 import { Team } from '../../../models/team';
 import { User } from '../../../models/user/user';
@@ -12,9 +10,9 @@ import { TeamInviteRequest } from 'src/app/models/teaminviterequest';
 import { TeamCreationRequest } from '../../../models/teamcreationrequest';
 import { Router } from '@angular/router';
 import { MessageResponse } from 'src/app/models/messageresponse';
-import { UserTeamService } from 'src/app/services/user-team.service';
 import { CountryService } from '../../../services/country.service';
-//import { ImageCroppedEvent } from 'ngx-image-cropper';
+import { ImageCroppedEvent } from 'ngx-image-cropper';
+import { ImageModel } from 'src/app/models/imagemodel';
 
 export interface Country{
   
@@ -37,6 +35,8 @@ export class TeamCreationPageComponent implements OnInit {
   teamForm: FormGroup;
 
   txtUserToSearch: FormControl;
+  userToSearchImage: string;
+
   userFound: User;  
 
   usersToInvite: User[];
@@ -69,7 +69,6 @@ export class TeamCreationPageComponent implements OnInit {
 			        private tokenService: TokenStorageService,
 			        private formBuilder: FormBuilder,
               private router: Router) {
-
   	this.team = new Team();
     this.teamCreationRequest = new TeamCreationRequest();
 	  this.teamInviteRequestUsersToInvite = [];
@@ -93,9 +92,14 @@ export class TeamCreationPageComponent implements OnInit {
     this.selectedImageFile = event;
   }
   
-  // cropImage(e: ImageCroppedEvent){
-  //   this.cropImagePreview = e.base64;
-  // }
+  cropImage(e: ImageCroppedEvent){
+    this.cropImagePreview = e.base64;
+  }
+
+  unselectImage(){
+    this.selectedImageFile = '';
+    this.cropImagePreview = '';
+  }
 
   onSubmit(){
     this.isClicked = true;
@@ -103,11 +107,11 @@ export class TeamCreationPageComponent implements OnInit {
     this.team.teamEmail = this.txtEmail.value;
     this.team.teamCountry = this.txtCountry.value;
     this.team.teamModerator = this.tokenService.getUser();
-	  this.teamCreationRequest.teamToRegister = this.team; 
+    this.teamCreationRequest.teamToRegister = this.team; 
     this.teamCreationRequest.teamModerator = this.tokenService.getUser();
     this.teamService.postTeam(this.teamCreationRequest, this.tokenService.getToken())
 	  .subscribe((response: any) => {
-      console.log(response.message);
+      console.log(response);
       this.team = response;
 	    this.isClicked = true;
       this.isSuccessfulRegister = true;
@@ -124,6 +128,18 @@ export class TeamCreationPageComponent implements OnInit {
         this.tokenService.addTeamAdminRoleToSavedUser();
         this.tokenService.addTeamToSavedUser(this.team);
       }
+      if(this.selectedImageFile){
+        this.submitImage();
+      }
+    });
+  }
+
+  submitImage(){
+    this.teamService.addImageToTeam(this.team.teamId, this.cropImagePreview, this.tokenService.getToken())
+    .subscribe((data: MessageResponse) => {
+      console.log(data);
+    }, err => {
+      console.error(err.error.message);
     });
   }
 
@@ -164,7 +180,7 @@ export class TeamCreationPageComponent implements OnInit {
   }
 
   public getUserByUserName(){
-	  if(this.txtUserToSearch === null){
+	  if(!this.txtUserToSearch.value){
 		  return;
     }
 	  this.userService.getUserByUserName(this.txtUserToSearch.value.trim())
@@ -173,7 +189,10 @@ export class TeamCreationPageComponent implements OnInit {
 			  this.userFound = data;
 			  console.log(data);
 			  this.isUserFound = true;
-			  this.isClickedSearchButton = true;
+        this.isClickedSearchButton = true;
+        if(data.hasImage){
+          this.getUserImage();
+        }
 			  return;
 		  }
 		  this.isClickedSearchButton = false;
@@ -184,6 +203,18 @@ export class TeamCreationPageComponent implements OnInit {
 		  this.isClickedSearchButton = false;	
 		  this.isUserFound = false;
 	  });
+  }
+
+  getUserImage(){
+    this.userService.getUserImage(this.userFound.userId)
+    .subscribe((data: ImageModel) => {
+      if(data){
+        this.userToSearchImage = data.imageBytes;
+      }
+    },
+    err => {
+      console.error(err);
+    });
   }
 
   public addUserToPendingInvites(){
@@ -200,19 +231,6 @@ export class TeamCreationPageComponent implements OnInit {
 	  this.router.navigate(['/my-teams']);
   }
 
-  public postTeamWithImage(){
-    console.log(this.selectedImageFile);
-    const uploadImageData = new FormData();
-    uploadImageData.append('imageFile', this.selectedImageFile, this.selectedImageFile.name);
-    this.teamService.postTeamWithImage(this.teamCreationRequest, this.tokenService.getToken())
-    .subscribe((resp: MessageResponse) => {
-      console.log(resp);
-    },
-    err => {
-      console.error(err);
-    });
-  }
-
   public getCountries(): void{  
     this.countryInfo = this.countryService.getCountriesData();
   }
@@ -222,10 +240,6 @@ export class TeamCreationPageComponent implements OnInit {
 		  onlySelf: true
 	  });
   }
-
-  // allCountries(): Observable<any> {
-  //   return this.httpClient.get<any>(this.countriesUrl);
-  // }
 
   get txtName(){
 	  return this.teamForm.get('txtName') as FormControl;	

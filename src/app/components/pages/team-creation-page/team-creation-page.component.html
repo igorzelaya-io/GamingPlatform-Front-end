@@ -70,7 +70,7 @@
 		                        	> 
 	                        	</div>
 	                        	<div class="col-sm">
-	                        		<button #searchButton (click)="getUserByUserName()" class="form-group">Search</button>
+	                        		<button mat-button style="background-color: red" #searchButton (click)="getUserByUserName()" class="form-group">Search</button>
 	                        	</div>
 	                        	<br>
 	                        	
@@ -83,10 +83,18 @@
 		                      	</div>
 		                      	
 		                        <div class="col-sm" *ngIf="isUserFound">
-		                        	<img
-		                        		src="assets/d1images/anonymoususer-big.png"
-		                        		style="border: solid red 2px"
-		                        	>
+                                    <div *ngIf="!userFound.hasImage">
+                                        <img
+                                            src="assets/d1images/anonymoususer-big.png"
+                                            style="border: solid red 2px"
+                                        >
+                                    </div>
+                                    <div *ngIf="userFound.hasImage" style="margin-bottom: 15px">
+                                        <img
+                                            [src]="userToSearchImage"
+                                            style="border: solid red 2px"
+                                        >
+                                    </div>
 		                        </div>
 		                        <div class="col-sm" *ngIf="isUserFound">
 		                      		<h3 style="text-align: center">{{userFound.userName}}</h3>
@@ -94,39 +102,47 @@
 		                      		<p style="text-align: center">{{userFound.userCountry}}</p>
 		                      	</div>
 		                      	<div class="col-sm" *ngIf="isUserFound">
-		                      		<button [disabled]="isClickedInviteButton" (click)="addUserToPendingInvites()">Invite</button>
+		                      		<button mat-button style="background-color: red" [disabled]="isClickedInviteButton" (click)="addUserToPendingInvites()">Invite</button>
 		                      	</div>
 		                      	<div class="col-sm" *ngIf="isClickedInviteButton">
-		                      		<button (click)="removeUserFromPendingInvites()">Cancel Invite</button>
+		                      		<button mat-button style="background-color: red" (click)="removeUserFromPendingInvites()">Cancel Invite</button>
 		                      	</div>
 		                      	                        	
                             </div>
                             <div class="row">
-                                <label>Select File for Team Image</label>
-                                <div class="col-sm">
+                                <div class="col-lg-3 col-md-9">
+                                    <label>Select File for Team Image</label>
                                     <input
                                         type="file"
                                         (change)="onFileChange($event)"
+                                        accept=".png, .jpg, .jpeg"
                                     >
                                 </div>
-                                <div class="col-sm">
-                                    <!-- <image-cropper 
+                                <div class="col-sm" *ngIf="selectedImageFile">
+                                    <image-cropper 
                                         [imageChangedEvent]="selectedImageFile"
-                                        [maintainAspectRatio]="true"
+                                        [maintainAspectRatio]="false"
                                         [aspectRatio]="4 / 4"
+                                        [maintainAspectRatio]="true"
                                         [resizeToWidth]="256"
                                         format="png"
                                         (imageCropped)="cropImage($event)"
+                                        style="width: 200px; height: auto"
                                     >
-                                    </image-cropper> -->
+                                    </image-cropper>
                                 </div>
-                                <label>Image Preview</label>
-                                <div class="col-sm">
-                                    <img [src]="cropImagePreview"/>
+                                <div class="col-sm" *ngIf="selectedImageFile">
+                                    <label>Image Preview</label>
+                                    <img [src]="cropImagePreview"
+                                        style="width: 250; height: 250"
+                                    />
                                 </div>
                             </div>
+                            <p style="font-size: small;color: red">*Supported formats: png, jpg, jpeg</p>
+                            <button *ngIf="selectedImageFile" mat-button style="background-color: red; margin-bottom: 20px; margin-right: 20px;" (click)="unselectImage()">Cancel Image</button>      
                         </div>
-                        <button type="submit" (click)="onSubmit()" 
+                        
+                        <button type="submit" (click)="onSubmit()"  mat-button style="background-color: red; width: 100%;"
                             [disabled]="txtName.invalid || txtEmail.invalid || txtCountry.invalid || isClicked">
                            Register
                         </button>
@@ -137,7 +153,7 @@
     </div>
     <div style="vertical-align: middle" *ngIf="isSuccessfulRegister">
         <h2 style="text-align: center">Team, "{{team.teamName}}" created.</h2>
-    	<button (click)="navigateToTeams()">
+    	<button style="background-color: red; width: 100%" mat-button (click)="navigateToTeams()">
     		My Teams
     	</button>
     </div>
@@ -146,6 +162,6 @@
             Registration failed.
         </h2>
         <h3 class="alert alert-danger" style="text-align: center">{{errorMessage}}</h3>
-        <button (click)="reloadPage()">Retry</button>
+        <button mat-button style="background-color: red; width: 100%" (click)="reloadPage()">Retry</button>
     </div>
 </section>

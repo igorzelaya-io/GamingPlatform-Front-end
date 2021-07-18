@@ -44,11 +44,6 @@ export class NavbarStyleOneComponent implements OnInit {
             });
     }
 
-    public logOut(){
-        this.tokenService.signOut();
-        window.location.reload();
-    }
-
     passUserIdToMyTeams(){
 		this.router.navigate(['/my-teams'], { queryParams: {userId: this.user.userId}});
 	}

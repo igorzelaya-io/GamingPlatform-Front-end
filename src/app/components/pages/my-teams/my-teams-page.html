@@ -17,25 +17,53 @@
             <h1 style="text-align: center"> You currently have no teams</h1>
         </div>  
         <div *ngIf="!isEmpty" style="margin-top: 50px" class="row">
-            <div *ngFor="let team of userTeams" class="col-lg-6 col-md-6">
-                <div class="single-blog-post-box">
-                    <div class="post-image">
-                        <a routerLink="/single-blog">
-                            <img src="assets/img/main-blog-img2.jpg" alt="image">
-                        </a>
-                    </div>
-
-                    <div class="post-content">
-                        <ul class="post-meta">
-                        <li>By <a (click)="passUser(team.teamModerator)">{{team.teamModerator.userName}}</a></li>
-                        <li>{{team.teamCountry}}</li>
-                        </ul>
-                        <h3><a (click)="passTeam(team)">{{team.teamName}}</a></h3>
-                        <a (click)="passTeam(team)" class="read-more-btn">View Team<i class="flaticon-null"></i></a>
+        
+            <div *ngIf="this.teamsWithImages.length > 0">
+                <div *ngFor="let teamWithImage of teamsWithImages; index as i" class="col-md">
+                    <div class="single-blog-post-box">
+                        <div class="post-image">
+                            <a (click)="passTeam(teamWithImage)">
+                                <img
+                                    [src]="teamImages[i]"
+                                >
+                            </a>
+                        </div>
+                        <div class="post-content">   
+                            <ul class="post-meta">
+                                <li>By <a class="read-more-btn" (click)="passUser(teamWithImage.teamModerator)">{{teamWithImage.teamModerator.userName}}</a></li>
+                                <li>{{teamWithImage.teamCountry}}</li>
+                            </ul>
+                            
+                            <h3><a (click)="passTeam(teamWithImage)" class="read-more-btn">{{teamWithImage.teamName}}</a></h3>
+                            <a (click)="passTeam(teamWithImage)" class="read-more-btn">View Team<i class="flaticon-null"></i></a>
+                        </div>
                     </div>
                 </div>
             </div>
 
+            <div *ngIf="this.teamsWithoutImages.length > 0">
+                <div *ngFor="let teamWithoutImage of teamsWithoutImages" class="col-md">
+                    <div class="single-blog-post-box">
+                        <div class="post-image">
+                            <a (click)="passTeam(teamWithoutImage)">
+                                <img
+                                    src="assets/d1images/anonymousteam.png"
+                                    style="width: 260px;height: 260px"    
+                                >
+                            </a>
+                        </div>
+                        <div class="post-content">   
+                            <ul class="post-meta">
+                                <li>By <a (click)="passUser(teamWithoutImage.teamModerator)">{{teamWithoutImage.teamModerator.userName}}</a></li>
+                                <li>{{teamWithoutImage.teamCountry}}</li>
+                            </ul>
+                            
+                            <h3><a (click)="passTeam(teamWithoutImage)" class="read-more-btn">{{teamWithoutImage.teamName}}</a></h3>
+                            <a (click)="passTeam(teamWithoutImage)" class="read-more-btn">View Team<i class="flaticon-null"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </section>

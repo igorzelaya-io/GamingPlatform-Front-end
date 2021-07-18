@@ -19,53 +19,53 @@ export class ImageUploaderComponent implements OnInit {
 
   public selectedImage: ImageModel;
 
-  private onSuccess(){
-    this.selectedImage.pending = false;
-    this.selectedImage.status = 'ok';
-  }
+  // private onSuccess(){
+  //   this.selectedImage.pending = false;
+  //   this.selectedImage.status = 'ok';
+  // }
 
-  private onError(){
-    this.selectedImage.pending = false;
-    this.selectedImage.status = ' ';
-    this.selectedImage.imageSrc = ' ';
-  }
+  // private onError(){
+  //   this.selectedImage.pending = false;
+  //   this.selectedImage.status = ' ';
+  //   this.selectedImage.imageSrc = ' ';
+  // }
 
-  public processFileOnTeam(image: any, team?: Team): void{
-    const file: File = image.files[0];
-    const reader: FileReader = new FileReader();
-    reader.addEventListener('load', (event: any) => {
-      this.selectedImage = new ImageModel(file, event.target.result);
-      this.teamService.addImageToTeam(team, this.selectedImage)
-      .subscribe((resp: void) => {
-        console.log(resp);
-        this.onSuccess();
-      },
-      (err) => {
-        console.error(err);
-        this.onError();
-      });
-    });
-    reader.readAsDataURL(file);
-  }
+  // public processFileOnTeam(image: any, team?: Team): void{
+  //   const file: File = image.files[0];
+  //   const reader: FileReader = new FileReader();
+  //   reader.addEventListener('load', (event: any) => {
+  //     this.selectedImage = new ImageModel(file, event.target.result);
+  //     this.teamService.addImageToTeam(team, this.selectedImage)
+  //     .subscribe((resp: void) => {
+  //       console.log(resp);
+  //       this.onSuccess();
+  //     },
+  //     (err) => {
+  //       console.error(err);
+  //       this.onError();
+  //     });
+  //   });
+  //   reader.readAsDataURL(file);
+  // }
 
-  public processFileOnUser(image: any, user: User): void{
-    const file: File =  image.files[0];
-    const reader: FileReader = new FileReader();
-    reader.addEventListener('load', (event: any) => {
-      this.selectedImage = new ImageModel(file, event.target.result);
-      this.userService.addImageToUser(user, this.selectedImage)
-      .subscribe((resp: void) => {
-        console.log(resp);
-        this.onSuccess();
-      },
-      (err: void) => {
-        console.error(err);
-        this.onError();
-      });
-      reader.readAsDataURL(file);
-    });
+  // public processFileOnUser(image: any, user: User): void{
+  //   const file: File =  image.files[0];
+  //   const reader: FileReader = new FileReader();
+  //   reader.addEventListener('load', (event: any) => {
+  //     this.selectedImage = new ImageModel(file, event.target.result);
+  //     this.userService.addImageToUser(user, this.selectedImage)
+  //     .subscribe((resp: void) => {
+  //       console.log(resp);
+  //       this.onSuccess();
+  //     },
+  //     (err: void) => {
+  //       console.error(err);
+  //       this.onError();
+  //     });
+  //     reader.readAsDataURL(file);
+  //   });
 
-  }
+  // }
 
   ngOnInit(): void {
 

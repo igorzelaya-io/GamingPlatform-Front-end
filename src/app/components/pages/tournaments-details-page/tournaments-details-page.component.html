@@ -7,7 +7,7 @@
             <br>
             <h1 title="{{tournament.tournamentName}}">{{tournament.tournamentName}}</h1>
             <button *ngIf="isUserAdmin" mat-button (click)="openDialogForFieldString('tournamentName')" style="background-color: #1a0000;">
-                <i class="fas fa-edit" style="font-size: 20px; color: red"></i>
+                <i class="bi bi-pencil-square" style="font-size: 20px; color: red"></i>
             </button>       
         </div>
     </div>
@@ -180,7 +180,7 @@
                 <li *ngIf="isUserAdmin" >
                     <div class="icon">
                         <button mat-button (click)="openConfirmationDialogForDeletion()" style="background-color: #1a0000; color: red; margin-bottom: 40px;">
-                            <i style="font-size: 20px; color: red" class="fas fa-trash"></i>
+                            <i style="font-size: 20px; color: red" class="bi bi-trash-fill"></i>
                         </button>                    
                     </div>
                 </li>

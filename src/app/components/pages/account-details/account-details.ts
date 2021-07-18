@@ -3,22 +3,21 @@ import { TokenStorageService } from '../../../services/token-storage.service';
 import { User } from '../../../models/user/user';
 import { UserService } from 'src/app/services/user.service';
 import { Router } from '@angular/router';
-import { Team } from '../../../models/team';
 import { MessageResponse } from 'src/app/models/messageresponse';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { FieldformComponent } from '../../common/fieldform/fieldform.component';
 import { FieldformConfirmationComponent } from '../../common/fieldform-confirmation/fieldform-confirmation.component';
-import { UserTournament } from 'src/app/models/user/user-tournament';
 import { UserTournamentService } from 'src/app/services/user-tournament.service';
 import { Tournament } from 'src/app/models/tournament/tournament';
 import { TeamInviteRequest } from 'src/app/models/teaminviterequest';
-import { AuthenticationService } from 'src/app/services/authentication.service';
-import { UserLoginRequest } from 'src/app/models/user/userloginrequest';
 import { UserTeamService } from 'src/app/services/user-team.service';
-import { Challenge } from 'src/app/models/challenge';
+import { Challenge } from 'src/app/models/challenge/challenge';
 import { UserChallengesService } from '../../../services/userchallenges.service';
 import { D1Transaction } from 'src/app/models/d1transaction';
 import { FieldformPasswordComponent } from '../../common/fieldform-password/fieldform-password.component';
+import { ImageModel } from 'src/app/models/imagemodel';
+import { Team } from 'src/app/models/team';
+import { TeamService } from 'src/app/services/team/team-service.service';
 
 
 export interface DialogData{
@@ -45,16 +44,25 @@ const monthNames = [ "January", "February", "March", "April", "May", "June",
 export class AccountDetailsComponent implements OnInit {
 
   user: User;
+  userImage: any;
+
   userTournaments: Tournament[];
   userChallenges: Challenge[];
   userTeamInvites: TeamInviteRequest[];
   userTransactions: D1Transaction[];
+  userTeams: Team[];
+
   isEmptyInvites: boolean = false;
   allTournamentYears: number[];
   allTournamentMonths: string[];
+
+  allChallengeYears: number[];
+  allChallengeMonths: string[];
+
   isEmptyTournaments: boolean = false;
   isEmptyChallenges: boolean = false;
   isEmptyTransactions: boolean = false;
+  isEmptyTeams: boolean = false;
   isSuccessfulUpdate: boolean = false;
 
   replaceValueString: string;  
@@ -65,24 +73,40 @@ export class AccountDetailsComponent implements OnInit {
               public dialog: MatDialog,
               private router: Router,
               private userTeamService: UserTeamService,
-              private userChallengeService: UserChallengesService) {
+              private userChallengeService: UserChallengesService,
+              private teamService: TeamService) {
       this.user = new User();
       this.userTournaments = [];
       this.userChallenges = [];
       this.allTournamentYears = [];
       this.allTournamentMonths = [];
+      this.allChallengeMonths = [];
+      this.allChallengeYears = [];
       this.userTransactions = [];
+      this.userTeams = [];
   }
   
-
   ngOnInit(): void {
     this.user = this.tokenService.getUser();
+    if(this.user.hasImage){
+      this.getUserImage(this.user.userId);
+    }
     this.getAllTournamentsFromUser(this.user.userId);
     this.getAllTeamInvites();
     this.getUserChallenges(this.user.userId);
     this.getUserTransactions();
+    this.getUserTeams();
   }
-  
+
+  getUserImage(userId: string){
+    this.userService.getUserImage(userId)
+    .subscribe((data: ImageModel) => {
+      if(data){
+        this.userImage = data.imageBytes;
+      }
+    },
+     err => console.error(err));
+  }
   
   public openConfirmationDialogForDeletion(){
     const dialogRef = this.dialog.open(FieldformConfirmationComponent);
@@ -265,6 +289,8 @@ export class AccountDetailsComponent implements OnInit {
    .subscribe((data: Challenge[]) => {
      if(data && data.length != 0){
       this.userChallenges = data;
+      this.getAllChallengeYears(data);
+      this.getAllChallengeMonths(data);
       return;
      }
      this.isEmptyChallenges = true;
@@ -273,6 +299,18 @@ export class AccountDetailsComponent implements OnInit {
      console.error(err);
      this.isEmptyChallenges = true;
    }); 
+  }
+
+  getAllChallengeYears(challenges: Challenge[]){
+    for(let i = 0; i < challenges.length; i++){
+      this.allChallengeYears.push(new Date(challenges[i].challengeDate).getFullYear());
+    }
+  }
+
+  getAllChallengeMonths(challenges: Challenge[]){
+    for(let i = 0; i < challenges.length; i++){
+      this.allChallengeMonths.push(monthNames[new Date(challenges[i].challengeDate).getMonth()] + ' ' + challenges[i].challengeDate.toString().slice(8, 10));
+    }
   }
 
   public getUserTransactions(){
@@ -287,8 +325,28 @@ export class AccountDetailsComponent implements OnInit {
     err => console.error(err));
   }
 
+  public getUserTeams(){
+    this.userTeamService.getAllUserTeams(this.user.userId)
+    .subscribe((data: Team[]) => {
+      if(data && data.length){
+        this.userTeams = data;
+        this.isEmptyTeams = false;
+        return;
+      }
+      this.isEmptyTeams = true;
+    },
+    err => {
+      console.error(err);
+    });
+  }
+
   public navigateToInvites(){
     this.router.navigate(['/team-invites']);
+  }
+
+  public logOut(){
+    this.tokenService.signOut();
+    this.router.navigate(['/']);
   }
   
   calculateUserWinLossRatio(){

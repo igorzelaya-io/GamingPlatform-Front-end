@@ -9,14 +9,16 @@ export class Challenge {
     challengeDescription: string;
     challengeGame: string;
     challengeCodGameMode: string;
+    challengeGameMode: string;
     challengeMatches: Match[];
+    challengePlatforms: string;
     challengeMatchesNumber: string;
     challengeModerator: User;
     challengeNumberOfPlayersPerTeam: string;
     challengeStatus: string;
     challengeDate: Date;
     challengeHostTeam: Team;
-    challengeOpponentTeam: Team;
+    challengeAwayTeam: Team;
     challengeWinningTeam: Team;
     challengeCashPrize: number;
     challengeTokenFee: number;

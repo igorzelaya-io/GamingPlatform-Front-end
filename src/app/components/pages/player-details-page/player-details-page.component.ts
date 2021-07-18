@@ -9,11 +9,12 @@ import { MessageResponse } from 'src/app/models/messageresponse';
 import { FieldformConfirmationComponent } from '../../common/fieldform-confirmation/fieldform-confirmation.component';
 import { Tournament } from 'src/app/models/tournament/tournament';
 import { UserTournamentService } from 'src/app/services/user-tournament.service';
-import { Challenge } from 'src/app/models/challenge';
+import { Challenge } from 'src/app/models/challenge/challenge';
 import { TeamInviteRequest } from 'src/app/models/teaminviterequest';
 import { UserTeamService } from 'src/app/services/user-team.service';
 import { D1Transaction } from '../../../models/d1transaction';
 import { UserChallengesService } from 'src/app/services/userchallenges.service';
+import { ImageModel } from 'src/app/models/imagemodel';
 
 export interface DialogData{
   field: string;
@@ -33,6 +34,7 @@ export class PlayerDetailsPageComponent implements OnInit {
 
   isAdmin = false;
   user: User;
+  userImage: any;
   
   userTournaments: Tournament[];
   userChallenges: Challenge[];
@@ -203,8 +205,23 @@ export class PlayerDetailsPageComponent implements OnInit {
         this.getAllTournamentsFromUser(this.user.userId);
         this.getAllChallengesFromUser();
         this.getAllTransactionsFromUser();
+        if(this.user.hasImage){
+          this.getUserImage();
+        }
       }
     }); 
+  }
+
+  getUserImage(){
+    this.userService.getUserImage(this.user.userId)
+    .subscribe((data: ImageModel) => {
+      if(data){
+        this.userImage = data.imageBytes;
+      }
+    }, 
+    err => {
+      console.error(err);
+    });
   }
 
   public getAllTournamentsFromUser(userId: string): void{

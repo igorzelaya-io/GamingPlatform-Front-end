@@ -12,7 +12,6 @@ import { TournamentService } from 'src/app/services/tournament/tournament.servic
 import { MessageResponse } from 'src/app/models/messageresponse';
 import { Renderer2 } from '@angular/core';
 import { SharedService } from 'src/app/services/helpers/shared-service';
-import { NgttTournament } from 'ng-tournament-tree';
 
 @Component({
   selector: 'app-match-details-page',
@@ -26,8 +25,6 @@ export class MatchDetailsPageComponent implements OnInit {
 
   @ViewChild('lostButton')
   lostButton: ElementRef;
-
-  singleEliminationTournamentBracketData: NgttTournament;
 
   userInspectingMatch: User;
   match: Match;

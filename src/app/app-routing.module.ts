@@ -25,11 +25,17 @@ import { TournamentCreationConfigPageComponent } from './components/pages/tourna
 import { MyTournamentsComponent } from './components/pages/my-tournaments/my-tournaments.component';
 import { AccountDetailsComponent } from './components/pages/account-details/account-details'; 
 import { ShopStyleTwoComponent } from './components/common/shop-style-two/shop-style-two.component';
+import { ChallengeCreationPageComponent } from './components/pages/challenge-creation-page/challenge-creation-page';
+import { ChallengeCreationConfigPageComponent } from './components/pages/challenge-creation-config-page/challenge-creation-config-page';
+import { ChallengesHomeComponent } from './components/pages/challenges-home/challenges-home.component';
+import { ChallengesDetailsPageComponent } from './components/pages/challenges-details-page/challenges-details-page.component';
 
 const routes: Routes = [
     {path: '', component: MainHomeComponent},
     {path: 'tournaments', component: TournamentsHomeComponent},
+    {path: 'challenges', component: ChallengesHomeComponent},
     {path: 'tournament-details', component: TournamentsDetailsPageComponent},
+    {path: 'challenge-details', component: ChallengesDetailsPageComponent},
 	{path: 'shopstyletwo', component: ShopStyleTwoComponent},
     {path: 'streaming', component: StreamingHomeComponent},
     {path: 'our-team', component: TeamPageComponent},
@@ -52,7 +58,9 @@ const routes: Routes = [
     {path: 'login', component: ProfileAuthenticationPageComponent},
     {path: 'register', component: ProfileRegistrationPageComponent},
 	{path: 'tournament-creation', component: TournamentCreationPageComponent},
-	{path: 'tournament-creation-config', component: TournamentCreationConfigPageComponent },
+    {path: 'tournament-creation-config', component: TournamentCreationConfigPageComponent },
+    {path: 'challenge-creation', component: ChallengeCreationPageComponent},
+    {path: 'challenge-creation-config', component: ChallengeCreationConfigPageComponent},
     {path: '**', component: ErrorPageComponent}
 ];
 

@@ -1,0 +1,62 @@
+<div class="container">
+    <div class="section-title">
+        <span class="sub-title">Upcoming Challenges</span>
+        <h2>Upcoming Challenges</h2>
+    </div>
+    <div *ngIf="!allChallenges || isEmptyChallenges" style="vertical-align: middle">
+		<h1 style="text-align: center">No tournaments available</h1>
+	</div>
+
+	<div class="container" *ngIf="allChallenges && !isEmptyChallenges">
+	    
+	    <div class="single-tournaments-box" *ngFor="let challenge of allChallenges; index as i">
+	        <div class="tournaments-image">
+	            <div *ngIf="isWarzoneChallenge(challenge)">
+	                    <img src="assets/d1images/tournamentwarzonebanner.png" alt="image">
+	                </div>
+	                <div *ngIf="isCDLChallenge(challenge)" >
+	                	<img
+	                		src="assets/d1images/tournamentCDLbanner.png" alt="image"
+	                	>
+	                </div>
+	                <div *ngIf="isFifaChallenge(challenge)">
+	                	<img
+	                		src="assets/d1images/tournamentFifabanner.png" alt="image"
+	                	>
+	                </div>
+	        </div>
+	
+	        <div class="tournaments-content">
+	            <div class="content">
+					<!-- VIEW CHALLENGE -->
+					<h3><a>{{challenge.challengeName}}</a></h3>
+	                <div class="date">
+	                    {{allChallengeMonthDates[i]}}
+	                    <sup>{{allChallengeMonths[i]}}</sup>
+	                    <sub>{{allChallengeYears[i]}}</sub>
+	                </div>
+	                <ul class="meta">
+	                    <li>
+	                        <span>Where</span>
+	                        {{challenge.challengeRegion}}
+	                    </li>
+	                    <li>
+	                        <span>When</span>
+	                        {{allChallengeWeekDays[i]}} ({{allChallengeTime[i]}})
+	                    </li>
+	                </ul>
+	                <ul class="info">
+                     <li><i class="flaticon-coin"></i>${{challenge.challengeCashPrize}}</li>
+                        <li><i class="flaticon-game"></i>{{challenge.challengeGameMode}}</li>
+                        <li><i class="flaticon-game-1"></i>{{challenge.challengePlatforms}}</li>
+                        <li><i class="flaticon-teamwork"></i>{{challenge.challengeMatchesNumber}}</li>
+                    	<li><i class="flaticon-teamwork"></i>{{challenge.challengeNumberOfPlayersPerTeam}}</li>
+						<li><img src="/assets/d1images/D1TokenBag.png">{{challenge.challengeTokenFee}} Entry Fee</li>
+					</ul>
+					<!-- VIEW CHALLENGE -->
+					<a class="default-btn">More Info</a>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+</div>

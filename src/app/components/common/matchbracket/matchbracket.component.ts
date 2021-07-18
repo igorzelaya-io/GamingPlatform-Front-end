@@ -12,7 +12,7 @@ import { BinaryTree } from 'src/app/models/binarytree';
 export class MatchbracketComponent implements OnInit {
 
   @Input() 
-  public matches: any;
+  public tournamentBracketTree: any;
 
   constructor() {
   

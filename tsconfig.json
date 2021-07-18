@@ -12,7 +12,8 @@
     "allowJs":true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true
   }, 
   "files": [],
   "references": [

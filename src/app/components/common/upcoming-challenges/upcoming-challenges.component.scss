@@ -1,0 +1,243 @@
+.single-tournaments-box {
+    display: flex;
+    flex-wrap: wrap;
+    background-color: #0b0a0b;
+
+    .tournaments-image {
+        flex: 0 0 50%;
+        max-width: 50%;
+
+        .image {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background: {
+                position: center center;
+                size: cover;
+                repeat: no-repeat;
+            };
+            img {
+                display: none;
+            }
+            &.bg1 {
+                background: {
+                    image: url(../../../../assets/img/upcoming-tournaments-img1.jpg);
+                };
+            }
+            &.bg2 {
+                background: {
+                    image: url(../../../../assets/img/upcoming-tournaments-img2.jpg);
+                };
+            }
+            &.bg3 {
+                background: {
+                    image: url(../../../../assets/img/upcoming-tournaments-img3.jpg);
+                };
+            }
+        }
+    }
+    .tournaments-content {
+        flex: 0 0 50%;
+        max-width: 50%;
+
+        .content {
+            padding: 50px 40px;
+
+            .date {
+                color: var(--mainColor);
+                margin-top: -5px;
+                font: {
+                    size: 60px;
+                    weight: 700;
+                };
+                sup {
+                    text-transform: uppercase;
+                    color: var(--whiteColor);
+                    top: -23px;
+                    left: -5px;
+                    font: {
+                        size: 20px;
+                        weight: 500;
+                    };
+                }
+                sub {
+                    left: -40px;
+                    top: -1px;
+                    color: var(--whiteColor);
+                    font: {
+                        size: 20px;
+                        weight: 500;
+                    };
+                }
+            }
+            h3 {
+                text-transform: uppercase;
+                letter-spacing: 1.5px;
+                margin-bottom: 12px;
+                font: {
+                    size: 30px;
+                    weight: 600;
+                };
+                a {
+                    display: inline-block;
+                }
+            }
+            .meta {
+                padding-left: 0;
+                list-style-type: none;
+                display: flex;
+                flex-wrap: wrap;
+                margin: {
+                    bottom: 0;
+                    left: -15px;
+                    right: -15px;
+                };
+                li {
+                    flex: 0 0 50%;
+                    max-width: 50%;
+                    font-size: 18px;
+                    letter-spacing: 1px;
+                    padding: {
+                        left: 15px;
+                        right: 15px;
+                    };
+                    span {
+                        display: block;
+                        margin-bottom: 5px;
+                        text-transform: uppercase;
+                        letter-spacing: 2px;
+                        font: {
+                            size: 20px;
+                            weight: 700;
+                        };
+                    }
+                }
+            }
+            .info {
+                padding-left: 0;
+                list-style-type: none;
+                margin: {
+                    top: 25px;
+                    bottom: 0;
+                };
+                li {
+                    display: inline-block;
+                    margin-right: 25px;
+                    text-transform: uppercase;
+                    letter-spacing: 1px;
+                    position: relative;
+                    padding-left: 28px;
+                    font: {
+                        size: 22px;
+                        weight: 600;
+                    };
+                    i {
+                        position: absolute;
+                        left: 0;
+                        top: 0;
+                        color: var(--mainColor);
+                        font: {
+                            weight: normal;
+                            size: 18px;
+                        };
+                        &.flaticon-coin, &.flaticon-game-computer {
+                            top: 1px;
+                        }
+                    }
+                }
+            }
+            .default-btn {
+                margin-top: 25px;
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 767px) {
+
+    .single-tournaments-box {
+        .tournaments-image {
+            flex: 0 0 100%;
+            order: 1;
+            max-width: 100%;
+
+            .image {
+                width: auto;
+                height: auto;
+                background-image: unset !important;
+
+                img {
+                    display: inline-block;
+                }
+            }
+        }
+        .tournaments-content {
+            flex: 0 0 100%;
+            order: 2;
+            max-width: 100%;
+
+            .content {
+                padding: 25px;
+
+                h3 {
+                    font-size: 22px;
+                }
+                .meta {
+                    margin-top: -15px;
+
+                    li {
+                        flex: 0 0 100%;
+                        max-width: 100%;
+                        font-size: 16px;
+                        padding-top: 15px;
+
+                        span {
+                            margin-bottom: 3px;
+                            letter-spacing: 1px;
+                            font-size: 18px;
+                        }
+                    }
+                }
+                .info {
+                    margin-top: 20px;
+
+                    li {
+                        margin-right: 15px;
+                        padding-left: 22px;
+                        font-size: 18px;
+
+                        i {
+                            font-size: 14px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+}
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+
+    .single-tournaments-box {
+        .tournaments-image {
+            flex: 0 0 100%;
+            max-width: 100%;
+            order: 1;
+
+            .image {
+                background-image: unset !important;
+
+                img {
+                    display: inline-block;
+                    width: 100%;
+                }
+            }
+        }
+        .tournaments-content {
+            order: 2;
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+    }
+
+}

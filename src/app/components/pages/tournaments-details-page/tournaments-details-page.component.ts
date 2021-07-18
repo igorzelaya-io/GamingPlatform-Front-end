@@ -130,12 +130,12 @@ export class TournamentsDetailsPageComponent implements OnInit {
       }, 
       () => {
         this.getAllTournamentDates();
-        this.isAlreadyPartOfTournament();
-        this.evaluateTournamentDate();    
         if(this.tokenService.loggedIn()){
-           this.userInspectingTournament = this.tokenService.getUser();
-           this.isAdminUser();
-       }
+          this.userInspectingTournament = this.tokenService.getUser();
+          this.isAlreadyPartOfTournament();
+          this.isAdminUser();
+        }
+        this.evaluateTournamentDate();    
       });
     });
   }
@@ -530,8 +530,9 @@ export class TournamentsDetailsPageComponent implements OnInit {
     return match;
   }
 
+  //DISPLAY TOURNAMENT BRACKET
   public displayTournamentBracket(){
-   
+    
   }
 
   openDialogForPrizePool(){
@@ -652,4 +653,5 @@ export class TournamentsDetailsPageComponent implements OnInit {
       this.router.navigate(['/tournaments']);
     });
   }
+
 }

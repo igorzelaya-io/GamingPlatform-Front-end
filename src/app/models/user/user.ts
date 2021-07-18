@@ -20,8 +20,7 @@ export class User {
 	userBirthDate: any;
 	userTeamRequests: Array<TeamInviteRequest>;
 	userRoles: Array<Role>;
-	userImage: FormData;
-	userGetImage: ImageModel;
+	hasImage: boolean;
 	userTournaments: Array<UserTournament>;
 	userChallenges: UserChallenge[];
 	userTotalWs: number;

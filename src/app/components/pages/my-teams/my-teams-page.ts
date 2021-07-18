@@ -4,6 +4,8 @@ import { User } from 'src/app/models/user/user';
 import { Team } from '../../../models/team';
 import { TokenStorageService } from 'src/app/services/token-storage.service';
 import { Router } from '@angular/router';
+import { TeamService } from 'src/app/services/team/team-service.service';
+import { ImageModel } from 'src/app/models/imagemodel';
 
 @Component({
   selector: 'app-my-teams-page',
@@ -15,14 +17,23 @@ export class MyTeamsPageComponent implements OnInit {
 
   user: User;
   userTeams: Team[];
+
+  teamsWithImages: Team[];
+  teamsWithoutImages: Team[];
+  teamImages: string[];
+
+
   isEmpty = true;
   
   constructor(private userTeamService: UserTeamService,
               private tokenService: TokenStorageService,
-			  private router: Router) {
-    
+        private router: Router,
+        private teamService: TeamService) {
     this.user = new User();
-	  this.userTeams = [];
+    this.userTeams = [];
+    this.teamsWithImages = [];
+    this.teamsWithoutImages = [];
+    this.teamImages = [];
   }
 
   ngOnInit(): void {
@@ -44,6 +55,31 @@ export class MyTeamsPageComponent implements OnInit {
     },
     err => {
       console.error(err);
+    }, 
+    () => {
+      if(!this.isEmpty){
+        this.evaluateImagesOnTeams();
+      }
+    });
+  }
+
+  evaluateImagesOnTeams(){
+    if(!this.isEmpty){
+      this.teamsWithImages = this.userTeams.filter(team => team.hasImage === true);
+      this.teamsWithoutImages = this.userTeams.filter(team => team.hasImage === false);
+      console.log(this.teamsWithImages);
+      for(let i = 0; i < this.teamsWithImages.length; i++){
+        this.getTeamImage(this.teamsWithImages[i].teamId);
+      }  
+    }
+  }
+
+  getTeamImage(teamId: string){
+    this.teamService.getTeamImage(teamId)
+    .subscribe((data: ImageModel) => {
+      if(data){
+        this.teamImages.push(data.imageBytes);
+      }
     });
   }
 

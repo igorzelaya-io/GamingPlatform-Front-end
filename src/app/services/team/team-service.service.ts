@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Team } from 'src/app/models/team';
 import { Observable, of, pipe  } from 'rxjs';
 import { catchError, retry, map } from 'rxjs/operators';
@@ -53,6 +53,14 @@ export class TeamService {
 	  .pipe(retry(1), catchError(this.handleError('getAllUsersInTeam', [])));
   }
 
+  public getTeamImage(teamId: string): Observable<ImageModel>{
+    return this.httpClient.get<ImageModel>(TEAM_API + '/image?teamId=' + teamId)
+    .pipe(
+      retry(1),
+      catchError(this.handleError('getTeamImage', {} as ImageModel))
+    );
+  }
+
   public addUserToTeam(teamCreationRequest: TeamCreationRequest, jwtToken: string): Observable<MessageResponse>{
     return this.httpClient.post<MessageResponse>(TEAM_API + '/users/add', teamCreationRequest,
     {headers: new HttpHeaders({'Authorization': 'Bearer ' + jwtToken})})
@@ -64,17 +72,17 @@ export class TeamService {
 	  {headers: new HttpHeaders( {'Authorization' : 'Bearer ' + jwtToken} )});
   }
 
-  public postTeamWithImage(team: TeamCreationRequest, jwtToken: string): Observable<MessageResponse>{
-    return this.httpClient.post<MessageResponse>(TEAM_API + '/create', team,
-	  {headers: new HttpHeaders( {'Authorization': 'Bearer ' + jwtToken})})
-    .pipe(catchError(this.handleError('postTeamWithImage', {} as MessageResponse)));
-  }
-
-  public addImageToTeam(team: Team, image: ImageModel): Observable<void>{
-    const formData = new FormData();
-    formData.append('image', image.imageFile, image.imageName);
-    team.teamImage = formData;
-    return;
+  public addImageToTeam(teamId: string, teamImageEventBase64: string, jwtToken: string): Observable<MessageResponse>{
+    
+    const imageModel: ImageModel = new ImageModel();
+    imageModel.imageBytes = teamImageEventBase64;
+    imageModel.dtoID = teamId;
+    const url: string = TEAM_API + '/create/image';
+    return this.httpClient.post<MessageResponse>(url, imageModel,
+      {headers: new HttpHeaders({'Authorization': 'Bearer ' + jwtToken})})
+        .pipe(
+          catchError(this.handleError('addImageToTeam', {} as MessageResponse))
+        );
   }
 
   public sendTeamInvite(teamInvite: TeamInviteRequest, jwtToken: string): Observable<MessageResponse>{

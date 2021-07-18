@@ -72,9 +72,9 @@ import { ImageUploaderComponent } from './components/common/image-uploader/image
 import { TournamentCreationPageComponent } from './components/pages/tournament-creation-page/tournament-creation-page';
 import { NumericTextBoxModule } from '@syncfusion/ej2-angular-inputs';
 import { TournamentCreationConfigPageComponent } from './components/pages/tournament-creation-config-page/tournament-creation-config-page';
-//import { NgxMatDatetimePickerModule, NgxMatTimepickerModule } from '@angular-material-components/datetime-picker';
+import { NgxMatDatetimePickerModule, NgxMatTimepickerModule } from '@angular-material-components/datetime-picker';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-//import { NgxMatNativeDateModule } from '@angular-material-components/datetime-picker';
+import { NgxMatNativeDateModule } from '@angular-material-components/datetime-picker';
 import { MyTournamentsComponent } from './components/pages/my-tournaments/my-tournaments.component';
 import { MatchbracketComponent } from './components/common/matchbracket/matchbracket.component';
 import { FieldformComponent } from './components/common/fieldform/fieldform.component';
@@ -90,7 +90,14 @@ import { FieldformDateComponent } from './components/common/fieldform-date/field
 import { FieldformCountryComponent } from './components/common/fieldform-country/fieldform-country.component';
 import { FieldformPasswordComponent } from './components/common/fieldform-password/fieldform-password.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-// import { ImageCropperModule } from 'ngx-image-cropper';
+import { ImageCropperModule } from 'ngx-image-cropper';
+import { ChallengeCreationPageComponent } from './components/pages/challenge-creation-page/challenge-creation-page';
+import { ChallengeCreationConfigPageComponent } from './components/pages/challenge-creation-config-page/challenge-creation-config-page';
+import { ChallengesHomeComponent } from './components/pages/challenges-home/challenges-home.component';
+import { ChallengesMainBannerComponent } from './components/pages/challenges-home/challenges-main-banner/challenges-main-banner.component';
+import { PopularChallengesComponent } from './components/common/popular-challenges/popular-challenges.component';
+import { UpcomingChallengesComponent } from './components/common/upcoming-challenges/upcoming-challenges.component';
+import { ChallengesDetailsPageComponent } from './components/pages/challenges-details-page/challenges-details-page.component';
 
 @NgModule({
   declarations: [
@@ -163,7 +170,14 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 	  FieldformNumericComponent,
 	  FieldformDateComponent,
 	  FieldformCountryComponent,
-	  FieldformPasswordComponent	
+    FieldformPasswordComponent,
+    ChallengeCreationPageComponent,
+    ChallengeCreationConfigPageComponent,
+    ChallengesHomeComponent,
+    ChallengesMainBannerComponent,
+    PopularChallengesComponent,
+    UpcomingChallengesComponent,
+    ChallengesDetailsPageComponent
   ],
   imports: [
     BrowserModule,
@@ -178,10 +192,10 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     MatChipsModule,
     MatFormFieldModule,
     NumericTextBoxModule,
-	  //NgxMatDatetimePickerModule,
-	  //NgxMatTimepickerModule,
+	  NgxMatDatetimePickerModule,
+	  NgxMatTimepickerModule,
 	  MatDatepickerModule,
-   // NgxMatNativeDateModule,
+    NgxMatNativeDateModule,
     MatButtonModule,
     MatDialogModule,
     MatListModule,
@@ -189,7 +203,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     MatToolbarModule,
     MatMenuModule,
     FontAwesomeModule,
-    //ImageCropperModule
+    ImageCropperModule
   ],
   providers: [],
   bootstrap: [AppComponent]

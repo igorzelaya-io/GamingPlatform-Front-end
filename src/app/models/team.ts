@@ -1,6 +1,5 @@
 import { User } from './user/user';
-import { Challenge} from './challenge';
-import { ImageModel } from './imagemodel';
+import { Challenge} from './challenge/challenge';
 import { TeamInviteRequest } from './teaminviterequest'; 
 
 export class Team {
@@ -13,8 +12,7 @@ export class Team {
     teamModerator: User;
     teamEmail: string;
     teamRequests: Array<TeamInviteRequest>;
-    teamImage: FormData;
-    imageToGet: ImageModel;
+    hasImage: boolean;
     teamTotalLs: number;
     teamTotalWs: number;
     teamTotalPlays: number;
@@ -22,7 +20,7 @@ export class Team {
     constructor(teamId ?: string, teamCountry?: string, teamName?: string, 
                 teamStatus ?:string, teamUsers?: Array<User>, teamChallenges?: Array<Challenge>,
                 teamModerator?: User, teamEmail?: string,
-                teamRequests?: Array<TeamInviteRequest>, teamImage?: FormData){
+                teamRequests?: Array<TeamInviteRequest>){
         this.teamId = teamId;
         this.teamCountry = teamCountry;
         this.teamName = teamName;
@@ -32,6 +30,5 @@ export class Team {
         this.teamModerator = teamModerator;
         this.teamEmail = teamEmail;
         this.teamRequests = teamRequests;
-        this.teamImage = teamImage;
     }
 }

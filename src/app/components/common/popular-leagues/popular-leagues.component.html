@@ -41,6 +41,7 @@
 	                        <li *ngIf="isPvPTournament(tournament)"><i class="flaticon-teamwork"></i>{{tournament.tournamentMatchesNumber}}</li>
 	                    	<li><i class="flaticon-teamwork"></i>{{tournament.tournamentNumberOfTeams}}/{{tournament.tournamentLimitNumberOfTeams}} Teams</li>
 							<li><img src="/assets/d1images/D1TokenBag.png">{{tournament.tournamentEntryFee}} Entry Fee</li>
+							<li><i class="flaticon-teamwork"></i>{{tournament.tournamentTeamSize}}</li>
 						</ul>
 						<a (click)="viewTournament(tournament)" *ngIf="!isPartOfTournament[i]" class="join-now-btn">Join Now</a>
 						<a class="join-now-btn" (click)="viewTournament(tournament)" *ngIf="isPartOfTournament[i]">View Tournament</a>

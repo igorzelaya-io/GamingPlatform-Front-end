@@ -1,0 +1,215 @@
+<app-navbar-style-one></app-navbar-style-one>
+
+<section class="page-title-area page-title-bg1">
+    <div class="container">
+        <div class="page-title-content">
+            <h1 title="Challenge Creation">Challenge Creation</h1>
+        </div>
+    </div>
+</section>
+<section class="profile-authentication-area ptb-100">
+    <div *ngIf="!isSuccessfulChallengeCreation" class="container">
+        <div class="row" style="margin-top: 30px;">
+			<div mat-button style="background-color: #1a0000" (click)="goBack()">
+				<i class="bi bi-caret-left-square-fill" style="font-size: 40px; color: red"></i>
+			</div>
+			<div class="col-lg-12 col-md-12">
+				<div class="register-form">
+	              <form>
+	              	<div class="form-group">
+	                	<div class="row" style="margin-top: 30px;">
+	                		<div class="container">
+	                			<h2 style="text-align: center">Challenge Matches Number</h2>
+	                			<div class="row">
+	                				<div class="col-sm">
+	                					<img
+	                						alt="image"
+	                						src="/assets/d1images/bestOfOne.png"
+	                						#bestOfOneElement
+	                						(click)="selectBestOfOneChallengeMatchesNumber()"
+	                						style="border: 3px solid white"
+											*ngIf="(isWarzoneChallenge || isCdlChallenge) && !isFifaChallenge"
+										>
+										<img
+											alt="image"
+											src="/assets/d1images/bestOfOneFifa.png"
+											#bestOfOneElement
+											(click)="selectBestOfOneChallengeMatchesNumber()"
+											style="border: 3px solid white"
+											*ngIf="isFifaChallenge && (!isWarzoneChallenge && !isCdlChallenge)"
+										>
+	                				</div>
+	                				<div class="col-sm">
+	                					<img
+	                						src="/assets/d1images/bestOf3.png"
+	                						#bestOfThreeElement
+	                						(click)="selectBestOfThreeChallengeMatchesNumber()"
+	                						style="border: 3px solid white"
+											*ngIf="(isWarzoneChallenge || isCdlChallenge) && !isFifaChallenge"
+										>
+										<img
+											src="/assets/d1images/bestOf3Fifa.png"
+											#bestOfThreeElement
+											(click)="selectBestOfThreeChallengeMatchesNumber()"
+											style="border: 3px solid white"
+											*ngIf="isFifaChallenge && (!isWarzoneChallenge && !isCdlChallenge)"
+										>
+	                				</div>
+	                				<div class="col-sm">
+	                					<img
+	                						src="assets/d1images/bestOf5.png"
+	                						#bestOfFiveElement
+	                						(click)="selectBestOfFiveChallengeMatchesNumber()"
+	                						style="border: 3px solid white"
+											*ngIf="(isWarzoneChallenge || isCdlChallenge) && !isFifaChallenge"
+										>
+										<img
+											src="/assets/d1images/bestOf5Fifa.png"
+											#bestOfFiveElement
+											(click)="selectBestOfFiveChallengeMatchesNumber()"	
+											style="border: 3px solid white"
+											*ngIf="isFifaChallenge && (!isWarzoneChallenge && !isCdlChallenge)"
+										>
+	                				</div>
+	                			</div>	
+	                		</div>
+	                	</div>
+	          		 </div>
+	              </form>
+           		</div>
+           </div>
+	    </div>
+	    <div *ngIf="!isSuccessfulChallengeCreation && !isSignUpFailed" class="container">
+	    	<div class="row" style="margin-top: 30px;">
+				<div class="col-lg-12 col-md-12">
+		    		<div class="register-form">
+		    			<form>
+							<!-- TODO SELECT VARIANT, SND, ETC-->
+							<h2 style="text-align: center">Challenge Game Mode</h2>
+		    				<div class="form-group">
+			    				<div class="row" style="margin-top: 30px;">		
+			    					<div class="col-sm">
+			    						<img src="/assets/d1images/KillRace.png"
+			            					#killRaceModeElement (click)="selectKillRaceChallengeGameMode()"
+			            					style="border: 3px solid white"
+			            				>
+			    					</div>
+			    					<div class="col-sm">
+			    						<img src="assets/d1images/Survival.png"
+		            						#survivalModeElement (click)="selectSurvivalChallengeGameMode()"
+		            						style="border: 3px solid white"
+
+										>
+			    					</div>
+			    				</div>
+		    				</div>    			
+		    			</form>
+		    		</div>
+				</div>	    		
+	    	</div>
+	    	<div class="row" style="margin-top: 30px;">
+	    		<div class="col-lg-12 col-md-12">
+	    			<div class="register-form">
+	    				<form>
+	    					<h2 style="text-align: center">Challenge Team Size</h2>
+	    					<div class="form-group">
+	    						<div class="row" style="margin-top: 30px">
+    								<div class="col-lg-3 col-md-12">
+    									<img src="assets/d1images/Solos.png"
+    										#solosTeamSizeElement
+    										(click)="selectSolosChallengeTeamSize()"
+    										style="border: 3px solid white"
+    									>
+    								</div>
+    								<div class="col-lg-3 col-md-12">
+    									<img (click)="selectDuosChallengeTeamSize()"
+    										src="assets/d1images/Duos.png"
+    										#duosTeamSizeElement
+    										style="border: 3px solid white"
+    									>
+    								</div>
+    								<div class="col-lg-3 col-md-12" *ngIf="challenge.challengeCodGameMode === 'CDL' ">
+    									<img src="assets/d1images/trios.png" 
+    										(click)="selectTriosChallengeTeamSize()"
+    										#triosTeamSizeElement 
+    										style="border: 3px solid white"
+    									>
+    								</div>
+    								<div class="col-lg-3 col-md-12" *ngIf="challenge.challengeCodGameMode === 'CDL' ">
+    									<img src="assets/d1images/Quads.png"
+    										(click)="selectSquadChallengeTeamSize()"
+    										#squadsTeamSizeElement
+    										style="border: 3px solid white"
+    									>
+    								</div>
+	    						</div>
+	    					</div>
+	    				</form>
+	    			</div>
+	    		</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-12 col-md-12" style="margin-top: 30px;">
+					<h2 style="text-align: center">Select your team for challenge</h2>
+					<div style="vertical-align: middle;">
+						<button mat-button (click)="navigateToTeams()" style="color: red; background-color: #1a0000;">
+							Create team
+						</button>
+					</div>
+					<div *ngIf="isEmptyTeams">
+						<h3>No teams available</h3>
+					</div>
+					<div *ngFor="let team of userModeratorTeams">
+						<div class="container" style="max-width: 400px; margin: auto;">
+							<div class="row">
+								<div class="col-sm" style="vertical-align:middle">
+									<img
+										src="assets/d1images/anonymousteam.png"
+										style="border: solid red 2px" 
+									>
+								</div>
+								<div class="col-sm" style="vertical-align:middle">
+									<h3 style="text-align:center">{{team.teamName}}</h3>
+									<p style="text-align:center">{{team.teamCountry}}</p>
+								</div>
+								<div style="vertical-align: middle;" class="col-sm">
+									<div class="container">
+										<div class="row">
+											<div class="col-sm" style="vertical-align: middle;">
+												<button mat-button style="background-color: #1a0000; color: red; width: 100%" (click)="selectTeamToJoinTournament(team); clickSelectButton()" [disabled]="isClickedSelectButton">
+													Select Team
+												</button>
+											</div>
+											<div class="col-sm" *ngIf="isClickedSelectButton" style="vertical-align: middle;">
+												<button mat-button style="background-color: #1a0000;color:red; width: 100%; margin-top:10px;" (click)="deselectTeamToJoinTournament()">
+													Cancel
+												</button>
+											</div>
+										</div>
+									</div>
+								</div> 
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	    <div>     
+			<button [disabled]="isClicked || !selectedTeamToJoinChallenge" mat-button style="color: red; background-color: #1a0000; width: 100%; height: 50px;" type="submit" (click)="onSubmit();" >
+	            Register
+	        </button>
+	    </div>
+    </div>
+    <div style="vertical-align: middle" *ngIf="isSuccessfulChallengeCreation">
+        <h2 style="text-align: center">You've registered your challenge Successfully</h2>
+    	<button mat-button style="color: red; background-color: #1a0000; width: 100%; height: 30px" (click)="navigateToTournaments()">
+    		Challenges
+    	</button>
+    </div>
+    <div style="vertical-align: middle" *ngIf="isSignUpFailed">
+        <h2 style="text-align: center">
+            Registration failed.
+        </h2>
+        <h3 style="text-align: center" class="alert alert-danger">{{errorMessage}}</h3>
+    </div>
+</section>

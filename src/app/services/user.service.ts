@@ -85,6 +85,25 @@ export class UserService {
     .pipe(catchError(this.handleError('updateUserTokens', {} as MessageResponse)));
   }
 
+  public getUserImage(userId: string): Observable<ImageModel>{
+    return this.httpClient.get<ImageModel>(USER_API + '/users/image?userId=' + userId)
+    .pipe(
+      retry(1),
+      catchError(this.handleError('getUserImage', {} as ImageModel))
+    );
+  }
+
+  public addImageToUser(userId: string, imageBase64: string): Observable<MessageResponse>{
+    const imageModel: ImageModel = new ImageModel();
+    imageModel.dtoID = userId; 
+    imageModel.imageBytes = imageBase64;
+    return this.httpClient.post<MessageResponse>(USER_API + '/users/image', imageModel)
+    .pipe(
+      retry(1),
+      catchError(this.handleError('addImageToUser', {} as MessageResponse))
+    );
+  }
+
   public deleteUser(userId: string, jwtToken: string):Observable<MessageResponse>{
     return this.httpClient.delete<MessageResponse>(USER_API + '/users/delete?userId=' + userId,
     {headers: new HttpHeaders({'Authorization': 'Bearer ' + jwtToken})})
@@ -118,12 +137,12 @@ export class UserService {
     .pipe(catchError(this.handleError('banPlayer', {} as MessageResponse)));
   }
 
-  public addImageToUser(user: User, imageModel: ImageModel): Observable<void>{
-    const formData: FormData = new FormData();
-    formData.append('image', imageModel.imageFile, imageModel.imageName);
-    user.userImage = formData;
-    return;
-  }
+  // public addImageToUser(user: User, imageModel: ImageModel): Observable<void>{
+  //   const formData: FormData = new FormData();
+  //   formData.append('image', imageModel.imageFile, imageModel.imageName);
+  //   user.userImage = formData;
+  //   return;
+  // }
 
   filteredListOptions(): User[]{
     let users = this.userData;

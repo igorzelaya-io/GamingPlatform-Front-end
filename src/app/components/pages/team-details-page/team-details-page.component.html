@@ -3,11 +3,13 @@
 <section class="page-title-area page-title-bg1">
     <div class="container">
         <div class="page-title-content">
-            <!-- <img class="small-image" src="assets/img/team-member1.jpg" alt="image"> -->
+            <div *ngIf="teamImage">
+                <img class="small-image" [src]="teamImage"  style="width: 250px; height: 250px;" alt="image">
+            </div>
             <br>
             <h1 title="{{team.teamName}}">{{team.teamName}}</h1>
             <button *ngIf="isAdminUser" mat-button (click)="openDialogForTeamName()" style="background-color: #1a0000;">
-                <i class="fas fa-edit" style="font-size: 20px; color: red"></i>
+                <i class="bi bi-pencil-square" style="font-size: 20px; color: red"></i>
             </button>
         </div>
     </div>
@@ -55,14 +57,14 @@
                 <li *ngIf="isAdminUser">
                     <div class="icon">
                         <button mat-button (click)="openConfirmationDialogForDeletion()" style="background-color: #1a0000; margin-bottom: 40px;">
-                            <i style="font-size: 20px; color: red" class="fas fa-trash"></i>
+                            <i style="font-size: 20px; color: red" class="bi bi-trash-fill"></i>
                         </button>
                     </div>
                 </li>
 
                 <li *ngIf="isPartOfTeam && this.userInspectingTeam.userName !== this.team.teamModerator.userName"> 
                     <div class="icon">
-                        <button (click)="openConfirmationDialog(this.userInspectingTeam)" style="margin-bottom:40px;">Exit Team</button>
+                        <button mat-button (click)="openConfirmationDialog(this.userInspectingTeam)" style="margin-bottom:40px; background-color: #1a0000; color: red">Exit Team</button>
                     </div>
                 </li>
 
@@ -81,25 +83,49 @@
             </ul>
 
             <div class="player-list">
-                <h3>Gamestar</h3>
+                <h3>Roster</h3>
                 
                 <div class="row">
-                    <div class="col-lg-3 col-md-4 col-sm-6" *ngFor="let user of teamUsers">
-                        <div *ngIf="isAdminUser">
-                            <button (click)="openConfirmationDialog(user)">Remove</button>
-                        </div>
-                        <div class="single-team-member">
-                            <img 
-                                src="assets/d1images/anonymoususer-big.png" 
-                                alt="image"
-                                style="width: 150px; height: 150px;"
-                            >
-                            <div class="content">
-                                <h3>{{user.userRealName}}</h3>
-                                <span>{{user.userName}}</span>
+                    <div *ngIf="teamUsersWithImage.length > 0">
+                        <div class="col-lg-3 col-md-4 col-sm-6" *ngFor="let userWithImage of teamUsersWithImage; index as i">
+                            <div *ngIf="isAdminUser">
+                                <button mat-button style="background-color: #1a0000; color: red" (click)="openConfirmationDialog(userWithImage)">Remove</button>
+                            </div>
+                            <div class="single-team-member" style="width: 200px">
+                                <img 
+                                    [src]="teamUsersImage[i]" 
+                                    alt="image"
+                                >
+                            
+                                <div class="content">
+                                    <h3>{{userWithImage.userRealName}}</h3>
+                                    <span>{{userWithImage.userName}}</span>
+                                </div>
+
+                                <a (click)="viewUser(userWithImage)" class="link-btn"></a>
                             </div>
 
-                            <a (click)="viewUser(user)" class="link-btn"></a>
+                        </div>
+                    </div>
+                    
+                    <div *ngIf="teamUsersWithoutImage.length > 0">
+                        <div class="col-lg-3 col-md-4 col-sm-6" *ngFor="let userWithoutImage of teamUsersWithoutImage">
+                            <div *ngIf="isAdminUser">
+                                 <button mat-button style="background-color: #1a0000; color: red" (click)="openConfirmationDialog(userWithoutImage)">Remove</button>
+                            </div>
+                            <div class="single-team-member" style="width: 235px">
+                                <img 
+                                    src="assets/d1images/anonymoususer-big.png" 
+                                    alt="image"
+                                    
+                                >
+                                <div class="content">
+                                    <h3>{{userWithoutImage.userRealName}}</h3>
+                                    <span>{{userWithoutImage.userName}}</span>
+                                </div>
+
+                                <a (click)="viewUser(userWithoutImage)" class="link-btn"></a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -226,7 +252,7 @@
                                         </div>
                                     </div>
                                     <div>
-                                        <button #searchButton (click)="getUserByUserName()" class="form-group" style="width: 350px">
+                                        <button mat-button #searchButton (click)="getUserByUserName()" class="form-group" style="width: 350px; background-color: #1a0000; color: red">
                                             Search
                                         </button>
                                     </div>
@@ -238,10 +264,18 @@
                                             <h4>User not found.</h4>
                                         </div>
                                         <div class="col-sm" *ngIf="isUserFound">
-                                            <img
-                                                src="assets/d1images/anonymoususer-big.png"
-                                                style="border: solid red 2px; width: 200px; height: 150px"
-                                            >
+                                            <div *ngIf="userFound.hasImage">
+                                                <img
+                                                    [src]="userFoundImage"
+                                                    style="border: solid red 2px; width: 200px; height: 150px;"
+                                                >
+                                            </div>
+                                            <div *ngIf="!userFound.hasImage">
+                                                <img
+                                                    src="assets/d1images/anonymoususer-big.png"
+                                                    style="border: solid red 2px; width: 200px; height: 150px"
+                                                >
+                                            </div>
                                         </div>
                                         <div class="col-sm" *ngIf="isUserFound">
                                             <h3 style="text-align: center">{{userFound.userName}}</h3>
@@ -249,7 +283,7 @@
                                             <p style="text-align: center">{{userFound.userCountry}}</p>
                                         </div>    
                                         <div class="col-sm" *ngIf="isUserFound">
-                                            <button [disabled]="isClickedInviteButton" (click)="openConfirmationDialogForTeamInvite()">
+                                            <button mat-button style="background-color: #1a0000; color: red" [disabled]="isClickedInviteButton" (click)="openConfirmationDialogForTeamInvite()">
                                                 Invite
                                             </button>
                                         </div>

@@ -12,6 +12,7 @@ import { User } from '../../../models/user/user';
 import { Router} from '@angular/router';
 import { MessageResponse } from 'src/app/models/messageresponse';
 import { CountryService } from 'src/app/services/country.service';
+import { ImageCroppedEvent } from 'ngx-image-cropper';
 
 @Component({
   selector: 'app-profile-registration-page',
@@ -29,7 +30,9 @@ export class ProfileRegistrationPageComponent implements OnInit {
   userToRegister: UserAuthRequest;
   userToLogin: UserLoginRequest;  
   userToSaveOnStorage: User;
- 
+  
+  userSelectedImageFile: any;
+  croppedImage: any;
 
   countryBirthDateForm: FormGroup;
 
@@ -61,14 +64,16 @@ export class ProfileRegistrationPageComponent implements OnInit {
 	  this.userToLogin = new UserLoginRequest();
 	  this.userToSaveOnStorage = new User();
 
-
     this.countryBirthDateForm = formBuilder.group({
-		day: ['', Validators.required],
-		month: ['', [Validators.required]],
-		year: ['', [Validators.required]],
-		country: ['', [Validators.required]]
-	});
-	
+      day: ['', Validators.required],
+      month: ['', [Validators.required]],
+      year: ['', [Validators.required]],
+      country: ['', [Validators.required]]
+	  });
+  }
+
+  ngOnInit(): void {
+    this.getCountries();
   }
 
   get day(){
@@ -91,9 +96,8 @@ export class ProfileRegistrationPageComponent implements OnInit {
     this.validatePasswords();
     this.validateYearInput();
     if (this.areEqualPasswords && this.isValidYear){
-	  this.clickedButton();
-	  this.submitForm();
-      return
+      this.clickedButton();
+      this.submitForm();
     }
   }
 
@@ -118,8 +122,21 @@ export class ProfileRegistrationPageComponent implements OnInit {
 	  () => {
 		  if(this.isSuccessfulRegister){
 		  	this.loginUser();
-	  	}	
+      }	
 	  });
+  }
+
+  onFileChange(event: any){
+    this.userSelectedImageFile = event;
+  }
+
+  cropImage(e: ImageCroppedEvent){
+    this.croppedImage = e.base64;
+  }
+
+  unselectImage(){
+    this.userSelectedImageFile = '';
+    this.croppedImage = '';
   }
 
   public loginUser(){
@@ -138,14 +155,31 @@ export class ProfileRegistrationPageComponent implements OnInit {
   }
 
   public getUserById(userId: string){
+    let isSuccessfulGet: boolean = false;
+    let resultData: User;
     this.userService.getUserById(userId)
     .subscribe((data: User) => {
-      this.tokenService.saveUser(data);
-      console.log(data);
+      if(data){
+        isSuccessfulGet = true;
+        resultData = data;
+      }
     },
     err => {
       console.error(err.error.message)
+    },
+    () => {
+      if(isSuccessfulGet){
+        if(this.userSelectedImageFile){
+          resultData.hasImage = true;
+        }
+        this.uploadImageAndSaveUser(resultData);
+      }
     });
+  }
+  
+  async uploadImageAndSaveUser(data: User){
+    await this.userService.addImageToUser(data.userId, this.croppedImage).toPromise();
+    this.tokenService.saveUser(data);
   }
 
   validatePasswords(): void{
@@ -188,9 +222,6 @@ export class ProfileRegistrationPageComponent implements OnInit {
     this.isValidYear = true;
   }
 
-  ngOnInit(): void {
-    this.getCountries();
-  }
 
   private toBirthDate(): any {
     let map: Map<string, object> = new Map();   

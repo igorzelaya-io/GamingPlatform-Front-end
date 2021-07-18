@@ -3,11 +3,13 @@
 <section class="page-title-area page-title-bg1">
     <div class="container">
         <div class="page-title-content">
-            <!-- <img src="assets/img/team-member1.jpg" class="player-image" alt="image"> -->
+            <div *ngIf="userImage" style="vertical-align: middle;">
+                <img [src]="userImage" class="small-image" style="width: 250px; height: 250px;" alt="image">
+            </div>
             <br>
             <h1 title="{{user.userName}}">{{user.userName}}</h1>
             <button mat-button (click)="openDialogUserName()" style="background-color: #1a0000;">
-                <i class="fas fa-edit" style="font-size: 20px; color: red"></i>
+                <i class="bi bi-pencil-square" style="font-size: 20px; color: red"></i>
             </button>
         </div>
     </div>
@@ -22,9 +24,9 @@
                 </div>
                 <div class="col-lg-3 col-md-12" style="vertical-align: middle; margin-right: 1000px; margin-bottom: 50px;">
                     <button mat-button (click)="openDialogUserRealName()" style="background-color: #1a0000;">
-                        <i class="fas fa-edit" style="font-size: 20px; color: red"></i>
+                        <i class="bi bi-pencil-square" style="font-size: 20px; color: red"></i>
                     </button>
-                    <button mat-button style="background-color: #1a0000; margin-left: 50px; color: red" (click)="openDialogForPasswordUpdate()">
+                    <button mat-button  (click)="openDialogForPasswordUpdate()" style="background-color: #1a0000; color: red; margin-left: 20px;">
                         Change Password
                     </button>
                 </div>
@@ -58,8 +60,15 @@
                 <li>
                     <div class="icon">
                         <button mat-button (click)="openConfirmationDialogForDeletion()" style="background-color: #1a0000; margin-bottom: 40px;">
-                            <i style="font-size: 20px; color: red" class="fas fa-trash"></i>
+                            <i style="font-size: 20px; color: red" class="bi bi-trash-fill"></i>
                         </button>                    
+                    </div>
+                </li>
+                <li>
+                    <div class="icon">
+                        <button mat-button style="background-color: #1a0000; color: red; margin-bottom: 40px;" (click)="logOut()">
+                            Log Out
+                        </button>
                     </div>
                 </li>
 
@@ -176,12 +185,15 @@
         <div class="row">
             <div class="col-sm">
                 <div class="text" >User Teams</div>
-                <div *ngIf="user.userTeams.length === 0 || !user.userTeams">
+                <div *ngIf="isEmptyTeams">
                     <h3>No teams available</h3>
                 </div>
-                <mat-list style="color: red;" class="mat-content" *ngIf="user.userTeams.length > 0">
-                    <mat-list-item style="background-color: red;" *ngFor="let team of user.userTeams">
+                <mat-list style="color: red;" class="mat-content" *ngIf="!isEmptyTeams">
+                    <mat-list-item style="background-color: red;" *ngFor="let team of userTeams">
+                        
                         <img matListAvatar src="assets/d1images/anonymousteam.png">
+                        
+
                         <h2 style="color: black;" matLine>{{team.teamName}}</h2>
                         <p matLine>
                             <span>{{team.teamCountry}} | <a (click)="viewTeamModerator(team.teamModerator.userId)">{{team.teamModerator.userName}}</a></span>
@@ -214,7 +226,7 @@
                             <span class="date">{{allTournamentMonths[i]}} {{allTournamentYears[i]}}</span>
                             <div class="content">
                                 <span class="time">{{tournament.tournamentGame}}</span>
-                                <h3><a (click)="viewTournamentDetails(tournament)"></a>{{tournament.tournamentName}}</h3>
+                                <h3><a (click)="viewTournamentDetails(tournament)">{{tournament.tournamentName}}</a></h3>
                             </div>
                             <a (click)="viewTournamentDetails(tournament)" class="link-btn" target="_blank"></a>
                         </div>
@@ -260,8 +272,19 @@
                 <div *ngIf="isEmptyChallenges">
                     <h3>No challenges available</h3>
                 </div>
-                <div>
-                    <!-- Display user challenges -->
+                <div *ngIf="!isEmptyChallenges">
+                    <div *ngFor="let challenge of userChallenges; index as i">
+                        <div class="single-stream-schedule-box">
+                            <span class="date">{{allChallengeMonths[i]}} {{allChallengeYears[i]}}</span>
+                            <div class="content">
+                                <span class="time">{{challenge.challengeGame}}</span>
+                                <!-- challenge details -->
+                                <h3><a >{{challenge.challengeName}}</a></h3>
+                            </div>
+                            <!-- CHALLENGE DETAILS -->
+                            <a class="link-btn" target="_blank"></a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
