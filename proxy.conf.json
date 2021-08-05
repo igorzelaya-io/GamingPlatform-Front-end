@@ -55,6 +55,11 @@
 		"secure":"false",
 		"logLevel":"debug"
 	},
+	"/teamchallengesapi/teamChallenges":{
+		"target":"http://localhost:8081",
+		"secure":"false",
+		"logLevel":"debug"
+	},
 	"/tournamentsapi/tournaments":{
 		"target":"http://localhost:8081",
 		"secure":"false",

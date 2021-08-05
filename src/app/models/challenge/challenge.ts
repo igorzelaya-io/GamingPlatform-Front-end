@@ -6,7 +6,6 @@ export class Challenge {
     
     challengeId: string;
     challengeName: string;
-    challengeDescription: string;
     challengeGame: string;
     challengeCodGameMode: string;
     challengeGameMode: string;
@@ -25,11 +24,10 @@ export class Challenge {
     challengeRegion: string;
     startedChallenge: boolean;
 
-    constructor(challengeId?:string, challengeName?: string, challengeDescription?: string, challengeGame?: string,
+    constructor(challengeId?:string, challengeName?: string, challengeGame?: string,
                 challengeCodGameMode?: string, challengeMatches?: Match[]) {
         this.challengeId = challengeId;
         this.challengeName = challengeName;
-        this.challengeDescription = challengeDescription; 
         this.challengeGame = challengeGame;
         this.challengeCodGameMode = challengeCodGameMode;
         this.challengeMatches = challengeMatches;

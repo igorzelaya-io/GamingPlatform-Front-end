@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Challenge } from 'src/app/models/challenge/challenge';
 import { retry, catchError } from 'rxjs/operators';
 import { Match } from 'src/app/models/match';
@@ -17,9 +17,9 @@ export class ChallengeServiceService {
   constructor(private httpClient: HttpClient) {
 
   }
-
+  
   private handleError<T>(operation = 'operation', result ?: T){
-    return(error: any): Observable<T> => {
+    return(error: HttpErrorResponse): Observable<T> => {
       console.error(error);
       this.log(`${operation} failed: ${error.message}`);
       return of (result as T);
@@ -86,11 +86,11 @@ export class ChallengeServiceService {
     );
   }
 
-  postChallenge(challenge: Challenge, jwtToken: string): Observable<Challenge>{
+  postChallenge(challenge: Challenge, jwtToken: string): Observable<{}>{
     return this.httpClient.post<Challenge>(CHALLENGES_API + '/add', challenge,
     {headers: new HttpHeaders({ 'Authorization' : 'Bearer ' + jwtToken})})
     .pipe(
-      catchError(this.handleError('postChallenge', {} as Challenge))
+      catchError(this.handleError('postChallenge', {} as HttpErrorResponse))
     );
   }
 

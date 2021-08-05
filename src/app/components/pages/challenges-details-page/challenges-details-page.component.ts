@@ -1,11 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Tournament } from 'src/app/models/tournament/tournament';
 import { User } from 'src/app/models/user/user';
 import { TokenStorageService } from 'src/app/services/token-storage.service';
 import { Team } from '../../../models/team';
-import { TeamTournamentRequest } from '../../../models/teamtournamentrequest';
-import { TeamTournamentService } from '../../../services/team/team-tournament.service';
 import { MatDialog } from '@angular/material/dialog';
 import { FieldformConfirmationComponent } from '../../common/fieldform-confirmation/fieldform-confirmation.component';
 import { FieldformComponent } from '../../common/fieldform/fieldform.component';
@@ -20,6 +17,8 @@ import { Challenge } from '../../../models/challenge/challenge';
 import { Role } from '../../../models/role';
 import { UserChallenge } from 'src/app/models/user/userchallenge';
 import { MessageResponse } from 'src/app/models/messageresponse';
+import { TeamChallengeService } from '../../../services/team/team-challenge.service';
+import { TeamChallengeRequest } from 'src/app/models/teamchallengerequest';
 
 const monthNames = [ "January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December" ];
@@ -77,14 +76,14 @@ export class ChallengesDetailsPageComponent implements OnInit {
 
   userInspectingChallenge: User;
 
-  selectedTeamToJoinTournamentWith: Team;
+  selectedTeamToJoinChallengeWith: Team;
 
   userTeamsAvailableToJoinChallenge: Team[];
 
-  userTeamEnrolledInTournament: Team;
+  userTeamEnrolledInChallenge: Team;
   userTeamActiveMatches: Match[];
-  tournamentMatches: Match[];
-  tournamentInactiveMatches: Match[];
+  challengeMatches: Match[];
+  challengeInactiveMatches: Match[];
 
   hasNoTeams: boolean = false;  
 
@@ -106,16 +105,16 @@ export class ChallengesDetailsPageComponent implements OnInit {
               private router: Router, 
               private tokenService: TokenStorageService,
               private userTeamService: UserTeamService, 
-              private teamTournamentService: TeamTournamentService,
+              private teamChallengeService: TeamChallengeService,
               private challengeService: ChallengeServiceService,
               private userService: UserService,
               public dialog: MatDialog) {
 	  this.challenge = new Challenge();
     this.userTeamsAvailableToJoinChallenge  = [];
-    this.userTeamEnrolledInTournament = new Team();
+    this.userTeamEnrolledInChallenge = new Team();
     this.userTeamActiveMatches = [];
-    this.tournamentMatches = [];
-    this.tournamentInactiveMatches = [];
+    this.challengeMatches = [];
+    this.challengeInactiveMatches = [];
   }
 
   ngOnInit(): void {
@@ -184,8 +183,7 @@ export class ChallengesDetailsPageComponent implements OnInit {
     .subscribe((data: Match[]) => {
       if(data){
         console.log(data);
-        this.tournamentMatches = data;
-        return;
+        this.challengeMatches = data;
       }
     },
     err => {
@@ -198,8 +196,7 @@ export class ChallengesDetailsPageComponent implements OnInit {
     .subscribe((data: Match[]) => {
       if(data){
         console.log(data);
-        this.tournamentInactiveMatches = data;
-        return;
+        this.challengeInactiveMatches = data;
       }
     },
     err => {
@@ -228,7 +225,7 @@ export class ChallengesDetailsPageComponent implements OnInit {
     this.alreadyJoinedChallenge = false;
   }
 
-  public isJoiningTournament(): void{
+  public isJoiningChallenge(): void{
     if(this.tokenService.loggedIn()){
       if(this.userInspectingChallenge.userTokens >= this.challenge.challengeTokenFee){
         this.isTryingToJoinChallenge = true;  
@@ -244,15 +241,15 @@ export class ChallengesDetailsPageComponent implements OnInit {
 
   public joinChallenge(){
     if(this.tokenService.loggedIn()){
-      if(this.selectedTeamToJoinTournamentWith){
-        if(this.selectedTeamToJoinTournamentWith.teamModerator.userName !== this.userInspectingChallenge.userName){
+      if(this.selectedTeamToJoinChallengeWith){
+        if(this.selectedTeamToJoinChallengeWith.teamModerator.userName !== this.userInspectingChallenge.userName){
           this.isFailedChallengeJoin = true;
           this.errorMessage = 'Only Team Creator is allowed to join with this team.';
           this.isClickedJoinButton = false;
           return;
         }
-        const teamTournamentRequest = new TeamTournamentRequest(this.tournament, this.selectedTeamToJoinTournamentWith); 
-        this.addTeamToCodTournament(teamTournamentRequest);       
+        const teamChallengeRequest: TeamChallengeRequest = new TeamChallengeRequest(this.challenge, this.selectedTeamToJoinChallengeWith);
+        this.addTeamToCodChallenge(teamChallengeRequest);       
         return;
       }
       this.isFailedChallengeJoin = true;
@@ -263,17 +260,16 @@ export class ChallengesDetailsPageComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 
-  public removeTeamFromTournament(): void{
+  public removeTeamFromChallenge(): void{
     if(this.alreadyJoinedChallenge){
       const teamOnTournament = this.userInspectingChallenge
               .userChallenges.filter((userChallenge: UserChallenge) => 
               userChallenge.userChallenge.challengeName === this.challenge.challengeName)[0].userChallengeTeam;
       
-      const teamTournamentRequest = new TeamTournamentRequest();
-      teamTournamentRequest.team = teamOnTournament;
-      // teamTournamentRequest.tournament = this.challenge;
-      
-      // this.removeTeamFromCodTournament(teamTournamentRequest);
+      const teamChallengeRequest: TeamChallengeRequest = new TeamChallengeRequest();
+      teamChallengeRequest.challenge = this.challenge;
+      teamChallengeRequest.team = teamOnTournament;
+      this.removeTeamFromCodChallenge(teamChallengeRequest);
     }
   }
 
@@ -290,66 +286,65 @@ export class ChallengesDetailsPageComponent implements OnInit {
   }
 
   public selectTeamToJoinChallenge(team: Team){
-    this.selectedTeamToJoinTournamentWith = team;
+    this.selectedTeamToJoinChallengeWith = team;
   }
 
   public deselectTeamToJoinChallenge(){
-    this.selectedTeamToJoinTournamentWith = undefined;
+    this.selectedTeamToJoinChallengeWith = undefined;
     this.isClickedSelectButton = false;
   } 
   
-  public removeTeamFromCodTournament(teamTournamentRequest: TeamTournamentRequest){
-    this.teamTournamentService.removeTeamFromCodTournament(teamTournamentRequest, this.tokenService.getToken())
+  public removeTeamFromCodChallenge(teamChallengeRequest: TeamChallengeRequest){
+    this.teamChallengeService.removeTeamFromCodChallenge(teamChallengeRequest, this.tokenService.getToken())
       .subscribe((data: MessageResponse) => {
-        console.log(data);
-        this.alreadyJoinedTournament = false;
+        console.log(data.message);
+        this.alreadyJoinedChallenge = false;
       }, 
       err => {
         console.error(err.error.message);
         this.isClickedExitButton = false;
-        return;
       },
       () => {
-        if(!this.alreadyJoinedTournament){
-          this.removeUserTournamentFromUser(teamTournamentRequest);
+        if(!this.alreadyJoinedChallenge){
+          this.removeUserChallengeFromUser(teamChallengeRequest);
         }
       });
     }
 
-  public addTeamToCodTournament(teamTournamentRequest: TeamTournamentRequest){
-    this.teamTournamentService.addTeamToCodTournament(teamTournamentRequest, this.tokenService.getToken())
+  public addTeamToCodChallenge(teamChallengeRequest: TeamChallengeRequest){
+    this.teamChallengeService.addTeamToCodChallenge(teamChallengeRequest, this.tokenService.getToken())
     .subscribe((data: MessageResponse) => {
       console.log(data);
-      this.alreadyJoinedTournament = true;
+      this.alreadyJoinedChallenge = true;
     },
     err => {
       console.error(err.error.message);
       this.errorMessage = err.error.message;
       this.isClickedJoinButton = false;
-      this.isFailedTournamentJoin = true;
+      this.isFailedChallengeJoin = true;
       return;
     },
     () => {
-      if(this.alreadyJoinedTournament){
-        this.addUserTournamentToUser(teamTournamentRequest);
+      if(this.alreadyJoinedChallenge){
+        this.addUserChallengeToUser(teamChallengeRequest);
       }
     });
   }
 
-  public addUserChallengeToUser(teamTournamentRequest: TeamTournamentRequest){
-     const user: User = this.userInspectingTournament;
-     let userTournament: UserTournament = new UserTournament(teamTournamentRequest.tournament, teamTournamentRequest.team, 0, 0, [], 'ACTIVE');
-     user.userTournaments.push(userTournament);
+  public addUserChallengeToUser(teamChallengeRequest: TeamChallengeRequest){
+     const user: User = this.userInspectingChallenge
+     let userChallenge: UserChallenge = new UserChallenge(teamChallengeRequest.challenge, teamChallengeRequest.team, [], 0, 0, 'ACTIVE');
+     user.userChallenges.push(userChallenge);
      this.tokenService.saveUser(user);
   }
 
-  public removeUserChallengeFromUser(teamTournamentRequest: TeamTournamentRequest){
-    const user: User = this.userInspectingTournament;
-    user.userTournaments = user.userTournaments.filter(userTournament => userTournament.userTournament.tournamentId !== teamTournamentRequest.tournament.tournamentId);
+  public removeUserChallengeFromUser(teamChallengeRequest: TeamChallengeRequest){
+    const user: User = this.userInspectingChallenge;
+    user.userChallenges = user.userChallenges.filter((userChallenge: UserChallenge) => userChallenge.userChallenge.challengeId !== teamChallengeRequest.challenge.challengeId);
     this.tokenService.saveUser(user);
   }
   
-  public activateTournament(){
+  public activateChallenge(){
     this.challengeService.activateChallenge(this.challenge.challengeId, this.tokenService.getToken())
     .subscribe((data: Challenge) => {
       if(data && Object.keys(data).length !== 0){
@@ -369,7 +364,7 @@ export class ChallengesDetailsPageComponent implements OnInit {
     this.userTeamService.getAllUserTeams(this.userInspectingChallenge.userId)
     .subscribe((data: Team[]) => {
       if(data && data.length !== 0){
-        this.userTeamsAvailableToJoinTournaments = data;
+        this.userTeamsAvailableToJoinChallenge = data;
         this.hasNoTeams = false;
         return;
       }
@@ -395,7 +390,7 @@ export class ChallengesDetailsPageComponent implements OnInit {
   startChallenge(){
     if(new Date().getTime() > new Date(this.challenge.challengeDate).getTime()){
       if(this.isStartedChallenge && !this.isActivatedChallenge){
-        this.activateTournament();
+        this.activateChallenge();
       }
     }
   }
@@ -460,7 +455,7 @@ export class ChallengesDetailsPageComponent implements OnInit {
     this.challenge[field] = replaceValue;
     this.challengeService.updateChallenge(this.challenge, this.tokenService.getToken())
     .subscribe((data: MessageResponse) => {
-
+      console.log(data.message);
     },
     err => {
       console.error(err);
@@ -504,20 +499,17 @@ export class ChallengesDetailsPageComponent implements OnInit {
     const dialogRef = this.dialog.open(FieldformConfirmationComponent);
     dialogRef.afterClosed().subscribe((result: any) => {
       if(result){
-        this.deleteTournament(); 
+        this.deleteChallenge();
       }      
     });
   }
 
-  public deleteTournament(){
+  public deleteChallenge(){
     this.challengeService.deleteChallengeById(this.challenge.challengeId, this.tokenService.getToken())
     .subscribe((data: MessageResponse) => {
-    },
-    err => {
-      console.error(err);
-    },
-    () => {
-      this.router.navigate(['/challenges']);
+
+    }, err => {
+      console.error(err.error.message);
     });
   }
 

@@ -162,6 +162,7 @@ export class ChallengeCreationConfigPageComponent implements OnInit {
 			this.challengeService.postChallenge(this.challenge, this.tokenService.getToken())
 			.subscribe((data: Challenge) => {
 				if(data){
+					console.log(data);
 					this.message = 'Tournament created Successfully.'
 					this.challenge = data;
 					this.isSuccessfulChallengeCreation = true;
@@ -171,7 +172,7 @@ export class ChallengeCreationConfigPageComponent implements OnInit {
 				}
 				this.isClicked = false;
 				this.isSignUpFailed = true;
-				this.errorMessage = 'Something went wrong, please try again later.';
+				this.errorMessage = 'Not enough tokens to create challenge';
 				this.isSuccessfulChallengeCreation = false;
 			},
 			err => {
@@ -185,7 +186,7 @@ export class ChallengeCreationConfigPageComponent implements OnInit {
 					this.userChallengeRequest.challenge = this.challenge;
 					this.userChallengeRequest.user = this.challenge.challengeModerator;
 					this.userChallengeRequest.team = this.selectedTeamToJoinChallenge;
-					this.userChallengeService.addChallengeToUserChallengeList(this.userChallengeRequest, this.tokenService.getToken())
+					this.userChallengeService.addChallengeToTeamCodChallengeList(this.userChallengeRequest, this.tokenService.getToken())
 					.subscribe((data: MessageResponse) => {
 						console.log(data);
 					}, err => console.error(err.error.message));

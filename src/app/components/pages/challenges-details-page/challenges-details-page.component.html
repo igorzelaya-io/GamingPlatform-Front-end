@@ -23,14 +23,14 @@
                         <span class="sub-title">{{challengeMonthDate}} {{challengeMonth}} {{challengeYear}} / {{challengeTime}}  {{challenge.challengeRegion}}</span>
                     </div>
                     <div class="col-lg-1 col-md-12">
-                        <button mat-icon-button style="background-color: red; color: #1a0000" [matMenuTriggerFor]="tournamentEdit">
+                        <button mat-icon-button style="background-color: red; color: #1a0000" [matMenuTriggerFor]="challengeEdit">
                             <mat-icon>
                                 more_vert
                             </mat-icon>
                         </button>
                     </div>
                 </div>  
-                <mat-menu #tournamentEdit="matMenu">
+                <mat-menu #challengeEdit="matMenu">
                     <button mat-menu-item style="color: red; background-color: #1a0000" (click)="openDialogForDate()">
                         Edit Date and Time
                     </button>
@@ -108,12 +108,12 @@
                 </button>
                 <li *ngIf="!alreadyJoinedChallenge">
                     
-                    <button mat-button style="background-color: #1a0000; color: red" *ngIf="!isTryingToJoinChallenge" (click)="isJoiningTournament()">
-                		Join Challenges
+                    <button mat-button style="background-color: #1a0000; color: red" *ngIf="!isTryingToJoinChallenge" (click)="isJoiningChallenge()">
+                		Join Challenge
                     </button>
                     <div style="vertical-align: middle;" *ngIf="isTryingToJoinChallenge">
                         <div style="vertical-align: middle">
-                            <h5 style="text-align: center">Select Team To Join Tournament</h5>
+                            <h5 style="text-align: center">Select Team To Join Challenge</h5>
                         </div>
                         <div *ngIf="hasNoTeams">
                             <h5 class="alert alert-danger">
@@ -167,8 +167,8 @@
                 </li>
                 
                 <li *ngIf="alreadyJoinedChallenge">
-                   <button mat-button style="background-color: #1a0000; color: red" (click)="removeTeamFromTournament(); isClickedExitTournamentButton()" [disabled]="isClickedExitButton">
-                        Exit Tournament
+                   <button mat-button style="background-color: #1a0000; color: red" (click)= "removeTeamFromChallenge(); isClickedExitChallengeButton()" [disabled]="isClickedExitButton">
+                        Exit Challenge
                    </button> 
                 </li>
                 <li *ngIf="isUserAdmin" >
@@ -196,22 +196,22 @@
             <div class="tab-content" id="myTabContent">
                 
                 <div class="tab-pane fade show active" id="all-matches" role="tabpanel">
-                    <div *ngIf="!isActivatedTournament" style="vertical-align: middle;">
-                        <h1 style="text-align: center">Tournament has not started</h1>
+                    <div *ngIf="!isActivatedChallenge" style="vertical-align: middle;">
+                        <h1 style="text-align: center">Challenge has not started</h1>
                     </div>
-                    <div *ngIf="!isActivatedTournament && !alreadyJoinedTournament" style="vertical-align: middle;">
-                        <h1 style="text-align: center;">Join tournament to access matches</h1>
-                    </div>
-
-                    <div *ngIf="isActivatedTournament && !alreadyJoinedTournament" style="vertical-align: middle;">
-                        <h1 style="text-align: center">You are not registered in this tournament</h1>
+                    <div *ngIf="!isActivatedChallenge && !alreadyJoinedChallenge" style="vertical-align: middle;">
+                        <h1 style="text-align: center;">Join challenge to access matches</h1>
                     </div>
 
-                    <div *ngIf="userTeamActiveMatches.length === 0 && this.alreadyJoinedTournament && isActivatedTournament" style="vertical-align: middle">
+                    <div *ngIf="isActivatedChallenge && !alreadyJoinedChallenge" style="vertical-align: middle;">
+                        <h1 style="text-align: center">You are not registered in this challenge</h1>
+                    </div>
+
+                    <div *ngIf="userTeamActiveMatches.length === 0 && this.alreadyJoinedChallenge && isActivatedChallenge" style="vertical-align: middle">
                         <h1 style="text-align: center">You have no matches available</h1>
                     </div>
                         
-                        <div *ngIf="isActivatedTournament && alreadyJoinedTournament && userTeamActiveMatches.length !== 0">
+                        <div *ngIf="isActivatedChallenge && alreadyJoinedChallenge && userTeamActiveMatches.length !== 0">
                             
                             <div *ngFor="let match of userTeamActiveMatches" class="single-matches-box">
                                 <div class="row align-items-center">
@@ -262,81 +262,71 @@
 
                 <div class="tab-pane fade" id="upcoming-matches" role="tabpanel">
                     
-                    <div *ngIf="!isActivatedTournament" style="vertical-align: middle;">
-                        <h1 style="text-align: center">Tournament has not started</h1>
+                    <div *ngIf="!isActivatedChallenge" style="vertical-align: middle;">
+                        <h1 style="text-align: center">Challenge has not started</h1>
                     </div>
 
-                    <div *ngIf="tournamentMatches.length === 0" style="vertical-align: middle;">
+                    <div *ngIf="challengeMatches.length === 0" style="vertical-align: middle;">
                         <h1 style="text-align: center">No matches available</h1>
                     </div>
-                    <div *ngIf="this.isActivatedTournament && tournamentMatches.length !== 0">
-                        <div *ngIf="isPvPTournament()">
-                            
-                            <!-- TODO: BRACKETS -->
-                        </div>
-
-                        <div *ngIf="!isPvPTournament()">
-                            <div *ngFor="let match of tournamentMatches" class="single-matches-box">
-                                <div class="row align-items-center">
-                                    <div class="col-lg-5 col-md-12">
-                                        <div class="matches-team">
-                                    
-            
-                                            <div class="content">
-                                                <h3>{{match.matchLocalTeam.teamName}}</h3>
-                                                <ul class="watch-list">
-                                                  
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-            
-                                    <div class="col-lg-2 col-md-12">
-                                        <div class="matches-result">
-                                            <ul>
-                                                <li>{{match.localTeamMatchScore}}</li>
-                                                <li>{{match.awayTeamMatchScore}}</li>
+                    <div *ngIf="this.isActivatedChallenge && challengeMatches.length !== 0">
+                        <div *ngFor="let match of challengeMatches" class="single-matches-box">
+                            <div class="row align-items-center">
+                                <div class="col-lg-5 col-md-12">
+                                    <div class="matches-team">
+                                        <div class="content">
+                                            <h3>{{match.matchLocalTeam.teamName}}</h3>
+                                            <ul class="watch-list">
+                                                
                                             </ul>
-                                            <span class="date-time"><button mat-button style="background-color: #1a0000; color: red" (click)="passMatch(match.matchId)">View Match</button></span>
                                         </div>
                                     </div>
-            
-                                    <div class="col-lg-5 col-md-12">
-                                        <div class="matches-team right-image">
-                                            
-            
-                                            <div class="content">
-                                                <h3>{{match.matchAwayTeam.teamName}}</h3>
-                                                <ul class="watch-list">
-                                                    
-                                                </ul>
-                                            </div>
+                                </div>
+        
+                                <div class="col-lg-2 col-md-12">
+                                    <div class="matches-result">
+                                        <ul>
+                                            <li>{{match.localTeamMatchScore}}</li>
+                                            <li>{{match.awayTeamMatchScore}}</li>
+                                        </ul>
+                                        <span class="date-time"><button mat-button style="background-color: #1a0000; color: red" (click)="passMatch(match.matchId)">View Match</button></span>
+                                    </div>
+                                </div>
+        
+                                <div class="col-lg-5 col-md-12">
+                                    <div class="matches-team right-image">
+                                        
+        
+                                        <div class="content">
+                                            <h3>{{match.matchAwayTeam.teamName}}</h3>
+                                            <ul class="watch-list">
+                                                
+                                            </ul>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        
                     </div>
                 </div>
 
                 <div class="tab-pane fade" id="latest-result" role="tabpanel">
-                    <!-- <div *ngIf="!isStartedTournament" style="vertical-align: middle;">
-                        <h1 style="text-align: center">Tournament has not started</h1>
+                    <div *ngIf="!isStartedChallenge" style="vertical-align: middle;">
+                        <h1 style="text-align: center">Challenge has not started</h1>
                     </div>
-                    <div *ngIf="tournamentInactiveMatches.length === 0" style="vertical-align: middle;">
+                    <div *ngIf="challengeInactiveMatches.length === 0" style="vertical-align: middle;">
                         <h1 style="text-align: center;">No matches available</h1>
-                    </div> -->
-                    <!-- *ngIf="isStartedTournament && tournamentInactiveMatches.length !== 0 && isPvPTournament()" -->
-                    <div >
-                        <!-- *ngFor="let match of tournamentInactiveMatches" -->
-                        <div class="single-matches-box" >
+                    </div>
+                    <div *ngIf="isStartedChallenge && challengeInactiveMatches.length !== 0">
+                        <div class="single-matches-box" *ngFor="let match of challengeInactiveMatches">
                             <div class="row align-items-center">
                                 <div class="col-lg-5 col-md-12">
                                     <div class="matches-team">
                                         <!-- <img src="assets/img/team1.png" alt="image"> -->
         
                                         <div class="content">
-                                            <!-- <h3>{{match.matchLocalTeam.teamName}}</h3> -->
+                                            <h3>{{match.matchLocalTeam.teamName}}</h3>
                                             <ul class="watch-list">
                                                 <!-- NOT INCLUDED -->
                                                 <!-- <li><span>Watch</span></li>
@@ -351,8 +341,8 @@
                                 <div class="col-lg-2 col-md-12">
                                     <div class="matches-result">
                                         <ul>
-                                            <!-- <li>{{match.localTeamMatchScore}}</li>
-                                            <li>{{match.awayTeamMatchScore}}</li> -->
+                                            <li>{{match.localTeamMatchScore}}</li>
+                                            <li>{{match.awayTeamMatchScore}}</li>
                                         </ul>
                                         <span class="date-time"><button mat-button style="background-color: #1a0000; color:red;" (click)="passMatch(match.matchId)">View Match</button></span>
                                     </div>
@@ -363,7 +353,7 @@
                                         <!-- <img src="assets/img/team2.png" alt="image"> -->
         
                                         <div class="content">
-                                            <!-- <h3>{{match.matchAwayTeam.teamName}}</h3> -->
+                                            <h3>{{match.matchAwayTeam.teamName}}</h3>
                                             <ul class="watch-list">
                                                 <!-- <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on YouTube"><i class='bx bxl-youtube'></i></a></li>
                                                 <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on Twitch"><i class='bx bxl-twitch'></i></a></li>
@@ -376,11 +366,6 @@
                             </div>
                         </div>
                     </div>
-                    <!-- TODO: League leaderboard -->
-                    <!--
-                        <div *ngIf="!isPvPTournament()">
-                        </div>
-                    -->
                 </div>
             </div>
         </div>

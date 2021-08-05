@@ -34,7 +34,7 @@ export class UserChallengesService {
     .pipe(retry(1), catchError(this.handleError('getAllUserChallenges', [])));
   } 
 
-  public addChallengeToUserChallengeList(userChallengeRequest: UserChallengeRequest, jwtToken: string): Observable<MessageResponse>{
+  public addChallengeToTeamCodChallengeList(userChallengeRequest: UserChallengeRequest, jwtToken: string): Observable<MessageResponse>{
     return this.httpClient.post<MessageResponse>(USER_CHALLENGES_API + '/add', userChallengeRequest,
     {headers: new HttpHeaders({'Authorization': 'Bearer ' + jwtToken})})
     .pipe(
