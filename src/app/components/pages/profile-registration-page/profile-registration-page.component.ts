@@ -32,7 +32,7 @@ export class ProfileRegistrationPageComponent implements OnInit {
   userToSaveOnStorage: User;
   
   userSelectedImageFile: any;
-  croppedImage: any;
+  croppedImage: string;
 
   countryBirthDateForm: FormGroup;
 
@@ -52,8 +52,7 @@ export class ProfileRegistrationPageComponent implements OnInit {
             private tokenService: TokenStorageService,
             private router: Router,
             private userService: UserService,
-            private countryService: CountryService,
-            private httpClient: HttpClient) {
+            private countryService: CountryService) {
     this.txtFirstName = new FormControl();
     this.txtBirthName = new FormControl();
     this.txtUserName = new FormControl();
@@ -64,7 +63,7 @@ export class ProfileRegistrationPageComponent implements OnInit {
 	  this.userToLogin = new UserLoginRequest();
 	  this.userToSaveOnStorage = new User();
 
-    this.countryBirthDateForm = formBuilder.group({
+    this.countryBirthDateForm = this.formBuilder.group({
       day: ['', Validators.required],
       month: ['', [Validators.required]],
       year: ['', [Validators.required]],
@@ -92,7 +91,7 @@ export class ProfileRegistrationPageComponent implements OnInit {
 	  return this.countryBirthDateForm.get('country') as FormControl;	
   } 
   
-  onSubmit(){
+  async onSubmit(){
     this.validatePasswords();
     this.validateYearInput();
     if (this.areEqualPasswords && this.isValidYear){
@@ -169,10 +168,10 @@ export class ProfileRegistrationPageComponent implements OnInit {
     },
     () => {
       if(isSuccessfulGet){
-        if(this.userSelectedImageFile){
+        if(this.userSelectedImageFile && this.croppedImage){
           resultData.hasImage = true;
+          this.uploadImageAndSaveUser(resultData);
         }
-        this.uploadImageAndSaveUser(resultData);
       }
     });
   }
@@ -182,7 +181,7 @@ export class ProfileRegistrationPageComponent implements OnInit {
     this.tokenService.saveUser(data);
   }
 
-  validatePasswords(): void{
+  validatePasswords(): void {
     if(this.txtPassword.value === this.txtPasswordRepeat.value){
       this.areEqualPasswords = true;
       return
@@ -229,10 +228,10 @@ export class ProfileRegistrationPageComponent implements OnInit {
     map.set('month', this.month.value);
     map.set('year', this.year.value);
     const convertedMap = {};
-	map.forEach((val: object, key: string) => {
-		convertedMap[key] = val;
-	});
-	return convertedMap;
+	  map.forEach((val: object, key: string) => {
+		  convertedMap[key] = val;
+	  });
+	  return convertedMap;
   }
 
   private toRealName(): string {

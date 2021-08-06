@@ -128,7 +128,7 @@ export class TeamCreationPageComponent implements OnInit {
         this.tokenService.addTeamAdminRoleToSavedUser();
         this.tokenService.addTeamToSavedUser(this.team);
       }
-      if(this.selectedImageFile){
+      if(this.selectedImageFile && this.cropImagePreview){
         this.submitImage();
       }
     });
@@ -138,7 +138,8 @@ export class TeamCreationPageComponent implements OnInit {
     this.teamService.addImageToTeam(this.team.teamId, this.cropImagePreview, this.tokenService.getToken())
     .subscribe((data: MessageResponse) => {
       console.log(data);
-    }, err => {
+    },
+    err => {
       console.error(err.error.message);
     });
   }

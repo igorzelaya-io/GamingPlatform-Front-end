@@ -314,7 +314,7 @@ export class AccountDetailsComponent implements OnInit {
   }
 
   public getUserTransactions(){
-    this.userService.getAllUserTransactions(this.user.userId, this.tokenService.getToken())
+    this.userService.getAllUserTransactions(this.tokenService.getUserId(), this.tokenService.getToken())
     .subscribe((data: D1Transaction[]) => {
       if(data && data.length){
         this.userTransactions = data;

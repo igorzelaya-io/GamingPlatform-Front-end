@@ -161,7 +161,7 @@ export class ChallengeCreationConfigPageComponent implements OnInit {
 			this.challenge.challengeHostTeam = this.selectedTeamToJoinChallenge;
 			this.challengeService.postChallenge(this.challenge, this.tokenService.getToken())
 			.subscribe((data: Challenge) => {
-				if(data){
+				if(data && data instanceof Challenge){
 					console.log(data);
 					this.message = 'Tournament created Successfully.'
 					this.challenge = data;
