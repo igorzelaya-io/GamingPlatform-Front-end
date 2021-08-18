@@ -31,9 +31,7 @@
 	
 	            <div class="popular-leagues-content">
 	                <div class="content">
-						<!-- VIEW CHALLENGE -->
-						<h3><a >{{challenge.challengeName}}</a></h3>
-	                    <p>{{challenge.challengeDescription}}</p>
+						<h3><a (click)="viewChallenge(challenge)">{{challenge.challengeName}}</a></h3>
 	                    <ul class="info">
 	                        <li><i class="flaticon-coin"></i>${{challenge.challengeCashPrize}}</li>
 	                        <li *ngIf="challenge.challengeGameMode"><i class="flaticon-game"></i>{{challenge.challengeGameMode}}</li>
@@ -42,8 +40,7 @@
 							<li><i class="flaticon-teamwork"></i>{{challenge.challengeNumberOfPlayersPerTeam}}</li>
 							<li><img src="/assets/d1images/D1TokenBag.png">{{challenge.challengeTokenFee}} Entry Fee</li>
 						</ul>
-						<!-- VIEW CHALLENGE -->
-						<a class="join-now-btn">Join Now</a>
+						<a class="join-now-btn" (click)="viewChallenge(challenge)">Join Now</a>
 					</div>
 	            </div>
 	

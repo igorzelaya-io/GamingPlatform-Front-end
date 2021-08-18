@@ -108,7 +108,7 @@
                 </button>
                 <li *ngIf="!alreadyJoinedChallenge">
                     
-                    <button mat-button style="background-color: #1a0000; color: red" *ngIf="!isTryingToJoinChallenge" (click)="isJoiningChallenge()">
+                    <button mat-button style="background-color: #1a0000; color: red" *ngIf="!isTryingToJoinChallenge && !this.alreadyJoinedChallenge" (click)="isJoiningChallenge()">
                 		Join Challenge
                     </button>
                     <div style="vertical-align: middle;" *ngIf="isTryingToJoinChallenge">
@@ -154,25 +154,25 @@
                         </div>
                         <button (click)="navigateToTeamCreation()" mat-button style="background-color: #1a0000; color: red; margin: 20px; width: 100%">Create Team</button>
                         <div style="vertical-align: middle;">
-                            <button mat-button style="background-color: #1a0000; color: red; margin: 10px; width: 100%" *ngIf="!hasNoTeams" (click)="joinChallenge(); clickJoinChallengeButton();" [disabled]="isClickedJoinButton">
+                            <button mat-button style="background-color: #1a0000; color: red; margin-left: 10px; width: 100%" *ngIf="!hasNoTeams" (click)="joinChallenge(); clickJoinChallengeButton();" [disabled]="isClickedJoinButton">
                                 Join
                             </button>
                         </div>
                     </div>
                     <div *ngIf="isFailedChallengeJoin" style="vertical-align: middle;">
                         <div style="text-align: center;">
-                        <h5 class="alert alert-danger">{{errorMessage}}</h5>
-                    </div>
+                            <h5 class="alert alert-danger">{{errorMessage}}</h5>
+                        </div>
                     </div>
                 </li>
                 
-                <li *ngIf="alreadyJoinedChallenge">
-                   <button mat-button style="background-color: #1a0000; color: red" (click)= "removeTeamFromChallenge(); isClickedExitChallengeButton()" [disabled]="isClickedExitButton">
+                <li *ngIf="alreadyJoinedChallenge && !this.isUserAdmin">
+                   <button mat-button style="background-color: #1a0000; color: red; margin-right: 5px;" (click)= "openConfirmationDialogForChallengeExit(); isClickedExitChallengeButton()" [disabled]="isClickedExitButton">
                         Exit Challenge
                    </button> 
                 </li>
-                <li *ngIf="isUserAdmin" >
-                    <div class="icon">
+                <li *ngIf="isUserAdmin">
+                    <div class="icon" style="margin-top: 10px; margin-left: 10px">
                         <button mat-button (click)="openConfirmationDialogForDeletion()" style="background-color: #1a0000; color: red; margin-bottom: 40px;">
                             <i style="font-size: 20px; color: red" class="bi bi-trash-fill"></i>
                         </button>                    

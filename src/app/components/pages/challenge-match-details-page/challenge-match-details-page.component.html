@@ -1,0 +1,292 @@
+<app-navbar-style-one></app-navbar-style-one>
+
+<section class="page-title-area page-title-bg1">
+    <div class="container">
+        <div class="page-title-content">
+            <div class="single-matches-box">
+                <div class="row align-items-center">
+                    <div class="col-lg-5 col-md-12">
+                        <div class="matches-team">
+                            <!-- <img src="assets/img/team1.png" class="wow fadeInLeft" data-wow-delay="00ms" data-wow-duration="1500ms" alt="image"> -->
+
+                            <div class="content">
+                            <h3 *ngIf="match">{{match.matchLocalTeam.teamName}}</h3>
+                                <ul class="watch-list">
+                                    <!-- <li><span>Watch</span></li>
+                                    <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on YouTube"><i class='bx bxl-youtube'></i></a></li>
+                                    <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on Twitch"><i class='bx bxl-twitch'></i></a></li>
+                                    <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on Vimeo"><i class='bx bxl-vimeo'></i></a></li> -->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-2 col-md-12">
+                        <div class="matches-result">
+                            <ul>
+                                <li *ngIf="match">{{match.localTeamMatchScore}}</li>
+                                <li *ngIf="match">{{match.awayTeamMatchScore}}</li>
+                            </ul>
+                            
+                            <!-- <span class="date-time">20TH May 2020, 23:00</span> -->
+                        </div>
+                    </div>
+
+                    <div class="col-lg-5 col-md-12">
+                        <div class="matches-team right-image">
+                            <!-- <img src="assets/img/team2.png" class="wow fadeInRight" data-wow-delay="00ms" data-wow-duration="1500ms" alt="image"> -->
+
+                            <div class="content">
+                                <h3 *ngIf="match">{{match.matchAwayTeam.teamName}}</h3>
+                                <ul class="watch-list">
+                                    <!-- <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on YouTube"><i class='bx bxl-youtube'></i></a></li>
+                                    <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on Twitch"><i class='bx bxl-twitch'></i></a></li>
+                                    <li><a href="#" target="_blank" data-toggle="tooltip" data-placement="top" title="Watch on Vimeo"><i class='bx bxl-vimeo'></i></a></li>
+                                    <li><span>Watch</span></li> -->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="match-details-area ptb-100">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-12">
+                <div class="match-details-desc">
+                    <div class="article-content">
+                        <div class="entry-meta">
+                            <ul>
+                                <!-- <li>Dota 1</li> -->
+                                <!-- <li>20 May 2020, 19:00</li> -->
+                            </ul>
+                        </div>
+                        <h3 *ngIf="match">{{match.matchLocalTeam.teamName}} vs {{match.matchAwayTeam.teamName}}</h3>
+                        <button *ngIf="isTeamAdmin && this.match.uploaded === false" (click)="isTryingToSubmitResults()" [disabled]="isClickedUploadButton">Upload Results</button>
+                        <h3 *ngIf="isTeamAdmin && match.uploaded === true">Match results have already been uploaded. If these results are wrong, dispute this match.</h3>
+                        <button *ngIf="isTeamAdmin && match.uploaded === true">Dispute Match</button>
+                        <div style="vertical-align: middle; margin-top: 50px;" *ngIf="isClickedUploadButton">
+                            <p style="text-align: center; font-size: large;">Did you team win or lose this match ?</p>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md">
+                                        <button style="border: 3px solid black" #wonButton (click)="selectWonMatchOption()">Won</button>
+                                    </div>
+                                    <div class="col-md">
+                                        <button style="border: 3px solid black" #lostButton (click)="selectLostMatchOption()" >Lost</button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="container">
+                                <div class="row">
+                                     <div style="vertical-align: middle; margin-top: 50px;" class="form-group col-md">
+                                            <p style="text-align: center; font-size: large;">Your Team Score</p>
+                                            <input
+                                                class="form-control"
+                                                type="number"
+                                                placeholder="Enter score"
+                                                required
+                                                minlength="0"
+                                                [formControl]="userTeamPointsScored"
+                                            >
+                                    </div>
+                                    <div style="margin-top: 50px; vertical-align: middle;" class="col-md form-group">
+                                        <p style="text-align: center; font-size: large;">Opponent Team Score</p>
+                                        <input
+                                            class="form-control"
+                                            required
+                                            placeholder="Enter opposite team score"
+                                            type="number"
+                                            minlength="0"
+                                            [formControl]="oppositeTeamPointsScored"
+                                        >
+                                    </div>
+                                </div>
+                                 <div *ngIf="userTeamPointsScored.invalid && (userTeamPointsScored.dirty || userTeamPointsScored.touched)">
+                                    <div class="alert alert-danger" *ngIf="userTeamPointsScored.errors.required">
+                                        <p style="text-align: center; font-size: large;"> Enter match score to upload result.</p>
+                                    </div>
+                                </div>
+                                <div *ngIf="oppositeTeamPointsScored.invalid && (oppositeTeamPointsScored.dirty || oppositeTeamPointsScored.touched)">
+                                    <div class="alert alert-danger" *ngIf="oppositeTeamPointsScored.errors.required">
+                                        <p style="text-align: center; font-size: large;"> Enter opposite team match score to upload result.</p>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div style="vertical-align: middle;">
+                                <button [disabled]="userTeamPointsScored.invalid || isClickedSentButton" (click)="uploadResults()">Upload Results</button>
+                                <p style="font-size: medium;">*Inserting unreal results may result in the permament ban of your D1Gaming account.</p>
+                            </div>
+                            <div *ngIf="isFailedUpload && !isSuccessfulUpload" style="vertical-align: middle;" class="alert alert-danger">
+                                <p style="text-align: center; font-size: large;">{{errorMessage}}</p>
+                            </div>
+                            <div *ngIf="isSuccessfulUpload && !isFailedUpload" style="vertical-align: middle;" class="alert alert-danger">
+                                <p style="text-align: center; font-size: large;">{{errorMessage}}</p>
+                            </div>
+                       </div>
+                        <!-- <p>Quuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quia non numquam eius modi tempora incidunt ut labore et dolore magnam dolor sit amet, consectetur adipisicing.</p>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in  sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.</p>
+                        <blockquote class="wp-block-quote">
+                            <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</p>
+                            <cite>Tom Cruise</cite>
+                        </blockquote>
+                        <p>Quuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quia non numquam eius modi tempora incidunt ut labore et dolore magnam dolor sit amet, consectetur adipisicing.</p>
+                        <ul class="wp-block-gallery columns-3">
+                            <li class="blocks-gallery-item">
+                                <figure>
+                                    <img src="assets/img/main-blog-img2.jpg" alt="image">
+                                </figure>
+                            </li>
+
+                            <li class="blocks-gallery-item">
+                                <figure>
+                                    <img src="assets/img/main-blog-img3.jpg" alt="image">
+                                </figure>
+                            </li>
+
+                            <li class="blocks-gallery-item">
+                                <figure>
+                                    <img src="assets/img/main-blog-img4.jpg" alt="image">
+                                </figure>
+                            </li>
+                        </ul> -->
+                        <!-- <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in  sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.</p>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud.</p> -->
+                    </div>
+
+                    <!-- <div class="article-footer">
+                        <div class="article-tags">
+                            <span><i class="bx bx-purchase-tag"></i></span>
+                            <a routerLink="/">Fashion</a>,
+                            <a routerLink="/">Games</a>,
+                            <a routerLink="/">Travel</a>
+                        </div>
+
+                        <div class="article-share">
+                            <ul class="social">
+                                <li><span>Share:</span></li>
+                                <li><a href="#" class="facebook" target="_blank"><i class="bx bxl-facebook"></i></a></li>
+                                <li><a href="#" class="twitter" target="_blank"><i class="bx bxl-twitter"></i></a></li>
+                                <li><a href="#" class="linkedin" target="_blank"><i class="bx bxl-linkedin"></i></a></li>
+                                <li><a href="#" class="instagram" target="_blank"><i class="bx bxl-instagram"></i></a></li>
+                            </ul>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+
+            <!-- <div class="col-lg-4 col-md-12">
+                <aside class="widget-area">
+                    <section class="widget widget_match_list">
+                        <div class="single-match-list">
+                            <img src="assets/img/team1.png" class="team-1" alt="image">
+                            <span class="date">20TH MAY 2020, 23:00</span>
+                            <ul>
+                                <li>09</li>
+                                <li>14</li>
+                            </ul>
+                            <img src="assets/img/team2.png" class="team-2" alt="image">
+                        </div>
+
+                        <div class="single-match-list">
+                            <img src="assets/img/team3.png" class="team-1" alt="image">
+                            <span class="date">19TH MAY 2020, 22:00</span>
+                            <ul>
+                                <li>10</li>
+                                <li>08</li>
+                            </ul>
+                            <img src="assets/img/team4.png" class="team-2" alt="image">
+                        </div>
+
+                        <div class="single-match-list">
+                            <img src="assets/img/team5.png" class="team-1" alt="image">
+                            <span class="date">18TH MAY 2020, 21:00</span>
+                            <ul>
+                                <li>10</li>
+                                <li>10</li>
+                            </ul>
+                            <img src="assets/img/team6.png" class="team-2" alt="image">
+                        </div>
+
+                        <div class="single-match-list">
+                            <img src="assets/img/team7.png" class="team-1" alt="image">
+                            <span class="date">17TH MAY 2020, 24:00</span>
+                            <ul>
+                                <li>14</li>
+                                <li>15</li>
+                            </ul>
+                            <img src="assets/img/team8.png" class="team-2" alt="image">
+                        </div>
+                    </section>
+
+                    <section class="widget widget_instagram">
+                        <ul>
+                            <li>
+                                <div class="box">
+                                    <img src="assets/img/team-member1.jpg" alt="image">
+                                    <i class="bx bxl-instagram"></i>
+                                    <a href="#" target="_blank" class="link-btn"></a>
+                                </div>
+                            </li>
+
+                            <li>
+                                <div class="box">
+                                    <img src="assets/img/team-member2.jpg" alt="image">
+                                    <i class="bx bxl-instagram"></i>
+                                    <a href="#" target="_blank" class="link-btn"></a>
+                                </div>
+                            </li>
+
+                            <li>
+                                <div class="box">
+                                    <img src="assets/img/team-member3.jpg" alt="image">
+                                    <i class="bx bxl-instagram"></i>
+                                    <a href="#" target="_blank" class="link-btn"></a>
+                                </div>
+                            </li>
+
+                            <li>
+                                <div class="box">
+                                    <img src="assets/img/team-member4.jpg" alt="image">
+                                    <i class="bx bxl-instagram"></i>
+                                    <a href="#" target="_blank" class="link-btn"></a>
+                                </div>
+                            </li>
+
+                            <li>
+                                <div class="box">
+                                    <img src="assets/img/team-member5.jpg" alt="image">
+                                    <i class="bx bxl-instagram"></i>
+                                    <a href="#" target="_blank" class="link-btn"></a>
+                                </div>
+                            </li>
+
+                            <li>
+                                <div class="box">
+                                    <img src="assets/img/team-member6.jpg" alt="image">
+                                    <i class="bx bxl-instagram"></i>
+                                    <a href="#" target="_blank" class="link-btn"></a>
+                                </div>
+                            </li>
+                        </ul>
+                    </section>
+
+                    <section class="widget widget_ads_box">
+                        <a routerLink="/products-list-1" class="d-block"><img src="assets/img/ads.jpg" alt="image"></a>
+                    </section>
+                </aside>
+            </div> -->
+        </div>
+    </div>
+</section>
+
+<footer class="footer-area bg-1b060a ptb-70">
+    <app-footer-style-one></app-footer-style-one>
+</footer>

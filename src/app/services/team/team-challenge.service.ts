@@ -6,8 +6,7 @@ import { map, catchError, retry } from 'rxjs/operators';
 import { Challenge } from 'src/app/models/challenge/challenge';
 import { MessageResponse } from 'src/app/models/messageresponse';
 import { TeamChallengeRequest } from '../../models/teamchallengerequest';
-
-
+import { MatchChallengeRequest } from '../../models/matchchallengerequest';
 
 const TEAM_CHALLENGES_API = '/teamchallengesapi/teamChallenges';
 
@@ -30,6 +29,14 @@ export class TeamChallengeService {
 
   private log(message: string): void{
     console.log(message);
+  }
+
+  getTeamMatchFromChallenge(matchId: string, challengeId: string): Observable<Match>{
+    return this.httpClient.get<Match>(TEAM_CHALLENGES_API + '/matches/search?matchId=' + matchId + '&challengeId=' + challengeId)
+    .pipe(
+      retry(1),
+      catchError(this.handleError('getTeamMatchFromChallenge', {} as Match))
+    );
   }
 
   getAllChallengesFromUser(matchId: string, challengeId: string): Observable<Match>{
@@ -61,6 +68,14 @@ export class TeamChallengeService {
     {headers: new HttpHeaders({ 'Authorization': 'Bearer ' + jwtToken})})
     .pipe(
       catchError(this.handleError('addTeamToCodChallenge', {} as MessageResponse))
+    );
+  }
+
+  uploadCodMatchResult(matchChallengeRequest: MatchChallengeRequest, jwtToken: string): Observable<MessageResponse>{
+    return this.httpClient.post<MessageResponse>(TEAM_CHALLENGES_API + '/matches/cod/save', matchChallengeRequest,
+    {headers: new HttpHeaders({'Authorization': 'Bearer ' + jwtToken} )})
+    .pipe(
+      catchError(this.handleError('uploadCodMatchResult', {} as MessageResponse))
     );
   }
 

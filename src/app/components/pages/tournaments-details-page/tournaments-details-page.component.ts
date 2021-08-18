@@ -337,7 +337,7 @@ export class TournamentsDetailsPageComponent implements OnInit {
   }
   
   public activateTournament(){
-    this.tournamentService.activateTournament(this.tournament)
+    this.tournamentService.activateTournament(this.tournament, this.tokenService.getToken())
     .subscribe((data: Tournament) => {
       if(data && Object.keys(data).length !== 0){
         this.tournament = data;

@@ -67,7 +67,6 @@ export class MyTeamsPageComponent implements OnInit {
     if(!this.isEmpty){
       this.teamsWithImages = this.userTeams.filter(team => team.hasImage === true);
       this.teamsWithoutImages = this.userTeams.filter(team => team.hasImage === false);
-      console.log(this.teamsWithImages);
       for(let i = 0; i < this.teamsWithImages.length; i++){
         this.getTeamImage(this.teamsWithImages[i].teamId);
       }  

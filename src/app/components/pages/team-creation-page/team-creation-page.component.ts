@@ -135,7 +135,7 @@ export class TeamCreationPageComponent implements OnInit {
   }
 
   submitImage(){
-    this.teamService.addImageToTeam(this.team.teamId, this.cropImagePreview, this.tokenService.getToken())
+    this.teamService.addImageToTeam(this.team.teamId, this.team.teamName, this.cropImagePreview, this.tokenService.getToken())
     .subscribe((data: MessageResponse) => {
       console.log(data);
     },

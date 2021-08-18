@@ -344,11 +344,16 @@ export class AccountDetailsComponent implements OnInit {
     this.router.navigate(['/team-invites']);
   }
 
+  public viewChallenge(challenge: Challenge){
+	  this.router.navigate(['/challenge-details'], { queryParams: {challengeId: challenge.challengeId}});
+  }
+
+
   public logOut(){
     this.tokenService.signOut();
     this.router.navigate(['/']);
   }
-  
+
   calculateUserWinLossRatio(){
     //TODO: 
   }

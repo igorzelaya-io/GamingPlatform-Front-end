@@ -125,25 +125,11 @@ export class TournamentCreationConfigPageComponent implements OnInit {
 				this.tournament = data;
 				console.log(data);
 				this.isSuccessfulTournamentCreation = true;
-			},
-				(err: any) => {
-					console.error(err);
-					this.isSuccessfulTournamentCreation = false;
-					this.isSignUpFailed = true;
-				},
-				() => {
-					if(this.isSuccessfulTournamentCreation){
-						this.userTournamentRequest.tournament = this.tournament;
-						this.userTournamentService.addTournamentToUserTournamentList(this.userTournamentRequest,
-																					 this.tokenService.getToken())
-						.subscribe((data: MessageResponse) => {
-							console.log(data);
-						},
-						err => {
-							console.error(err.error.message);
-						});
-					}
-				});
+			},(err: any) => {
+				console.error(err);
+				this.isSuccessfulTournamentCreation = false;
+				this.isSignUpFailed = true;
+			});
 	}
 
 	public navigateToTournaments() {

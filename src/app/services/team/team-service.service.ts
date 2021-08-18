@@ -61,6 +61,22 @@ export class TeamService {
     );
   }
 
+  getFirstFifteenTeams(): Observable<Team[]>{
+    return this.httpClient.get<Team[]>(TEAM_API + '/leaderboards')
+    .pipe(
+      retry(1),
+      catchError(this.handleError('getFirstFifteenTeams', []))
+    );
+  }
+
+  getNextPageBy(lastUserId: string): Observable<Team[]>{
+    return this.httpClient.get<Team[]>(TEAM_API + '/leaderboards/next?lastUserId=' + lastUserId)
+    .pipe(
+      retry(1),
+      catchError(this.handleError('getNextPageBy', []))
+    );
+  }
+
   public addUserToTeam(teamCreationRequest: TeamCreationRequest, jwtToken: string): Observable<MessageResponse>{
     return this.httpClient.post<MessageResponse>(TEAM_API + '/users/add', teamCreationRequest,
     {headers: new HttpHeaders({'Authorization': 'Bearer ' + jwtToken})})
@@ -72,11 +88,12 @@ export class TeamService {
 	  {headers: new HttpHeaders( {'Authorization' : 'Bearer ' + jwtToken} )});
   }
 
-  public addImageToTeam(teamId: string, teamImageEventBase64: string, jwtToken: string): Observable<MessageResponse>{
+  public addImageToTeam(teamId: string, teamName: string, teamImageEventBase64: string, jwtToken: string): Observable<MessageResponse>{
     
     const imageModel: ImageModel = new ImageModel();
     imageModel.imageBytes = teamImageEventBase64;
     imageModel.dtoID = teamId;
+    imageModel.dtoName = teamName;
     const url: string = TEAM_API + '/create/image';
     return this.httpClient.post<MessageResponse>(url, imageModel,
       {headers: new HttpHeaders({'Authorization': 'Bearer ' + jwtToken})})

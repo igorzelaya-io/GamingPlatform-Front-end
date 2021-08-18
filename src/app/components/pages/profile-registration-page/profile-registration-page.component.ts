@@ -172,13 +172,13 @@ export class ProfileRegistrationPageComponent implements OnInit {
           resultData.hasImage = true;
           this.uploadImageAndSaveUser(resultData);
         }
+        this.tokenService.saveUser(resultData);
       }
     });
   }
   
   async uploadImageAndSaveUser(data: User){
-    await this.userService.addImageToUser(data.userId, this.croppedImage).toPromise();
-    this.tokenService.saveUser(data);
+    await this.userService.addImageToUser(data.userId, data.userName, this.croppedImage).toPromise();
   }
 
   validatePasswords(): void {

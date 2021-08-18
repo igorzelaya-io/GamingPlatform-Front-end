@@ -278,11 +278,10 @@
                             <span class="date">{{allChallengeMonths[i]}} {{allChallengeYears[i]}}</span>
                             <div class="content">
                                 <span class="time">{{challenge.challengeGame}}</span>
-                                <!-- challenge details -->
-                                <h3><a >{{challenge.challengeName}}</a></h3>
+                                
+                                <h3><a (click)="viewChallenge(challenge)">{{challenge.challengeName}}</a></h3>
                             </div>
-                            <!-- CHALLENGE DETAILS -->
-                            <a class="link-btn" target="_blank"></a>
+                            <a class="link-btn" target="_blank" (click)="viewChallenge(challenge)"></a>
                         </div>
                     </div>
                 </div>

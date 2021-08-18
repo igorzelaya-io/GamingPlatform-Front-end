@@ -3,22 +3,22 @@ import { ActivatedRoute } from '@angular/router';
 import { TokenStorageService } from 'src/app/services/token-storage.service';
 import { User } from 'src/app/models/user/user';
 import { Match } from 'src/app/models/match';
-import { TeamTournamentService } from 'src/app/services/team/team-tournament.service';
-import { UserTournament } from 'src/app/models/user/user-tournament';
 import { Team } from 'src/app/models/team';
 import { FormControl } from '@angular/forms';
-import { MatchTournamentRequest } from 'src/app/models/matchtournamentrequest';
-import { TournamentService } from 'src/app/services/tournament/tournament.service';
 import { MessageResponse } from 'src/app/models/messageresponse';
 import { Renderer2 } from '@angular/core';
 import { SharedService } from 'src/app/services/helpers/shared-service';
+import { UserChallenge } from 'src/app/models/user/userchallenge';
+import { TeamChallengeService } from 'src/app/services/team/team-challenge.service';
+import { MatchChallengeRequest } from 'src/app/models/matchchallengerequest';
+import { Role } from 'src/app/models/role';
 
 @Component({
-  selector: 'app-match-details-page',
-  templateUrl: './match-details-page.component.html',
-  styleUrls: ['./match-details-page.component.scss']
+  selector: 'app-challenge-match-details-page',
+  templateUrl: './challenge-match-details-page.component.html',
+  styleUrls: ['./challenge-match-details-page.component.scss']
 })
-export class MatchDetailsPageComponent implements OnInit {
+export class ChallengeMatchDetailsPageComponent implements OnInit {
 
   @ViewChild('wonButton')
   wonButton: ElementRef;
@@ -28,10 +28,13 @@ export class MatchDetailsPageComponent implements OnInit {
 
   userInspectingMatch: User;
   match: Match;
-  tournamentId: string;
-  userTeamInTournament: Team;
+
+  challengeId: string;
+  
+  userTeamInChallenge: Team;
   userTeamPointsScored: FormControl;
   oppositeTeamPointsScored: FormControl;
+  
   isWinningUserTeam: boolean = false;
   
   isTeamAdmin: boolean = false;
@@ -45,8 +48,7 @@ export class MatchDetailsPageComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,
               private tokenService: TokenStorageService,
-              private teamTournamentService: TeamTournamentService,
-              private tournamentService: TournamentService,
+              private teamChallengeService: TeamChallengeService,
               private renderer: Renderer2,
               private sharedService: SharedService) {
     this.match = new Match();
@@ -59,14 +61,13 @@ export class MatchDetailsPageComponent implements OnInit {
   ngOnInit(): void {
     this.userInspectingMatch = this.tokenService.getUser();
     this.route.queryParams.subscribe(params => {
-      this.getMatchFromTournament(params['matchId'], params['tournamentId']);
-      this.tournamentId = params['tournamentId'];
+      this.getMatchFromChallenge(params['matchId'], params['challengeId']);
+      this.challengeId = params['challengeId'];
     });
   }
   
-  
-  public getMatchFromTournament(matchId:string, tournamentId: string){
-    this.teamTournamentService.getTeamMatchFromTournament(matchId, tournamentId)
+  public getMatchFromChallenge(matchId: string, challengeId: string){
+    this.teamChallengeService.getTeamMatchFromChallenge(matchId, challengeId)
     .subscribe((data: Match) => {
       if(data){
         console.log(data); 
@@ -76,23 +77,29 @@ export class MatchDetailsPageComponent implements OnInit {
       console.error(err);
     }, 
     () => {
-      this.hasTeamAdminRole(tournamentId);
+      this.hasTeamAdminRole(challengeId);
     });
   }
   
-  hasTeamAdminRole(tournamentId: string){
-    const userTournaments: UserTournament[] = this.userInspectingMatch.userTournaments
-        .filter(userTournament => userTournament.userTournament.tournamentId === tournamentId);
-    if(userTournaments.length !== 0){
-      const userTeamInTournament: Team = userTournaments[0].userTournamentTeam;
-      this.userTeamInTournament = userTeamInTournament;
-      if(userTeamInTournament.teamId === this.match.matchLocalTeam.teamId || userTeamInTournament.teamId === this.match.matchAwayTeam.teamId){
-        const userTeamModerator = userTeamInTournament.teamModerator; 
+  hasTeamAdminRole(challengeId: string){
+    const userChallenges: UserChallenge[] = this.userInspectingMatch.userChallenges
+        .filter(userChallenge => userChallenge.userChallengeId === challengeId);
+    if(userChallenges.length !== 0){
+      const userTeamInChallenge: Team = userChallenges[0].userChallengeTeam;
+      this.userTeamInChallenge = userTeamInChallenge;
+      if(userTeamInChallenge.teamId === this.match.matchLocalTeam.teamId || userTeamInChallenge.teamId === this.match.matchAwayTeam.teamId){
+        const userTeamModerator = userTeamInChallenge.teamModerator; 
         if(this.userInspectingMatch.userId === userTeamModerator.userId){
           this.isTeamAdmin = true;
           return;
         }
       }
+    }
+    let role: Role = this.userInspectingMatch.userRoles.filter(userRole => userRole.authority === 'ADMIN')
+                                                        .find(userRole => userRole.authority === 'ADMIN');
+    if(role){
+      this.isTeamAdmin = true;
+      return;
     }
     this.isTeamAdmin = false;
   }
@@ -100,12 +107,13 @@ export class MatchDetailsPageComponent implements OnInit {
   uploadResults(): void{
     this.isClickedSentButton = true;
     if(this.isWinningUserTeam === true){
-      this.match.matchWinningTeam = this.userTeamInTournament;
+      this.match.matchWinningTeam = this.userTeamInChallenge;
     }
     else {
-      this.match.matchWinningTeam = this.match.matchLocalTeam.teamId === this.userTeamInTournament.teamId ? this.match.matchAwayTeam : this.match.matchLocalTeam
+      let isLocalTeam: boolean = this.userTeamInChallenge.teamId === this.match.matchLocalTeam.teamId ? true : false;
+      this.match.matchWinningTeam = isLocalTeam ? this.match.matchAwayTeam : this.match.matchLocalTeam;
     }
-    if(this.match.matchLocalTeam.teamId === this.userTeamInTournament.teamId){
+    if(this.match.matchLocalTeam.teamId === this.userTeamInChallenge.teamId){
       this.match.localTeamMatchScore = this.userTeamPointsScored.value;
       this.match.awayTeamMatchScore = this.oppositeTeamPointsScored.value;
     }
@@ -113,38 +121,15 @@ export class MatchDetailsPageComponent implements OnInit {
       this.match.awayTeamMatchScore = this.userTeamPointsScored.value;
       this.match.localTeamMatchScore = this.oppositeTeamPointsScored.value;
     }
-    const matchTournamentRequest: MatchTournamentRequest = new MatchTournamentRequest();
-    matchTournamentRequest.matchTournamentMatch = this.match;
-    matchTournamentRequest.matchTournamentTeam = this.userTeamInTournament;
-    matchTournamentRequest.matchTournamentTournamentId = this.tournamentId;
-    if(this.match.matchTournament.tournamentGame === 'Fifa'){
-      this.uploadFifaMatchResults(matchTournamentRequest);
-      return;
-    }
-    this.uploadCodMatchResults(matchTournamentRequest);
+    const matchChallengeRequest: MatchChallengeRequest = new MatchChallengeRequest();
+    matchChallengeRequest.matchChallengeMatch = this.match; 
+    matchChallengeRequest.matchChallengeTeam = this.userTeamInChallenge;
+    matchChallengeRequest.matchChallengeChallengeId = this.challengeId;
+    this.uploadCodMatchResults(matchChallengeRequest);
   }
 
-  uploadFifaMatchResults(matchTournamentRequest: MatchTournamentRequest){
-    this.teamTournamentService.uploadFifaMatchResult(matchTournamentRequest, this.tokenService.getToken())
-    .subscribe((data: MessageResponse) => {
-      if(data){
-        this.isSuccessfulUpload = true;
-        this.errorMessage = data.message;
-      }
-    }, err => {
-      this.isSuccessfulUpload = false;
-      this.isFailedUpload = true;
-      console.error(err.error.message);
-      this.errorMessage = err.error.message;
-      this.isClickedSentButton = false; 
-    }, 
-    () => {
-      window.location.reload();
-    });
-  }
-
-  uploadCodMatchResults(matchTournamentRequest: MatchTournamentRequest){
-    this.teamTournamentService.uploadCodMatchResult(matchTournamentRequest, this.tokenService.getToken())
+  uploadCodMatchResults(matchChallengeRequest: MatchChallengeRequest){
+    this.teamChallengeService.uploadCodMatchResult(matchChallengeRequest, this.tokenService.getToken())
     .subscribe((data: MessageResponse) => {
       if(data){
         this.isSuccessfulUpload = true;
@@ -161,6 +146,7 @@ export class MatchDetailsPageComponent implements OnInit {
       window.location.reload();
     });
   }
+
   selectLostMatchOption(): void{
     if(this.isWhiteBorder(this.lostButton)){
       this.changeToBlackBorder(this.lostButton);

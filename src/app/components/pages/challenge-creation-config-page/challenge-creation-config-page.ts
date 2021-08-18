@@ -18,6 +18,8 @@ import { UserService } from 'src/app/services/user.service';
 import { UserTeamService } from 'src/app/services/user-team.service';
 import { UserChallengesService } from 'src/app/services/userchallenges.service';
 import { UserChallengeRequest } from 'src/app/models/userchallengerequest';
+import { User } from 'src/app/models/user/user';
+import { UserChallenge } from 'src/app/models/user/userchallenge';
 
 @Component({
 	selector: 'app-challenge-creation-config-page',
@@ -161,10 +163,10 @@ export class ChallengeCreationConfigPageComponent implements OnInit {
 			this.challenge.challengeHostTeam = this.selectedTeamToJoinChallenge;
 			this.challengeService.postChallenge(this.challenge, this.tokenService.getToken())
 			.subscribe((data: Challenge) => {
-				if(data && data instanceof Challenge){
+				if(data && data.challengeId){
 					console.log(data);
 					this.message = 'Tournament created Successfully.'
-					this.challenge = data;
+					this.challenge = data as Challenge;
 					this.isSuccessfulChallengeCreation = true;
 					this.isSignUpFailed = false;
 					this.isClicked = true;
@@ -189,10 +191,23 @@ export class ChallengeCreationConfigPageComponent implements OnInit {
 					this.userChallengeService.addChallengeToTeamCodChallengeList(this.userChallengeRequest, this.tokenService.getToken())
 					.subscribe((data: MessageResponse) => {
 						console.log(data);
-					}, err => console.error(err.error.message));
+					},
+					err => {
+						console.error(err.error.message);
+					},
+					() => {
+						this.addChallengeToUserStorage();
+					});
 				}
 			});
 		}
+	}
+
+	async addChallengeToUserStorage(){
+		let userInStorage: User = this.tokenService.getUser();
+		let userChallenge: UserChallenge = new UserChallenge(this.challenge.challengeId, this.selectedTeamToJoinChallenge, [], 0, 0, 'ACTIVE');
+		userInStorage.userChallenges.push(userChallenge);
+		this.tokenService.saveUser(userInStorage);
 	}
 
 	public navigateToTournaments() {

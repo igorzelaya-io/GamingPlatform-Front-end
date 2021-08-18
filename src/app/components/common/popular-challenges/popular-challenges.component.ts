@@ -103,8 +103,8 @@ export class PopularChallengesComponent implements OnInit {
 	}
   }
 
-  public viewTournament(tournament: Tournament){
-	this.router.navigate(['/tournament-details'], {queryParams: {tournamentId: tournament.tournamentId}});
+  public viewChallenge(challenge: Challenge){
+	this.router.navigate(['/challenge-details'], { queryParams: {challengeId: challenge.challengeId}});
   }
 
   public hasAdminRole(): void{

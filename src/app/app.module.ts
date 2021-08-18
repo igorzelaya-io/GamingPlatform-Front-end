@@ -38,7 +38,7 @@ import { TournamentsMainBannerComponent } from './components/pages/tournaments-h
 import { UpcomingStreamingComponent } from './components/common/upcoming-streaming/upcoming-streaming.component';
 import { TrendingStreamingComponent } from './components/common/trending-streaming/trending-streaming.component';
 import { StreamingMainBannerComponent } from './components/pages/streaming-home/streaming-main-banner/streaming-main-banner.component';
-import { GalleryPageComponent } from './components/pages/gallery-page/gallery-page.component';
+import { LeaderboardsPageComponent } from './components/pages/leaderboards-page/leaderboards-page.component';
 import { TeamPageComponent } from './components/pages/team-page/team-page.component';
 import { ContactPageComponent } from './components/pages/contact-page/contact-page.component';
 import { SponsorsPageComponent } from './components/pages/sponsors-page/sponsors-page.component';
@@ -98,6 +98,8 @@ import { ChallengesMainBannerComponent } from './components/pages/challenges-hom
 import { PopularChallengesComponent } from './components/common/popular-challenges/popular-challenges.component';
 import { UpcomingChallengesComponent } from './components/common/upcoming-challenges/upcoming-challenges.component';
 import { ChallengesDetailsPageComponent } from './components/pages/challenges-details-page/challenges-details-page.component';
+import { ChallengeMatchDetailsPageComponent } from './components/pages/challenge-match-details-page/challenge-match-details-page.component';
+
 
 @NgModule({
   declarations: [
@@ -138,7 +140,7 @@ import { ChallengesDetailsPageComponent } from './components/pages/challenges-de
     UpcomingStreamingComponent,
     TrendingStreamingComponent,
     StreamingMainBannerComponent,
-    GalleryPageComponent,
+    LeaderboardsPageComponent,
     TeamPageComponent,
     ContactPageComponent,
     SponsorsPageComponent,
@@ -177,7 +179,8 @@ import { ChallengesDetailsPageComponent } from './components/pages/challenges-de
     ChallengesMainBannerComponent,
     PopularChallengesComponent,
     UpcomingChallengesComponent,
-    ChallengesDetailsPageComponent
+    ChallengesDetailsPageComponent,
+    ChallengeMatchDetailsPageComponent
   ],
   imports: [
     BrowserModule,

@@ -217,7 +217,7 @@ export class ChallengesDetailsPageComponent implements OnInit {
   public isAlreadyPartOfChallenge(): void {
     if(this.userInspectingChallenge){
       if(this.userInspectingChallenge.userChallenges.filter((userChallenge: UserChallenge) => 
-          userChallenge.userChallenge.challengeId === this.challenge.challengeId).length){
+          userChallenge.userChallengeId === this.challenge.challengeId).length){
           this.alreadyJoinedChallenge = true;
           return;
       }
@@ -229,11 +229,12 @@ export class ChallengesDetailsPageComponent implements OnInit {
     if(this.tokenService.loggedIn()){
       if(this.userInspectingChallenge.userTokens >= this.challenge.challengeTokenFee){
         this.isTryingToJoinChallenge = true;  
+        this.isFailedChallengeJoin = false;
         this.getAllUserTeamsAvailable();
         return;
       }
       this.isFailedChallengeJoin = true;
-      this.errorMessage = 'Not enough tokens to join tournament.';
+      this.errorMessage = 'Not enough tokens to join challenge.';
       return;
     }
     this.router.navigate(['/login']);
@@ -253,7 +254,7 @@ export class ChallengesDetailsPageComponent implements OnInit {
         return;
       }
       this.isFailedChallengeJoin = true;
-      this.errorMessage  = 'A team must be selected to join tournament';
+      this.errorMessage  = 'A team must be selected to join challenge';
       this.isClickedJoinButton = false;
       return;
     }
@@ -264,7 +265,7 @@ export class ChallengesDetailsPageComponent implements OnInit {
     if(this.alreadyJoinedChallenge){
       const teamOnTournament = this.userInspectingChallenge
               .userChallenges.filter((userChallenge: UserChallenge) => 
-              userChallenge.userChallenge.challengeName === this.challenge.challengeName)[0].userChallengeTeam;
+              userChallenge.userChallengeId === this.challenge.challengeId)[0].userChallengeTeam;
       
       const teamChallengeRequest: TeamChallengeRequest = new TeamChallengeRequest();
       teamChallengeRequest.challenge = this.challenge;
@@ -272,27 +273,6 @@ export class ChallengesDetailsPageComponent implements OnInit {
       this.removeTeamFromCodChallenge(teamChallengeRequest);
     }
   }
-
-  public isClickedExitChallengeButton(){
-    this.isClickedExitButton = true;
-  }
-
-  public clickJoinChallengeButton(){
-    this.isClickedJoinButton = true;
-  }
-
-  public clickSelectTeamButton(){
-    this.isClickedSelectButton = true;
-  }
-
-  public selectTeamToJoinChallenge(team: Team){
-    this.selectedTeamToJoinChallengeWith = team;
-  }
-
-  public deselectTeamToJoinChallenge(){
-    this.selectedTeamToJoinChallengeWith = undefined;
-    this.isClickedSelectButton = false;
-  } 
   
   public removeTeamFromCodChallenge(teamChallengeRequest: TeamChallengeRequest){
     this.teamChallengeService.removeTeamFromCodChallenge(teamChallengeRequest, this.tokenService.getToken())
@@ -310,6 +290,30 @@ export class ChallengesDetailsPageComponent implements OnInit {
         }
       });
     }
+
+
+  public isClickedExitChallengeButton(){
+    this.isClickedExitButton = true;
+  }
+
+  public clickJoinChallengeButton(){
+    this.isClickedJoinButton = true;
+  }
+
+  public clickSelectTeamButton(){
+    this.isClickedSelectButton = true;
+  }
+
+  public selectTeamToJoinChallenge(team: Team){
+    this.selectedTeamToJoinChallengeWith = team;
+    this.isClickedJoinButton = false;
+  }
+
+  public deselectTeamToJoinChallenge(){
+    this.selectedTeamToJoinChallengeWith = undefined;
+    this.isClickedSelectButton = false;
+  } 
+  
 
   public addTeamToCodChallenge(teamChallengeRequest: TeamChallengeRequest){
     this.teamChallengeService.addTeamToCodChallenge(teamChallengeRequest, this.tokenService.getToken())
@@ -333,19 +337,19 @@ export class ChallengesDetailsPageComponent implements OnInit {
 
   public addUserChallengeToUser(teamChallengeRequest: TeamChallengeRequest){
      const user: User = this.userInspectingChallenge
-     let userChallenge: UserChallenge = new UserChallenge(teamChallengeRequest.challenge, teamChallengeRequest.team, [], 0, 0, 'ACTIVE');
+     let userChallenge: UserChallenge = new UserChallenge(teamChallengeRequest.challenge.challengeId, teamChallengeRequest.team, [], 0, 0, 'ACTIVE');
      user.userChallenges.push(userChallenge);
      this.tokenService.saveUser(user);
   }
 
   public removeUserChallengeFromUser(teamChallengeRequest: TeamChallengeRequest){
     const user: User = this.userInspectingChallenge;
-    user.userChallenges = user.userChallenges.filter((userChallenge: UserChallenge) => userChallenge.userChallenge.challengeId !== teamChallengeRequest.challenge.challengeId);
+    user.userChallenges = user.userChallenges.filter((userChallenge: UserChallenge) => userChallenge.userChallengeId !== teamChallengeRequest.challenge.challengeId);
     this.tokenService.saveUser(user);
   }
   
   public activateChallenge(){
-    this.challengeService.activateChallenge(this.challenge.challengeId, this.tokenService.getToken())
+    this.challengeService.activateChallenge(this.challenge, this.tokenService.getToken())
     .subscribe((data: Challenge) => {
       if(data && Object.keys(data).length !== 0){
         this.challenge = data;
@@ -374,7 +378,7 @@ export class ChallengesDetailsPageComponent implements OnInit {
   }
 
   passMatch(matchId: string){
-    this.router.navigate(['/match-details'], { queryParams: {matchId: matchId, tournamentId: this.challenge.challengeId}});
+    this.router.navigate(['/challenge-match-details'], { queryParams: {matchId: matchId, challengeId: this.challenge.challengeId}});
   }
 
 
@@ -386,6 +390,15 @@ export class ChallengesDetailsPageComponent implements OnInit {
       }
     });
   } 
+
+  openConfirmationDialogForChallengeExit(){
+    const dialogRef = this.dialog.open(FieldformConfirmationComponent);
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if(result){
+        this.removeTeamFromChallenge();
+      }
+    });
+  }
   
   startChallenge(){
     if(new Date().getTime() > new Date(this.challenge.challengeDate).getTime()){

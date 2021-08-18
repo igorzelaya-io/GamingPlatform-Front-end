@@ -29,10 +29,13 @@ import { ChallengeCreationPageComponent } from './components/pages/challenge-cre
 import { ChallengeCreationConfigPageComponent } from './components/pages/challenge-creation-config-page/challenge-creation-config-page';
 import { ChallengesHomeComponent } from './components/pages/challenges-home/challenges-home.component';
 import { ChallengesDetailsPageComponent } from './components/pages/challenges-details-page/challenges-details-page.component';
+import { ChallengeMatchDetailsPageComponent } from './components/pages/challenge-match-details-page/challenge-match-details-page.component';
+import { LeaderboardsPageComponent } from './components/pages/leaderboards-page/leaderboards-page.component';
 
 const routes: Routes = [
     {path: '', component: MainHomeComponent},
     {path: 'tournaments', component: TournamentsHomeComponent},
+    {path: 'leaderboards', component: LeaderboardsPageComponent},
     {path: 'challenges', component: ChallengesHomeComponent},
     {path: 'tournament-details', component: TournamentsDetailsPageComponent},
     {path: 'challenge-details', component: ChallengesDetailsPageComponent},
@@ -44,6 +47,7 @@ const routes: Routes = [
     {path: 'team-invites', component: TeamInvitesPageComponent},
     {path: 'team-details', component: TeamDetailsPageComponent},
     {path: 'team-creation', component: TeamCreationPageComponent},
+    {path: 'challenge-match-details', component: ChallengeMatchDetailsPageComponent},
     {path: 'match-details', component: MatchDetailsPageComponent},
     {path: 'coming-soon', component: ComingSoonPageComponent},
     {path: 'error', component: ErrorPageComponent},

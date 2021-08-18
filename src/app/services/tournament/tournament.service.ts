@@ -108,8 +108,9 @@ export class TournamentService {
     .pipe(catchError(this.handleError('updateTournament', {} as MessageResponse)));
   }
 
-   public activateTournament(tournament: Tournament): Observable<Tournament>{
-    return this.httpClient.post<Tournament>(TOURNAMENTS_API + '/start', tournament)
+   public activateTournament(tournament: Tournament, jwtToken: string): Observable<Tournament>{
+    return this.httpClient.post<Tournament>(TOURNAMENTS_API + '/start', tournament,
+    {headers: new HttpHeaders({'Authorization': 'Bearer ' + jwtToken})})
     .pipe(catchError(this.handleError('activateTournament', {} as Tournament)));
   }
 }

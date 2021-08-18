@@ -5,16 +5,16 @@ import { Match } from '../match';
 
 export class UserChallenge {
     
-    userChallenge: Challenge;
+    userChallengeId: string;
     userChallengeTeam: Team; 
     userChallengeMatches: Match[];
     userChallengeMatchesWins: number;
     userChallengeLosses: number;
     userChallengeStatus: string;
 
-    constructor(userChallenge?: Challenge, userChallengeTeam?: Team, userChallengeMatches?: Match[], userChallengeMatchesWins?: number, userChallengeLosses?: number,
+    constructor(userChallengeId?: string, userChallengeTeam?: Team, userChallengeMatches?: Match[], userChallengeMatchesWins?: number, userChallengeLosses?: number,
                 userChallengeStatus?: string){
-        this.userChallenge = userChallenge;
+        this.userChallengeId = userChallengeId;
         this.userChallengeTeam = userChallengeTeam;
         this.userChallengeMatches = userChallengeMatches;
         this.userChallengeMatchesWins = userChallengeMatchesWins;

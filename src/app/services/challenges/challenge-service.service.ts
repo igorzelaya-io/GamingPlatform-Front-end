@@ -86,11 +86,11 @@ export class ChallengeServiceService {
     );
   }
 
-  postChallenge(challenge: Challenge, jwtToken: string): Observable<{}>{
+  postChallenge(challenge: Challenge, jwtToken: string): Observable<Challenge>{
     return this.httpClient.post<Challenge>(CHALLENGES_API + '/add', challenge,
     {headers: new HttpHeaders({ 'Authorization' : 'Bearer ' + jwtToken})})
     .pipe(
-      catchError(this.handleError('postChallenge', {} as HttpErrorResponse))
+      catchError(this.handleError('postChallenge', {} as Challenge))
     );
   }
 
@@ -110,8 +110,8 @@ export class ChallengeServiceService {
     );
   }
 
-  activateChallenge(challengeId: string, jwtToken: string): Observable<Challenge>{
-    return this.httpClient.post<Challenge>(CHALLENGES_API + '/start?challengeId='+challengeId, 
+  activateChallenge(challenge: Challenge, jwtToken: string): Observable<Challenge>{
+    return this.httpClient.post<Challenge>(CHALLENGES_API + '/start',challenge, 
     { headers: new HttpHeaders({ 'Authorization' : 'Bearer ' + jwtToken})})
     .pipe(
       catchError(this.handleError('activateChallenge', {} as Challenge))

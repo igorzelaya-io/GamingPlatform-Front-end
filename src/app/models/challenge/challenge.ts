@@ -23,6 +23,7 @@ export class Challenge {
     challengeTokenFee: number;
     challengeRegion: string;
     startedChallenge: boolean;
+    numberOfPlayedMatches: number;
 
     constructor(challengeId?:string, challengeName?: string, challengeGame?: string,
                 challengeCodGameMode?: string, challengeMatches?: Match[]) {

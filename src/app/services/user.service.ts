@@ -62,6 +62,22 @@ export class UserService {
     );
   }
 
+  public getFirstFifteenUsersByWins(): Observable<User[]>{
+    return this.httpClient.get<User[]>(USER_API + '/users/leaderboards')
+    .pipe(
+      retry(1),
+      catchError(this.handleError('getFirstTwentyFiveUsersByWins', []))
+    );
+  }
+
+  public getNextPage(lastUserId: string): Observable<User[]>{
+    return this.httpClient.get<User[]>(USER_API + '/users/leaderboards/next?lastUserId=' + lastUserId)
+    .pipe(
+      retry(1),
+      catchError(this.handleError('getNextPage', []))
+    );
+  }
+
   public getUserTransaction(userId: string, transactionId: string): Observable<D1Transaction>{
     return this.httpClient.get<D1Transaction>(USER_API + '/users/transactions?userId=' + userId + '&transactionId=' + transactionId,
       {headers: new HttpHeaders({'Authorization': 'Bearer ' + JwtResponse})})
@@ -93,9 +109,10 @@ export class UserService {
     );
   }
 
-  public addImageToUser(userId: string, imageBase64: string): Observable<MessageResponse>{
+  public addImageToUser(userId: string, userName: string, imageBase64: string): Observable<MessageResponse>{
     const imageModel: ImageModel = new ImageModel();
     imageModel.dtoID = userId; 
+    imageModel.dtoName = userName;
     imageModel.imageBytes = imageBase64;
     return this.httpClient.post<MessageResponse>(USER_API + '/users/image', imageModel)
     .pipe(
