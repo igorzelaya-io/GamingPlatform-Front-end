@@ -80,8 +80,11 @@ export class TournamentsDetailsPageComponent implements OnInit {
   selectedTeamToJoinTournamentWith: Team;
   userTeamsAvailableToJoinTournaments: Team[];
   userTeamEnrolledInTournament: Team;
+  
   userTeamActiveMatches: Match[];
+  
   tournamentMatches: Match[];
+  
   tournamentInactiveMatches: Match[];
 
   hasNoTeams: boolean = false;  
@@ -106,7 +109,6 @@ export class TournamentsDetailsPageComponent implements OnInit {
               private userTeamService: UserTeamService, 
               private teamTournamentService: TeamTournamentService,
               private tournamentService: TournamentService,
-              private userService: UserService,
               public dialog: MatDialog) {
 	  this.tournament = new Tournament();
     this.userTeamsAvailableToJoinTournaments  = [];
@@ -140,10 +142,102 @@ export class TournamentsDetailsPageComponent implements OnInit {
     });
   }
 
+  getAllTournamentDates(): void{
+    this.getTournamentYear();
+    this.getTournamentMonth();
+    this.getTournamentTime();
+    this.getTournamentMonthDate(); 
+  }
+
+  getTournamentYear(){
+	  this.tournamentYear = new Date(this.tournament.tournamentDate).getFullYear();	
+  }
+
+  getTournamentMonth(){
+	  this.tournamentMonth = monthNames[new Date(this.tournament.tournamentDate).getMonth()];	
+  } 
+
+  getTournamentTime(){
+	  this.tournamentTime = new Date(this.tournament.tournamentDate).toString().slice(15, 25) + '  ' + new Date(this.tournament.tournamentDate).toString().match(/([A-Z]+[\+-][0-9]+)/)[1];
+  }
+
+  getTournamentMonthDate(){
+	  this.tournamentMonthDate = new Date(this.tournament.tournamentDate).getDate();		
+  } 
+
+  evaluateTournamentDate(){
+    if(new Date().getTime() > new Date(this.tournament.tournamentDate).getTime()){
+      this.isStartedTournament = true;
+      if(this.tournament.startedTournament){
+        this.isActivatedTournament = true;
+        if(this.alreadyJoinedTournament){
+          this.getAllUserActiveMatches();
+        }
+        if(this.isPvPTournament()){
+          this.getAllActiveTournamentMatches();
+          this.getAllTournamentInactiveMatches();
+          return;
+        }
+
+        //getTournamentLeaderboard
+      }
+    }
+  }
+
+  getAllActiveTournamentMatches(){
+    this.tournamentService.getAllActiveTournamentMatches(this.tournament.tournamentId)
+    .subscribe((data: Match[]) => {
+      if(data){
+        console.log(data);
+        this.tournamentMatches = data;
+        return;
+      }
+    },
+    err => {
+      console.error(err);
+    });
+  }
+
+  getAllTournamentInactiveMatches(){
+    this.tournamentService.getAllTournamentInactiveMatches(this.tournament.tournamentId)
+    .subscribe((data: Match[]) => {
+      if(data){
+        console.log(data);
+        this.tournamentInactiveMatches = data;
+        return;
+      }
+    },
+    err => {
+      console.error(err);
+    });  
+  }
+
+  getAllUserActiveMatches(){
+    this.tournamentService.getAllUserActiveMatches(this.userInspectingTournament.userId, this.tournament.tournamentId)
+    .subscribe((data: Match[]) => {
+      if(data){
+        this.userTeamActiveMatches = data;
+        return;
+      }
+    }, err => console.error(err));
+  }
+
+  public isAlreadyPartOfTournament(): void {
+    if(this.userInspectingTournament){
+      if(this.userInspectingTournament.userTournaments.filter((tournament: UserTournament) => 
+            tournament.userTournamentId === this.tournament.tournamentId).length !== 0){
+          this.alreadyJoinedTournament = true;
+          return;
+      }
+    }
+    this.alreadyJoinedTournament = false;
+  }
+
   public isJoiningTournament(): void{
     if(this.tokenService.loggedIn()){
       if(this.userInspectingTournament.userTokens >= this.tournament.tournamentEntryFee){
         this.isTryingToJoinTournament = true;  
+        this.isFailedTournamentJoin = false;
         this.getAllUserTeamsAvailable();
         return;
       }
@@ -185,7 +279,7 @@ export class TournamentsDetailsPageComponent implements OnInit {
     if(this.alreadyJoinedTournament){
       const teamOnTournament = this.userInspectingTournament
               .userTournaments.filter(userTournaments => 
-              userTournaments.userTournament.tournamentName === this.tournament.tournamentName)[0].userTournamentTeam;
+              userTournaments.userTournamentId === this.tournament.tournamentId)[0].userTournamentTeam;
       
       const teamTournamentRequest = new TeamTournamentRequest();
       teamTournamentRequest.team = teamOnTournament;
@@ -198,55 +292,6 @@ export class TournamentsDetailsPageComponent implements OnInit {
       this.removeTeamFromCodTournament(teamTournamentRequest);
     }
   }
-  
-  public isAlreadyPartOfTournament(): void {
-    if(this.userInspectingTournament){
-      if(this.userInspectingTournament.userTournaments
-            .filter(tournament => 
-            tournament.userTournament.tournamentId === this.tournament.tournamentId).length !== 0){
-          this.alreadyJoinedTournament = true;
-          return;
-      }
-    }
-    this.alreadyJoinedTournament = false;
-  }
-
-  public isClickedExitTournamentButton(){
-    this.isClickedExitButton = true;
-  }
-
-  public clickJoinTournamentButton(){
-    this.isClickedJoinButton = true;
-  }
-
-  public clickSelectTeamButton(){
-    this.isClickedSelectButton = true;
-  }
-
-  public selectTeamToJoinTournament(team: Team){
-    this.selectedTeamToJoinTournamentWith = team;
-  }
-
-  public deselectTeamToJoinTournament(){
-    this.selectedTeamToJoinTournamentWith = undefined;
-    this.isClickedSelectButton = false;
-  }
-
-  getTournamentYear(){
-	  this.tournamentYear = new Date(this.tournament.tournamentDate).getFullYear();	
-  }
-
-  getTournamentMonth(){
-	  this.tournamentMonth = monthNames[new Date(this.tournament.tournamentDate).getMonth()];	
-  } 
-
-  getTournamentTime(){
-	  this.tournamentTime = new Date(this.tournament.tournamentDate).toString().slice(15, 25) + '  ' + new Date(this.tournament.tournamentDate).toString().match(/([A-Z]+[\+-][0-9]+)/)[1];
-  }
-
-  getTournamentMonthDate(){
-	  this.tournamentMonthDate = new Date(this.tournament.tournamentDate).getDate();		
-  } 
 
   public removeTeamFromFifaTournament(teamTournamentRequest: TeamTournamentRequest){   
     this.teamTournamentService.removeTeamFromFifaTournament(teamTournamentRequest, this.tokenService.getToken())
@@ -282,6 +327,29 @@ export class TournamentsDetailsPageComponent implements OnInit {
         }
       });
   }
+
+  public isClickedExitTournamentButton(){
+    this.isClickedExitButton = true;
+  }
+
+  public clickJoinTournamentButton(){
+    this.isClickedJoinButton = true;
+  }
+
+  public clickSelectTeamButton(){
+    this.isClickedSelectButton = true;
+  }
+
+  public selectTeamToJoinTournament(team: Team){
+    this.selectedTeamToJoinTournamentWith = team;
+  }
+
+  public deselectTeamToJoinTournament(){
+    this.selectedTeamToJoinTournamentWith = undefined;
+    this.isClickedSelectButton = false;
+  }
+
+  
 
   public addTeamToFifaTournament(teamTournamentRequest: TeamTournamentRequest){
     this.teamTournamentService.addTeamToFifaTournament(teamTournamentRequest, this.tokenService.getToken())
@@ -325,14 +393,14 @@ export class TournamentsDetailsPageComponent implements OnInit {
 
   public addUserTournamentToUser(teamTournamentRequest: TeamTournamentRequest){
      const user: User = this.userInspectingTournament;
-     let userTournament: UserTournament = new UserTournament(teamTournamentRequest.tournament, teamTournamentRequest.team, 0, 0, [], 'ACTIVE');
+     let userTournament: UserTournament = new UserTournament(teamTournamentRequest.tournament.tournamentId, teamTournamentRequest.team, 0, 0, [], 'ACTIVE');
      user.userTournaments.push(userTournament);
      this.tokenService.saveUser(user);
   }
 
   public removeUserTournamentFromUser(teamTournamentRequest: TeamTournamentRequest){
     const user: User = this.userInspectingTournament;
-    user.userTournaments = user.userTournaments.filter(userTournament => userTournament.userTournament.tournamentId !== teamTournamentRequest.tournament.tournamentId);
+    user.userTournaments = user.userTournaments.filter(userTournament => userTournament.userTournamentId !== teamTournamentRequest.tournament.tournamentId);
     this.tokenService.saveUser(user);
   }
   
@@ -366,85 +434,8 @@ export class TournamentsDetailsPageComponent implements OnInit {
     err => console.error(err));
   }
 
-  getAllActiveTournamentMatches(){
-    this.tournamentService.getAllActiveTournamentMatches(this.tournament.tournamentId)
-    .subscribe((data: Match[]) => {
-      if(data){
-        console.log(data);
-        this.tournamentMatches = data;
-        return;
-      }
-    },
-    err => {
-      console.error(err);
-    });
-  }
-
-  getAllTournamentInactiveMatches(){
-    this.tournamentService.getAllTournamentInactiveMatches(this.tournament.tournamentId)
-    .subscribe((data: Match[]) => {
-      if(data){
-        console.log(data);
-        this.tournamentInactiveMatches = data;
-        return;
-      }
-    },
-    err => {
-      console.error(err);
-    });  
-  }
-
-  getAllUserActiveMatches(){
-    this.tournamentService.getAllUserActiveMatches(this.userInspectingTournament.userId, this.tournament.tournamentId)
-    .subscribe((data: Match[]) => {
-      if(data){
-        this.userTeamActiveMatches = data;
-        return;
-      }
-    });
-  }
-
-  addMatchToTeams(matchTournamentRequest: MatchTournamentRequest): void{
-    if(this.tournament.tournamentGame === 'Fifa'){
-      this.teamTournamentService.addFifaMatchToTeams(matchTournamentRequest)
-      .subscribe(data => {
-
-      }, err => {
-        console.error(err.error.message);
-      });
-      return;
-    }
-    this.teamTournamentService.addCodMatchToTeams(matchTournamentRequest)
-    .subscribe(data => {
-
-    },
-    err => {
-      console.error(err.error.message);
-    });
-  }
-
   passMatch(matchId: string){
     this.router.navigate(['/match-details'], { queryParams: {matchId: matchId, tournamentId: this.tournament.tournamentId}});
-  }
-
-  evaluateTournamentDate(){
-    if(new Date().getTime() > new Date(this.tournament.tournamentDate).getTime()){
-      this.isStartedTournament = true;
-      if(this.tournament.startedTournament){
-        this.isActivatedTournament = true;
-        if(this.alreadyJoinedTournament){
-          this.getAllUserActiveMatches();
-        }
-        if(this.isPvPTournament()){
-          this.displayTournamentBracket();
-          this.getAllActiveTournamentMatches();
-          this.getAllTournamentInactiveMatches();
-          this.displayTournamentBracket();
-          return;
-        }
-        //getTournamentLeaderboard
-      }
-    }
   }
 
   openConfirmationDialogForTournamentInitialization(){
@@ -462,13 +453,6 @@ export class TournamentsDetailsPageComponent implements OnInit {
         this.activateTournament();
       }
     }
-  }
-
-  getAllTournamentDates(): void{
-    this.getTournamentYear();
-    this.getTournamentMonth();
-    this.getTournamentTime();
-    this.getTournamentMonthDate(); 
   }
 
   public isPvPTournament(): boolean{
@@ -505,34 +489,6 @@ export class TournamentsDetailsPageComponent implements OnInit {
       }
       return numberOfRounds;
     }
-  }
-
-  public createMatchForTeams(awayTeam: Team, localTeam?: Team ): Match{
-    let match: Match = new Match();
-    if(localTeam){
-      match.matchLocalTeam = localTeam;
-      match.localTeamMatchScore = 0;
-      match.matchAwayTeam = awayTeam;
-      match.awayTeamMatchScore = 0;
-      match.matchTournament = this.tournament;
-      match.matchStatus = 'ACTIVE';
-      match.uploaded = false;
-      const matchTournamentRequest: MatchTournamentRequest = new MatchTournamentRequest();
-      matchTournamentRequest.matchTournamentMatch = match;
-      this.addMatchToTeams(matchTournamentRequest);
-      return match;
-    }
-    match.matchAwayTeam = awayTeam;
-    match.awayTeamMatchScore = 0;
-    match.matchTournament = this.tournament;
-    match.matchStatus = 'ACTIVE';
-    match.uploaded = false;
-    return match;
-  }
-
-  //DISPLAY TOURNAMENT BRACKET
-  public displayTournamentBracket(){
-    
   }
 
   openDialogForPrizePool(){

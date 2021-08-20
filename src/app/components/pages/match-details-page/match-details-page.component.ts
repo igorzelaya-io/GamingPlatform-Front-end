@@ -82,7 +82,7 @@ export class MatchDetailsPageComponent implements OnInit {
   
   hasTeamAdminRole(tournamentId: string){
     const userTournaments: UserTournament[] = this.userInspectingMatch.userTournaments
-        .filter(userTournament => userTournament.userTournament.tournamentId === tournamentId);
+        .filter(userTournament => userTournament.userTournamentId === tournamentId);
     if(userTournaments.length !== 0){
       const userTeamInTournament: Team = userTournaments[0].userTournamentTeam;
       this.userTeamInTournament = userTeamInTournament;

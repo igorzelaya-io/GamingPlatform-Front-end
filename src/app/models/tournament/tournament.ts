@@ -29,6 +29,7 @@ export class Tournament {
     startedTournament: boolean;
     tournamentDateInMilliseconds: number;
     tournamentBinaryTree: BinaryTree;
+    tournamentWinningTeam: Team;
     
     constructor(tournamentName?: string, tournamentStatus?: string, tournamentModerator?: User,
                 tournamentDate?: Date, tournamentTeams?: Array<Team>){

@@ -1,11 +1,11 @@
 import { Match } from './match';
-import { Tournament } from './tournament/tournament';
+
 
 export class TeamFifaTournament {
 
-    teamTournamentId: string;
+    teamFifaTournamentId: string;
     
-    teamFifaTournament: Tournament;
+    teamTournamentId: string;
     
     teamTournamentMatches: Match[];
     
@@ -27,12 +27,12 @@ export class TeamFifaTournament {
 
     teamTournamentStatus: string;
 
-    constructor(teamCodTournamentId?: string, teamCodTournament?: Tournament, teamCodTournamentMatches?: Match[],
+    constructor(teamFifaTournamentId?: string, teamTournamentId?: string, teamFifaTournamentMatches?: Match[],
                 teamTournamentNumberOfMatchesPlayed?: number, teamTournamentNumberOfMatchesDraws?: number,
                 teamTournamentNumberOfMatchesWins?: number, teamTournamentNumberOfMatchesLosses?:number,){
-        this.teamTournamentId = teamCodTournamentId;
-        this.teamFifaTournament = teamCodTournament;
-        this.teamTournamentMatches = teamCodTournamentMatches;
+        this.teamTournamentId = teamFifaTournamentId;
+        this.teamTournamentId = teamTournamentId;
+        this.teamTournamentMatches = teamFifaTournamentMatches;
         this.teamTournamentNumberOfMatchesPlayed = teamTournamentNumberOfMatchesPlayed;
         this.teamTournamentNumberOfMatchesWins = teamTournamentNumberOfMatchesWins;
         this.teamTournamentNumberOfMatchesDraws = teamTournamentNumberOfMatchesDraws;

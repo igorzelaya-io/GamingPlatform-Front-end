@@ -179,7 +179,7 @@
                 </li>
                 <li *ngIf="isUserAdmin" >
                     <div class="icon">
-                        <button mat-button (click)="openConfirmationDialogForDeletion()" style="background-color: #1a0000; color: red; margin-bottom: 40px;">
+                        <button mat-button (click)="openConfirmationDialogForDeletion()" style="background-color: #1a0000; color: red; margin-bottom: 20px;">
                             <i style="font-size: 20px; color: red" class="bi bi-trash-fill"></i>
                         </button>                    
                     </div>
@@ -277,7 +277,45 @@
                     </div>
                     <div *ngIf="this.isActivatedTournament && tournamentMatches.length !== 0">
                         <div *ngIf="isPvPTournament()">
-                            
+                            <div *ngFor="let match of tournamentMatches" class="single-matches-box">
+                                <div class="row align-items-center">
+                                    <div class="col-lg-5 col-md-12">
+                                        <div class="matches-team">
+                                            
+                                            <div class="content">
+
+                                                <h3>{{match.matchLocalTeam.teamName}}</h3>
+                                                <ul class="watch-list">
+
+                                                </ul>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-2 col-md-12">
+                                        <div class="matches-result">
+                                            <ul>
+                                                <li>{{match.localTeamMatchScore}}</li>
+                                                <li>{{match.awayTeamMatchScore}}</li>
+                                            </ul>
+                                            <span class="date-time"><button mat-button style="background-color: #1a0000; color: red" (click)="passMatch(match.matchId)">View Match</button></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-5 col-md-12">
+                                        <div class="matches-team right-image">
+                                            
+            
+                                            <div class="content">
+                                                <h3>{{match.matchAwayTeam.teamName}}</h3>
+                                                <ul class="watch-list">
+                                                    
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>    
                             <!-- TODO: BRACKETS -->
                         </div>
 

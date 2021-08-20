@@ -66,9 +66,9 @@
                             </ul>
                         </div>
                         <h3 *ngIf="match">{{match.matchLocalTeam.teamName}} vs {{match.matchAwayTeam.teamName}}</h3>
-                        <button *ngIf="isTeamAdmin && !this.match.uploaded === false" (click)="isTryingToSubmitResults()" [disabled]="isClickedUploadButton">Upload Results</button>
-                        <h3 *ngIf="isTeamAdmin && match.uploaded === true">Match results have already been uploaded. If these results are wrong, dispute this match.</h3>
-                        <button *ngIf="isTeamAdmin && match.uploaded === true">Dispute Match</button>
+                        <button *ngIf="isTeamAdmin && this.match.uploaded === false" (click)="isTryingToSubmitResults()" [disabled]="isClickedUploadButton">Upload Results</button>
+                        <h3 *ngIf="isTeamAdmin && match.uploaded === true">Match results have already been uploaded.</h3>
+                        <!-- <button *ngIf="isTeamAdmin && match.uploaded === true">Dispute Match</button> -->
                         <div style="vertical-align: middle; margin-top: 50px;" *ngIf="isClickedUploadButton">
                             <p style="text-align: center; font-size: large;">Did you team win or lose this match ?</p>
                             <div class="container">
@@ -91,7 +91,7 @@
                                                 type="number"
                                                 placeholder="Enter score"
                                                 required
-                                                min="0"
+                                                minlength="0"
                                                 [formControl]="userTeamPointsScored"
                                             >
                                     </div>
@@ -102,7 +102,7 @@
                                             required
                                             placeholder="Enter opposite team score"
                                             type="number"
-                                            min="0"
+                                            minlength="0"
                                             [formControl]="oppositeTeamPointsScored"
                                         >
                                     </div>
