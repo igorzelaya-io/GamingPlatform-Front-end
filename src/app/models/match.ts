@@ -14,11 +14,22 @@ export class Match {
     matchAwayTeam: Team;
     
     localTeamMatchScore: number;
+    
     awayTeamMatchScore: number;
+    
     matchStatus: string;
+    
     matchWinningTeam: Team;
-    uploaded: boolean;
-    matchRoundInTournament: number;
+    
+    localTeamUploaded: boolean;
+
+    awayTeamUploaded: boolean;
+
+    isDisputedMatch: boolean;
+    
+    hasImage: boolean;
+
+    matchGame: string;
 
     constructor(matchId?: string, matchTournament?: Tournament, matchLocalTeam?: Team, matchAwayTeam?:Team,
                 localTeamMatchScore?: number, awayTeamMatchScore?: number){

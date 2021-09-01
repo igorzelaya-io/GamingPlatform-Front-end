@@ -45,16 +45,32 @@
                     <div class="icon">
                         <i class="flaticon-network"></i>
                     </div>
-                    W's
-                    <span>{{user.userTotalWs}}</span>
+                    Cod W's
+                    <span>{{user.userCodTotalWs}}</span>
                 </li>
 
                 <li>
                     <div class="icon">
                         <i class="flaticon-fall"></i>
                     </div>
-                    L's
-                    <span>{{user.userTotalLs}}</span>
+                    Cod L's
+                    <span>{{user.userCodTotalLs}}</span>
+                </li>
+
+                <li>
+                    <div class="icon">
+                        <i class="flaticon-network"></i>
+                    </div>
+                    Fifa W's
+                    <span>{{user.userFifaTotalWs}}</span>
+                </li>
+
+                <li>
+                    <div class="icon">
+                        <i class="flaticon-fall"></i>
+                    </div>
+                    Fifa L's
+                    <span>{{user.userFifaTotalLs}}</span>
                 </li>
                 <li *ngIf="isAdmin">
                     <div class="icon">
@@ -199,7 +215,7 @@
                             <span class="date">{{allTournamentMonths[i]}} {{allTournamentYears[i]}}</span>
                             <div class="content">
                                 <span class="time">{{tournament.tournamentGame}}</span>
-                                <h3><a (click)="viewTournamentDetails(tournament)"></a>{{tournament.tournamentName}}</h3>
+                                <h3><a (click)="viewTournamentDetails(tournament)">{{tournament.tournamentName}}</a></h3>
                             </div>
                             <a (click)="viewTournamentDetails(tournament)" class="link-btn" target="_blank"></a>
                         </div>
@@ -209,12 +225,27 @@
         </div>
         <div class="row">
                 <div class="col-sm">
-                    <div class="text">User Challenges</div>
+                    <div class="text">
+                        User Challenges
+                    </div>
+                    
                     <div *ngIf="isEmptyChallenges">
                         <h3>No challenges available</h3>
                     </div>
-                    <!-- Display challenges -->
+                    <div *ngIf="!isEmptyChallenges">
+                        <div *ngFor="let challenge of userChallenges; index as i">
+                            <div class="single-stream-schedule-box">
+                                <span class="date">{{allChallengeMonths[i]}} {{allChallengeYears[i]}}</span>
+                                <div class="content">
+                                    <span class="time">{{challenge.challengeGame}}</span>
+                                    <h3><a (click)="viewChallengeDetails(challenge)">{{challenge.challengeName}}</a></h3>    
+                                </div>
+                                <a (click)="viewChallengeDetails(challenge)" class="link-btn" target="_blank"></a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
                 <div class="col-sm" *ngIf="isAdmin">
                     <div class="text">User Team Invites</div>
                     <div *ngIf="isEmptyInvites">

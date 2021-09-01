@@ -1,7 +1,7 @@
 import { Team } from '../team';
-import { User } from '../user/user';
+
 import { Stack } from '../helpers/stack';
-import { TreeNode } from '../treenode';
+
 import { BinaryTree } from '../binarytree';
 export class Tournament {
 
@@ -11,7 +11,7 @@ export class Tournament {
     tournamentLimitNumberOfTeams: number;
     tournamentNumberOfTeams: number;
     tournamentStatus: string;
-    tournamentModerator: User;
+    tournamentModeratorId: string;
     tournamentDate: Date;
     tournamentGameMode: string;
     tournamentPlatforms: string;
@@ -31,12 +31,12 @@ export class Tournament {
     tournamentBinaryTree: BinaryTree;
     tournamentWinningTeam: Team;
     
-    constructor(tournamentName?: string, tournamentStatus?: string, tournamentModerator?: User,
+    constructor(tournamentName?: string, tournamentStatus?: string, tournamentModeratorId?: string,
                 tournamentDate?: Date, tournamentTeams?: Array<Team>){
         this.tournamentName = tournamentName;
         this.tournamentTeams = tournamentTeams;
         this.tournamentStatus = tournamentStatus;
-        this.tournamentModerator = tournamentModerator;
+        this.tournamentModeratorId = tournamentModeratorId;
         this.tournamentDate = tournamentDate;
     }
 }

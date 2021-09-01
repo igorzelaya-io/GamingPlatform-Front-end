@@ -74,5 +74,10 @@
 		"target":"http://localhost:8081",
 		"secure":"false",
 		"logLevel":"debug"
+	},
+	"/disputedMatches": {
+		"target":"http://localhost:8081",
+		"secure":"false",
+		"logLevel":"debug"
 	}
 }

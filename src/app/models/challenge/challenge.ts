@@ -12,7 +12,7 @@ export class Challenge {
     challengeMatches: Match[];
     challengePlatforms: string;
     challengeMatchesNumber: string;
-    challengeModerator: User;
+    challengeModeratorId: string;
     challengeNumberOfPlayersPerTeam: string;
     challengeStatus: string;
     challengeDate: Date;

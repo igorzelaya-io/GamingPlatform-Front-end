@@ -1,15 +1,15 @@
 import { Tournament } from '../tournament/tournament';
-import { User } from './user';
+
 import { Team } from '../team';
 export class UserTournamentRequest {
     
     tournament: Tournament;
     team: Team;
-    user: User;
+    userId: string;
 
-    constructor(tournament?: Tournament, team?: Team, user?: User){
+    constructor(tournament?: Tournament, team?: Team, user?: string){
         this.tournament = tournament;
         this.team = team;
-        this.user = user;
+        this.userId = user;
     }
 }

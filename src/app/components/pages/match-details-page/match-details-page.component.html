@@ -1,13 +1,13 @@
 <app-navbar-style-one></app-navbar-style-one>
 
 <section class="page-title-area page-title-bg1">
-    <div class="container">
+    <div class="container" *ngIf="match">
         <div class="page-title-content">
             <div class="single-matches-box">
                 <div class="row align-items-center">
                     <div class="col-lg-5 col-md-12">
                         <div class="matches-team">
-                            <!-- <img src="assets/img/team1.png" class="wow fadeInLeft" data-wow-delay="00ms" data-wow-duration="1500ms" alt="image"> -->
+                            <img *ngIf="match && this.match.matchLocalTeam.hasImage" [src]="localTeamImage.imageBytes" class="wow fadeInLeft" data-wow-delay="00ms" data-wow-duration="1500ms" alt="image">
 
                             <div class="content">
                             <h3 *ngIf="match">{{match.matchLocalTeam.teamName}}</h3>
@@ -34,7 +34,7 @@
 
                     <div class="col-lg-5 col-md-12">
                         <div class="matches-team right-image">
-                            <!-- <img src="assets/img/team2.png" class="wow fadeInRight" data-wow-delay="00ms" data-wow-duration="1500ms" alt="image"> -->
+                            <img *ngIf="match && this.match.matchAwayTeam.hasImage" [src]="awayTeamImage" class="wow fadeInRight" data-wow-delay="00ms" data-wow-duration="1500ms" alt="image">
 
                             <div class="content">
                                 <h3 *ngIf="match">{{match.matchAwayTeam.teamName}}</h3>
@@ -57,6 +57,9 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-md-12">
+                <div *ngIf="match" style="background-color:#1a0000; width: 0%" (click)="goBack()">
+                    <i class="bi bi-caret-left-square-fill" style="font-size: 40px; color: red"></i>
+                </div>
                 <div class="match-details-desc">
                     <div class="article-content">
                         <div class="entry-meta">
@@ -66,9 +69,115 @@
                             </ul>
                         </div>
                         <h3 *ngIf="match">{{match.matchLocalTeam.teamName}} vs {{match.matchAwayTeam.teamName}}</h3>
-                        <button *ngIf="isTeamAdmin && this.match.uploaded === false" (click)="isTryingToSubmitResults()" [disabled]="isClickedUploadButton">Upload Results</button>
-                        <h3 *ngIf="isTeamAdmin && match.uploaded === true">Match results have already been uploaded.</h3>
-                        <!-- <button *ngIf="isTeamAdmin && match.uploaded === true">Dispute Match</button> -->
+                        
+                        <button *ngIf="isTeamAdmin && !isTeamSubmitted && !this.match.isDisputedMatch" (click)="isTryingToSubmitResults()" [disabled]="isClickedUploadButton">Upload Results</button>
+                        
+                        <h3 *ngIf="isTeamAdmin && this.isTeamSubmitted && !this.match.isDisputedMatch">Match results have already been uploaded.</h3>
+                        
+                        <h3 *ngIf="match.isDisputedMatch && !match.hasImage">Inserted values by teams do not match. This match is disputed, please upload a picture of match results.</h3>
+                        
+                        <div class="container" *ngIf="match.isDisputedMatch">
+                            <div class="row" *ngIf="!match.hasImage">
+                                <div class="col-lg-3 col-md-9">
+                                    <label>Select File for Match results</label>
+                                    <input
+                                        type="file"
+                                        (change)="onFileChange($event)"
+                                        accept=".png, .jpg, .jpeg"
+                                    >
+                                </div>
+                                <div class="col-sm" *ngIf="selectedImageFile">
+                                    <image-cropper 
+                                        [imageChangedEvent]="selectedImageFile"
+                                        [maintainAspectRatio]="true"
+                                        [aspectRatio]="5 / 3"
+                                        [resizeToWidth]="256"
+                                        format="png"
+                                        (imageCropped)="cropImage($event)"
+                                        style="width: 250; height: 200px;"
+                                    >
+                                    </image-cropper>
+                                </div>
+                                <div class="col-sm" *ngIf="selectedImageFile">
+                                    <label>Image preview</label>
+                                    <img
+                                        [src]="croppedImageFile"
+                                        style="width: 200px;"
+                                    >
+                                </div>
+                                <p style="font-size: small; color: red">Supported formats: png, jpg, jpeg</p>
+                                &nbsp;
+                                <p style="font-size: small; color: red; margin-top: 10px">Note: Please submit a clear picture where results are clearly displayed.</p>
+                                <button *ngIf="match.isDisputedMatch" (click)="postDisputedMatch()" [disabled]="isClickedUploadImageButton">Upload image</button>
+                            </div>
+                            <h3 *ngIf="successfullyDisputed || (match.hasImage && isTeamAdmin)">Evidence submitted, a D1 Administrator will get to you shortly.</h3>
+                            <div *ngIf="!successfullyDisputed" style="vertical-align: middle;">
+                                <h4 style="color: red; margin-left: 250px;">{{disputeErrorMessage}}</h4>
+                            </div>
+                        </div>
+                        
+                        <div *ngIf="this.match.hasImage && isAdminAdmin">
+                        
+                            <img
+                                [src]="disputedMatchImageSource"
+                                style="width: 350px; height: 230px;"
+                            >
+                            <button *ngIf="isAdminAdmin && this.match.hasImage" (click)="isTryingToSubmitDisputedResults()" [disabled]="isClickedUploadDisputedButton">Upload results</button>
+                            
+                            <div style="vertical-align: middle; margin-top: 50px;" *ngIf="isClickedUploadDisputedButton">
+                                <p style="text-align: center; font-size: large;">Which team won the match ?</p>
+                                <div class="container">
+                                    <div class="row">
+
+                                        <div class="col-md">
+                                            <button style="border: 3px solid black" #wonLocalButton (click)="selectLocalWonButton()">Local</button>
+                                        </div>
+                                        <div class="col-md">
+                                            <button style="border: 3px solid black" #wonAwayButton (click)="selectAwayWonButton()">Away</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="container">
+                                    <div class="row">
+                                        <div style="vertical-align: middle; margin-top: 50px;" class="form-group col-md">
+                                            <p style="text-align: center; font-size: large;">Local Team Score</p>
+                                            <input
+                                                class="form-control"
+                                                type="number"
+                                                placeholder="Enter local team score"
+                                                required
+                                                minlength="0"
+                                                min="0"
+                                                [formControl]="localTeamPointsScored"
+                                            >
+                                        </div>
+                                        <div style="margin-top: 50px; vertical-align: middle;" class="col-md form-group">
+                                            <p style="text-align: center; font-size: large;">Away Team Score</p>
+                                            <input
+                                                class="form-control"
+                                                required
+                                                placeholder="Enter away team score"
+                                                type="number"
+                                                minlength="0"
+                                                min="0"
+                                                [formControl]="awayTeamPointsScored"
+                                            >
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div style="vertical-align: middle;">
+                                    <button [disabled]="isClickedSentButton" (click)="uploadDisputedResults()">Upload Results</button>
+                                </div>
+                                <div *ngIf="isFailedUpload && !isSuccessfulUpload" style="vertical-align: middle;" class="alert alert-danger">
+                                    <p style="text-align: center; font-size: large;">{{errorMessage}}</p>
+                                </div>
+                                <div *ngIf="isSuccessfulUpload && !isFailedUpload" style="vertical-align: middle;" class="alert alert-danger">
+                                    <p style="text-align: center; font-size: large;">{{errorMessage}}</p>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <div style="vertical-align: middle; margin-top: 50px;" *ngIf="isClickedUploadButton">
                             <p style="text-align: center; font-size: large;">Did you team win or lose this match ?</p>
                             <div class="container">
@@ -92,6 +201,7 @@
                                                 placeholder="Enter score"
                                                 required
                                                 minlength="0"
+                                                min="0"
                                                 [formControl]="userTeamPointsScored"
                                             >
                                     </div>
@@ -103,6 +213,7 @@
                                             placeholder="Enter opposite team score"
                                             type="number"
                                             minlength="0"
+                                            min="0"
                                             [formControl]="oppositeTeamPointsScored"
                                         >
                                     </div>
@@ -255,6 +366,7 @@
                             <li>
                                 <div class="box">
                                     <img src="assets/img/team-member4.jpg" alt="image">
+
                                     <i class="bx bxl-instagram"></i>
                                     <a href="#" target="_blank" class="link-btn"></a>
                                 </div>

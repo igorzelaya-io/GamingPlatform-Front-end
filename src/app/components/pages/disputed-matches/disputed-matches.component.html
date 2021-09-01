@@ -1,0 +1,36 @@
+<app-navbar-style-one></app-navbar-style-one>
+
+<section class="page-title-area page-title-bg1">
+    <div class="container">
+        <div class="page-title-content">
+            <h1 title="Disputed Matches">Disputed Matches</h1>
+        </div>
+    </div>
+</section>
+
+<section class="stream-schedule-area pt-100 pb-70">
+    <div class="container">
+    	
+  		<div style="vertical-align: middle" *ngIf="isEmptyDisputedMatches">
+  			<h1 style="text-align: center">There are no disputed matches at this moment.</h1>
+  		</div>
+
+        <div class="row" *ngIf="!isEmptyDisputedMatches">
+            <div *ngFor="let match of disputedMatches; index as i" class="col-lg-6 col-md-12">
+                <div class="single-stream-schedule-box">
+                    <!-- <span class="date">{{match.disputedMatchMatchId}}</span> -->
+                    <div class="content">
+                        <span *ngIf="match.disputedMatchChallengeId" class="time">{{match.disputedMatchChallengeId}}</span>
+                        <span *ngIf="match.disputedMatchTournamentId" class="time">{{match.disputedMatchTournamentId}}</span>
+                        <h3><a (click)="passMatch(match)">{{match.disputedMatchMatchId}}</a></h3>
+                    </div>
+                    <a (click)="passMatch(match)" class="link-btn" target="_blank"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer class="footer-area bg-1b060a ptb-70">
+    <app-footer-style-one></app-footer-style-one>
+</footer>

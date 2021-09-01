@@ -31,6 +31,8 @@ import { ChallengesHomeComponent } from './components/pages/challenges-home/chal
 import { ChallengesDetailsPageComponent } from './components/pages/challenges-details-page/challenges-details-page.component';
 import { ChallengeMatchDetailsPageComponent } from './components/pages/challenge-match-details-page/challenge-match-details-page.component';
 import { LeaderboardsPageComponent } from './components/pages/leaderboards-page/leaderboards-page.component';
+import { MyChallengesComponent } from './components/pages/my-challenges/my-challenges.component';
+import { DisputedMatchesComponent } from './components/pages/disputed-matches/disputed-matches.component';
 
 const routes: Routes = [
     {path: '', component: MainHomeComponent},
@@ -42,7 +44,9 @@ const routes: Routes = [
 	{path: 'shopstyletwo', component: ShopStyleTwoComponent},
     {path: 'streaming', component: StreamingHomeComponent},
     {path: 'our-team', component: TeamPageComponent},
-	{path: 'my-tournaments', component: MyTournamentsComponent},
+    {path: 'disputed-matches', component: DisputedMatchesComponent},
+    {path: 'my-tournaments', component: MyTournamentsComponent},
+    {path: 'my-challenges', component: MyChallengesComponent},
     {path: 'my-teams', component: MyTeamsPageComponent},
     {path: 'team-invites', component: TeamInvitesPageComponent},
     {path: 'team-details', component: TeamDetailsPageComponent},

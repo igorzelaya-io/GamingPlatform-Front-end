@@ -37,9 +37,7 @@
                     <button mat-menu-item style="color: red; background-color: #1a0000" (click)="openDialogForCountry()">
                         Edit Challenge Country
                     </button>
-                    <!-- <button mat-menu-item style="color: red; background-color: #1a0000" (click)="openDialogForPrizePool()">
-                        Edit Challenge Cash Prize
-                    </button> -->
+                   
                     <button mat-menu-item style="color: red; background-color: #1a0000" (click)="openDialogForEntryFee()">
                         Edit Challenge Entry Fee
                     </button>
@@ -57,14 +55,6 @@
                     <span>${{challenge.challengeCashPrize}}</span>
                     Prize Pool
                 </li>
-
-                <!-- <li>
-                    <div class="icon">
-                        <i class="flaticon-game"></i>
-                    </div>
-                    <span>{{tournament.tournamentFormat}}</span>
-                     Tournament Format
-                </li> -->
                 
                 <li>
                     <div class="icon">
@@ -103,7 +93,10 @@
                     <span>{{challenge.challengeTokenFee}}</span>
                     Challenge Points Entry Fee
                 </li>
-                <button mat-button style="background-color: #1a0000; color: red" *ngIf="isStartedChallenge && isUserAdmin && !isActivatedChallenge" (click)="openConfirmationDialogForChallengeInitialization()">
+                <li *ngIf="isTerminatedChallenge">
+                    <h3>Challenge winner: {{challenge.challengeWinningTeam.teamName}}</h3>
+                </li>
+                <button mat-button style="background-color: #1a0000; color: red" *ngIf="isStartedChallenge && isUserAdmin && !isActivatedChallenge && !isTerminatedChallenge" (click)="openConfirmationDialogForChallengeInitialization()" [disabled]="isClickedStartChallenge">
                     Start Challenge
                 </button>
                 <li *ngIf="!alreadyJoinedChallenge">
@@ -154,7 +147,7 @@
                         </div>
                         <button (click)="navigateToTeamCreation()" mat-button style="background-color: #1a0000; color: red; margin: 20px; width: 100%">Create Team</button>
                         <div style="vertical-align: middle;">
-                            <button mat-button style="background-color: #1a0000; color: red; margin-left: 10px; width: 100%" *ngIf="!hasNoTeams" (click)="joinChallenge(); clickJoinChallengeButton();" [disabled]="isClickedJoinButton">
+                            <button mat-button style="background-color: #1a0000; color: red; margin-left: 10px; width: 100%" *ngIf="!hasNoTeams" (click)="joinChallenge();" [disabled]="isClickedJoinButton">
                                 Join
                             </button>
                         </div>
@@ -166,7 +159,7 @@
                     </div>
                 </li>
                 
-                <li *ngIf="alreadyJoinedChallenge && !this.isUserAdmin">
+                <li *ngIf="alreadyJoinedChallenge && !this.isUserAdmin && !this.isActivatedChallenge">
                    <button mat-button style="background-color: #1a0000; color: red; margin-right: 5px;" (click)= "openConfirmationDialogForChallengeExit(); isClickedExitChallengeButton()" [disabled]="isClickedExitButton">
                         Exit Challenge
                    </button> 

@@ -55,6 +55,14 @@ export class TeamChallengeService {
     );
   }
 
+  getAllDisputedMatches(challengeId: string): Observable<Match[]>{
+    return this.httpClient.get<Match[]>(TEAM_CHALLENGES_API + '/matches/disputed?challengeId='+ challengeId)
+    .pipe(
+      retry(1),
+      catchError(this.handleError('getAllDisputedMatches', []))
+    );
+  }
+
   getCodChallengeFromTeam(): Observable<Challenge>{
     return this.httpClient.get<Challenge>(TEAM_CHALLENGES_API + '/cod/search')
     .pipe(

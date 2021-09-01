@@ -15,6 +15,7 @@ import { UserTeamService } from 'src/app/services/user-team.service';
 import { D1Transaction } from '../../../models/d1transaction';
 import { UserChallengesService } from 'src/app/services/userchallenges.service';
 import { ImageModel } from 'src/app/models/imagemodel';
+import { Role } from 'src/app/models/role';
 
 export interface DialogData{
   field: string;
@@ -44,8 +45,12 @@ export class PlayerDetailsPageComponent implements OnInit {
   isEmptyTournaments: boolean = false;
   isEmptyChallenges: boolean = false;
   isEmptyInvites: boolean = false;
+  
   allTournamentYears: number[];
   allTournamentMonths: string[];
+
+  allChallengeYears: number[];
+  allChallengeMonths: number[];
   
   userInspectingUser: User;
   replaceValueString: string;
@@ -67,7 +72,8 @@ export class PlayerDetailsPageComponent implements OnInit {
     this.userChallenges = [];
     this.allTournamentYears = [];
     this.allTournamentMonths = [];
-    
+    this.allChallengeYears = [];
+    this.allChallengeMonths = [];
   }
   
   ngOnInit(): void {
@@ -77,12 +83,83 @@ export class PlayerDetailsPageComponent implements OnInit {
     });
   }
 
+   public getUserById(userId: string){
+    let isSuccessfulUserGet: boolean = false;
+    this.userService.getUserById(userId)
+    .subscribe((data: User) => {
+      if(data){
+        this.user = data;
+        isSuccessfulUserGet = true;
+        
+      }
+    }, err => {
+      console.error(err);
+    },
+    () => {
+      if(isSuccessfulUserGet && this.tokenService.loggedIn()){
+        this.userInspectingUser = this.tokenService.getUser();
+        this.evaluateRole();
+        this.getAllTournamentsFromUser(this.user.userId);
+        this.getAllChallengesFromUser(this.user.userId);
+        if(this.user.hasImage){
+          this.getUserImage();
+        }
+      }
+    }); 
+  }
+
   public evaluateRole(){
-    if(this.userInspectingUser.userRoles.filter(userRole => userRole.authority === 'ADMIN')){
+    let role: Role = this.userInspectingUser.userRoles.filter(userRole => userRole.authority === 'ADMIN')
+                                                       .find(userRole => userRole.authority === 'ADMIN');
+    if(role){
       this.isAdmin = true;
       this.getAllTeamInvites();
-      this.getAllTournamentsFromUser(this.user.userId);
+      this.getAllTransactionsFromUser();
     }
+  }
+
+  public getAllTournamentsFromUser(userId: string): void{
+    this.userTournamentService.getAllTournamentsFromUser(userId)
+    .subscribe((data: Tournament[]) => {
+      if(data && data.length != 0){
+        this.userTournaments = data;
+        this.getAllTournamentYears(data);
+        this.getAllTournamentMonths(data);
+        return;
+      }
+      this.isEmptyTournaments = true;
+    },
+    err => {
+      console.error(err);
+      this.isEmptyTournaments = true; 
+    });
+  }
+
+   public getAllTournamentYears(tournaments: Tournament[]){
+    for(let i = 0; i < tournaments.length; i++){
+      this.allTournamentYears.push(new Date(tournaments[i].tournamentDate).getFullYear());
+    }
+  }
+
+  public getAllTournamentMonths(tournaments: Tournament[]){
+    for(let i = 0; i < tournaments.length; i++){
+      this.allTournamentMonths.push(monthNames[new Date(tournaments[i].tournamentDate).getMonth()] + ' ' + tournaments[i].tournamentDate.toString().slice(8, 10));
+    }
+  }
+
+  public getAllChallengesFromUser(userId: string): void{
+    this.userChallengeService.getAllUserChallenges(userId)
+    .subscribe((data: Challenge[]) =>{
+      if(data && data.length){
+        this.isEmptyChallenges = false;
+        this.userChallenges = data;
+        return;
+      }
+      this.isEmptyChallenges = true;
+    },err => {
+      console.error(err.error.message);
+      this.isEmptyChallenges = true;
+    });
   }
 
   public openConfirmationDialogForBanning(){
@@ -186,32 +263,6 @@ export class PlayerDetailsPageComponent implements OnInit {
     //TODO:
   }
 
-  public getUserById(userId: string){
-    let isSuccessfulUserGet: boolean = false;
-    this.userService.getUserById(userId)
-    .subscribe((data: User) => {
-      if(data){
-        this.user = data;
-        isSuccessfulUserGet = true;
-        
-      }
-    }, err => {
-      console.error(err);
-    },
-    () => {
-      if(isSuccessfulUserGet && this.tokenService.loggedIn()){
-        this.userInspectingUser = this.tokenService.getUser();
-        this.evaluateRole();
-        this.getAllTournamentsFromUser(this.user.userId);
-        this.getAllChallengesFromUser();
-        this.getAllTransactionsFromUser();
-        if(this.user.hasImage){
-          this.getUserImage();
-        }
-      }
-    }); 
-  }
-
   getUserImage(){
     this.userService.getUserImage(this.user.userId)
     .subscribe((data: ImageModel) => {
@@ -222,35 +273,6 @@ export class PlayerDetailsPageComponent implements OnInit {
     err => {
       console.error(err);
     });
-  }
-
-  public getAllTournamentsFromUser(userId: string): void{
-    this.userTournamentService.getAllTournamentsFromUser(userId)
-    .subscribe((data: Tournament[]) => {
-      if(data && data.length != 0){
-        this.userTournaments = data;
-        this.getAllTournamentYears(data);
-        this.getAllTournamentMonths(data);
-        return;
-      }
-      this.isEmptyTournaments = true;
-    },
-    err => {
-      console.error(err);
-      this.isEmptyTournaments = true; 
-    });
-  }
-
-  public getAllTournamentYears(tournaments: Tournament[]){
-    for(let i = 0; i < tournaments.length; i++){
-      this.allTournamentYears.push(new Date(tournaments[i].tournamentDate).getFullYear());
-    }
-  }
-
-  public getAllTournamentMonths(tournaments: Tournament[]){
-    for(let i = 0; i < tournaments.length; i++){
-      this.allTournamentMonths.push(monthNames[new Date(tournaments[i].tournamentDate).getMonth()] + ' ' + tournaments[i].tournamentDate.toString().slice(8, 10));
-    }
   }
 
   public getAllTeamInvites(){
@@ -264,21 +286,6 @@ export class PlayerDetailsPageComponent implements OnInit {
     }, err => {
       console.error(err);
       this.isEmptyInvites = true;
-    });
-  }
-
-  public getAllChallengesFromUser(){
-    this.userChallengeService.getAllUserChallenges(this.user.userId)
-    .subscribe((data: Challenge[]) => {
-      if(data && data.length){
-        this.userChallenges = data;
-        return;
-      }
-      this.isEmptyChallenges = true;
-    },
-    err => {
-      console.error(err);
-      this.isEmptyChallenges = true;
     });
   }
 
@@ -328,6 +335,10 @@ export class PlayerDetailsPageComponent implements OnInit {
 
   public navigateToInvites(){
     this.router.navigate(['/team-invites']);
+  }
+
+  public viewChallengeDetails(challenge: Challenge){
+    this.router.navigate(['/challenge-details'], {queryParams: { challengeId: challenge.challengeId}});
   }
 
 }

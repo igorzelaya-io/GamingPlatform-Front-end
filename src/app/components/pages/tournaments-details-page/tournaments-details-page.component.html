@@ -109,12 +109,15 @@
                     <span>{{tournament.tournamentEntryFee}}</span>
                     Tournament Points Entry Fee
                 </li>
-                <button mat-button style="background-color: #1a0000; color: red" *ngIf="isStartedTournament && isUserAdmin && !isActivatedTournament" (click)="openConfirmationDialogForTournamentInitialization()">
+                <li *ngIf="isTerminatedTournament">
+                    <h3>Tournament winner: {{tournament.tournamentWinningTeam.teamName}}</h3>
+                </li>
+                <button mat-button style="background-color: #1a0000; color: red" *ngIf="isStartedTournament && isUserAdmin && !isActivatedTournament && !isTerminatedTournament" (click)="openConfirmationDialogForTournamentInitialization()">
                     Start Tournament
                 </button>
                 <li *ngIf="!alreadyJoinedTournament">
                     
-                    <button mat-button style="background-color: #1a0000; color: red" *ngIf="!isTryingToJoinTournament" (click)="isJoiningTournament()">
+                    <button mat-button style="background-color: #1a0000; color: red" *ngIf="!isTryingToJoinTournament && !this.alreadyJoinedTournament" (click)="isJoiningTournament()">
                 		Join Tournament
                     </button>
                     <div style="vertical-align: middle;" *ngIf="isTryingToJoinTournament">
@@ -172,7 +175,7 @@
                     </div>
                 </li>
                 
-                <li *ngIf="alreadyJoinedTournament">
+                <li *ngIf="alreadyJoinedTournament && !this.isUserAdmin && !this.isActivatedTournament">
                    <button mat-button style="background-color: #1a0000; color: red" (click)="removeTeamFromTournament(); isClickedExitTournamentButton()" [disabled]="isClickedExitButton">
                         Exit Tournament
                    </button> 

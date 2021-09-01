@@ -6,6 +6,7 @@ import { TeamInviteRequest } from '../teaminviterequest';
 import { UserChallenge } from '../user/userchallenge';
 
 export class User {
+
 	userId: string;
 	userRealName: string;
 	userName: string;
@@ -23,8 +24,10 @@ export class User {
 	hasImage: boolean;
 	userTournaments: Array<UserTournament>;
 	userChallenges: UserChallenge[];
-	userTotalWs: number;
-	userTotalLs: number;
+	userCodTotalWs: number;
+	userCodTotalLs: number;
+	userFifaTotalWs: number;
+	userFifaTotalLs: number;
 
 	constructor(userRealName?: string, userName?: string, userPassword?: string,
 		userEmail?: string, userCountry?: string, userBirthDate?: any,

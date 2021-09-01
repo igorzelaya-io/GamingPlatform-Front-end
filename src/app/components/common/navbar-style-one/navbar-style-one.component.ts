@@ -4,6 +4,7 @@ import { Location, LocationStrategy, PathLocationStrategy } from '@angular/commo
 import { TokenStorageService } from 'src/app/services/token-storage.service';
 import { User } from 'src/app/models/user/user';
 import { UserService } from '../../../services/user.service';
+import { Role } from 'src/app/models/role';
 
 @Component({
     selector: 'app-navbar-style-one',
@@ -23,6 +24,7 @@ export class NavbarStyleOneComponent implements OnInit {
     containerClass: any;
 
     isAuthenticated = false;
+    isAdmin = false;
     user: User = new User();
 
     constructor(private router: Router,
@@ -46,7 +48,18 @@ export class NavbarStyleOneComponent implements OnInit {
 
     passUserIdToMyTeams(){
 		this.router.navigate(['/my-teams'], { queryParams: {userId: this.user.userId}});
-	}
+    }
+    
+    evaluateUserRole(){
+        let adminRole:  Role = this.user.userRoles
+                                            .filter(userRole => userRole.authority === 'ADMIN')
+                                            .find(userRole => userRole.authority === 'ADMIN');
+        if(adminRole){
+            this.isAdmin = true;
+            return;
+        }
+        this.isAdmin = false;
+    }
    
     ngOnInit(): void {
         if(this.tokenService.loggedIn()){
@@ -56,7 +69,8 @@ export class NavbarStyleOneComponent implements OnInit {
 				return;
 			}
 			this.user = this.tokenService.getUser();
-			this.isAuthenticated = true;		
+            this.evaluateUserRole();
+            this.isAuthenticated = true;		
 		}
     }
     

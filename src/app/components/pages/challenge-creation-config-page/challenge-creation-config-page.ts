@@ -1,20 +1,18 @@
 import { Component, OnInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import { Team } from '../../../models/team';
 import { TournamentTeamSize } from '../../../models/tournament/tournament-team-size.enum';
-import { Tournament } from '../../../models/tournament/tournament';
+
 import { TournamentMode } from '../../../models/tournament/tournament-mode.enum';
-import { TournamentFormat } from '../../../models/tournament/tournament-format.enum';
+
 import { SharedService } from '../../../services/helpers/shared-service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TournamentService } from '../../../services/tournament/tournament.service';
-import { UserTournamentRequest } from '../../../models/user/user-tournament-request';
-import { UserTournamentService } from '../../../services/user-tournament.service';
 import { TournamentCreationRequest } from '../../../models/tournament/tournament-creation-request';
 import { TokenStorageService } from '../../../services/token-storage.service';
 import { MessageResponse } from '../../../models/messageresponse';
 import { ChallengeServiceService } from '../../../services/challenges/challenge-service.service';
 import { Challenge } from 'src/app/models/challenge/challenge';
-import { UserService } from 'src/app/services/user.service';
+
 import { UserTeamService } from 'src/app/services/user-team.service';
 import { UserChallengesService } from 'src/app/services/userchallenges.service';
 import { UserChallengeRequest } from 'src/app/models/userchallengerequest';
@@ -130,7 +128,7 @@ export class ChallengeCreationConfigPageComponent implements OnInit {
 	}
 
 	getAllUserTeams(){
-		this.userService.getAllUserTeams(this.challenge.challengeModerator.userId)
+		this.userService.getAllUserTeams(this.challenge.challengeModeratorId)
 		.subscribe((data: Team[]) => {
 			if(data && data.length){
 				this.userModeratorTeams = data;
@@ -152,7 +150,7 @@ export class ChallengeCreationConfigPageComponent implements OnInit {
 	public onSubmit() {
 		this.isClicked = true;
 		if(this.selectedTeamToJoinChallenge){
-			if(this.selectedTeamToJoinChallenge.teamModerator.userId !== this.challenge.challengeModerator.userId){
+			if(this.selectedTeamToJoinChallenge.teamModerator.userId !== this.challenge.challengeModeratorId){
 				this.isSignUpFailed = true;
 				this.errorMessage = 'Only Team creator is allowed to join a challenge with this team.';
 				this.isClicked = false;
@@ -186,7 +184,7 @@ export class ChallengeCreationConfigPageComponent implements OnInit {
 			}, () => {
 				if(this.isSuccessfulChallengeCreation && !this.isSignUpFailed){
 					this.userChallengeRequest.challenge = this.challenge;
-					this.userChallengeRequest.user = this.challenge.challengeModerator;
+					this.userChallengeRequest.userId = this.challenge.challengeModeratorId;
 					this.userChallengeRequest.team = this.selectedTeamToJoinChallenge;
 					this.userChallengeService.addChallengeToTeamCodChallengeList(this.userChallengeRequest, this.tokenService.getToken())
 					.subscribe((data: MessageResponse) => {

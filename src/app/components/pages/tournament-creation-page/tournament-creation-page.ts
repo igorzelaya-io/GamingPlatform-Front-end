@@ -116,13 +116,16 @@ export class TournamentCreationPageComponent implements OnInit {
 	this.tournament.tournamentDescription = this.txtDescription.value;
 	this.tournament.tournamentCashPrize = this.cashPrice.value;
 	this.tournament.tournamentEntryFee = this.entryFee.value;
+	this.tournament.tournamentLimitNumberOfTeams = this.limitNumberOfTeams.value;
 	this.tournament.tournamentRegion = this.tournamentCountry.value;
 	this.tournament.tournamentPlatforms = this.tournamentPlatform.valueOf();
 	this.tournament.tournamentDate = this.tournamentDateElement._selected;
-	this.tournament.tournamentModerator = this.tournamentModerator;
-	this.tournament.tournamentLimitNumberOfTeams = this.limitNumberOfTeams.value;
+	this.tournament.tournamentModeratorId = this.tournamentModerator.userId;
 	this.tournament.tournamentGame = this.tournamentGame;
 	this.tournament.tournamentCodGameMode = this.tournamentCodGameMode;
+	if(!this.tournament.tournamentLimitNumberOfTeams){
+		this.tournament.tournamentLimitNumberOfTeams = 2;
+	}
 	this.router.navigate(['/tournament-creation-config'], {queryParams: { tournament: JSON.stringify(this.tournament)}}); 
   }
 

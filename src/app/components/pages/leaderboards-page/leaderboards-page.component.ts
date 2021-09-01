@@ -19,118 +19,254 @@ export class LeaderboardsPageComponent implements OnInit {
 
   @ViewChild('teamsButton')
   teamButton: ElementRef;
-  
-  users: User[];
-  isEmptyUsers: boolean = false;
 
-  teams: Team[];
-  isEmptyTeams: boolean = false;
+  @ViewChild('codButton')
+  codButton: ElementRef;
+
+  @ViewChild('fifaButton')
+  fifaButton: ElementRef;
+  
+  fifaUsers: User[];
+  isEmptyFifaUsers: boolean = false;
+
+  codUsers: User[];
+  isEmptyCodUsers: boolean = false;
+
+  codTeams: Team[];
+  isEmptyCodTeams: boolean = false;
+
+  fifaTeams: Team[];
+  isEmptyFifaTeams: boolean = false;
 
   isUserFind: boolean = false;
+  isCodFind: boolean = false;
   
   constructor(private userService: UserService,
               private teamService: TeamService,
               private sharedService: SharedService,
               private renderer: Renderer2,
               private router: Router) {
-    this.users = [];
-    this.teams = [];
+    this.codUsers = [];
+    this.codTeams = [];
     this.userButton = this.sharedService.get();
     this.teamButton = this.sharedService.get();
+    this.codButton = this.sharedService.get();
+    this.fifaButton = this.sharedService.get();
   } 
 
 
   ngOnInit(): void {
-    this.toggleFindUsers();
+    this.toggleFindCodUsers();
   }
 
-  toggleFindUsers(){
+  toggleFindCodUsers(): void{
     this.isUserFind = true;
-    this.getFirstFifteenUsers();
+    this.isCodFind = true;
+    this.getFirstFifteenUsersByCodWins();
   }
 
-  toggleFindTeams(){
+  toggleFindFifaUsers(): void{
+    this.isUserFind = true;
+    this.isCodFind = false;
+    this.getFirstFifteenUsersByFifaWins();
+  }
+
+  toggleFindCodTeams(){
     this.isUserFind = false;
-    this.getFirstFifteenTeams();
+    this.isCodFind = true;
+    this.getFirstFifteenTeamsByCodWins();
   }
 
-  getFirstFifteenTeams(){
-    this.teamService.getFirstFifteenTeams()
-    .subscribe((data: Team[]) => {
-      if(data){
-        this.teams = data;
-        this.isEmptyTeams = false;
-        return;
-      }
-      this.isEmptyTeams = true;
-    }, err => console.error(err.error.message));
+  toggleFindFifaTeams(){
+    this.isUserFind = false;
+    this.isCodFind = false;
+    this.getFirstFifteenTeamsByFifaWins();
   }
 
-  getNextPageOfTeams(){
-    this.teamService.getNextPageBy(this.teams[this.teams.length].teamId)
-    .subscribe((data: Team[]) => {
-      if(data){
-        this.teams = data;
-        this.isEmptyTeams = false;
-        return;
-      }
-      this.isEmptyTeams = true;
-    }, err => console.error(err.error.message));
-  }
-
-  getFirstFifteenUsers(){
-    this.userService.getFirstFifteenUsersByWins()
+  getFirstFifteenUsersByCodWins(){
+    this.userService.getFirstFifteenUsersByCodWins()
     .subscribe((data: User[]) => {
-      if(data){
-        console.log(data);
-        this.users = data;
-        this.isEmptyUsers = false;
+      if(data && data.length){
+        this.codUsers = data;
+        this.isEmptyCodUsers = false;
         return;
       }
-      this.isEmptyUsers = true;
+      this.isEmptyCodUsers = true;
     },err => console.error(err.error.message));
   }
 
-  getNextPageOfUsers(){
-    this.userService.getNextPage(this.users[this.users.length].userId)
+  getFirstFifteenUsersByFifaWins(){
+    this.userService.getFirstFifteenUsersByFifaWins()
     .subscribe((data: User[]) => {
-      if(data){
-        this.users = data;
-        this.isEmptyUsers = false;
+      if(data && data.length){
+        this.fifaUsers = data;
+        this.isEmptyFifaUsers = false;
         return;
       }
-      this.isEmptyUsers = true;
+      this.isEmptyFifaUsers = true; 
+    }, err => console.error(err));
+  }
+
+  getFirstFifteenTeamsByCodWins(){
+    this.teamService.getFirstFifteenTeamsByCodWins()
+    .subscribe((data: Team[]) => {
+      if(data && data.length){
+        this.codTeams = data;
+        this.isEmptyCodTeams = false;
+        return;
+      }
+      this.isEmptyCodTeams = true;
     }, err => console.error(err.error.message));
   }
+
+  getFirstFifteenTeamsByFifaWins(){
+    this.teamService.getFirstFifteenTeamsByFifaWins()
+    .subscribe((data: Team[]) => {
+      if(data && data.length){
+        this.fifaTeams = data;
+        this.isEmptyFifaTeams = false;
+        return;
+      }
+      this.isEmptyFifaTeams = true;
+    }, err => console.error(err));
+  }
+
+  getNextCodPageOfUsers(){
+    this.userService.getNextCodPage(this.codUsers[this.codUsers.length].userId)
+    .subscribe((data: User[]) => {
+      if(data){
+        this.codUsers = data;
+        this.isEmptyCodUsers = false;
+        return;
+      }
+      this.isEmptyCodUsers = true;
+    }, err => console.error(err.error.message));
+  }
+
+  getNextPageByCodTeams(){
+    this.teamService.getNextPageByCodWins(this.codTeams[this.codTeams.length].teamId)
+    .subscribe((data: Team[]) => {
+      if(data){
+        this.codTeams = data;
+        this.isEmptyCodTeams = false;
+        return;
+      }
+      this.isEmptyCodTeams = true;
+    }, err => console.error(err.error.message));
+  }
+
 
   selectUsersGet(){
     if(this.isWhiteBorder(this.userButton)){
       this.changeToBlackBorder(this.userButton);
-      return;
+      if(this.isWhiteBorder(this.codButton)){
+        this.changeToBlackBorder(this.codButton);
+      }
+      else if(this.isWhiteBorder(this.fifaButton)){
+        this.changeToBlackBorder(this.fifaButton);
+      }
     }
+    
     else if(this.isWhiteBorder(this.teamButton)){
       this.changeToBlackBorder(this.teamButton);
       this.changeToWhiteBorder(this.userButton);
-      this.toggleFindUsers();
-      return;
+      if(this.isWhiteBorder(this.codButton)){
+        this.toggleFindCodUsers();
+      }
+      else if(this.isWhiteBorder(this.fifaButton)){
+        this.toggleFindFifaUsers();
+      }
     }
-    this.changeToWhiteBorder(this.userButton);
-    this.toggleFindUsers();
+    else{
+      this.changeToWhiteBorder(this.userButton);
+      if(this.isWhiteBorder(this.codButton)){
+        this.toggleFindCodUsers();
+      }
+      else if(this.isWhiteBorder(this.fifaButton)){
+        this.toggleFindFifaUsers();
+      }
+    }
   } 
-  
+
   selectTeamsGet(){
     if(this.isWhiteBorder(this.teamButton)){
       this.changeToBlackBorder(this.teamButton);
-      return;
+      if(this.isWhiteBorder(this.codButton)){
+        this.changeToBlackBorder(this.codButton);
+      }
+      else if(this.isWhiteBorder(this.fifaButton)){
+        this.changeToBlackBorder(this.fifaButton);
+      }
     }
     else if(this.isWhiteBorder(this.userButton)){
       this.changeToBlackBorder(this.userButton);
       this.changeToWhiteBorder(this.teamButton);
-      this.toggleFindTeams();
-      return;
+      if(this.isWhiteBorder(this.codButton)){
+        this.toggleFindCodTeams();
+      }
+      else if(this.isWhiteBorder(this.fifaButton)){
+        this.toggleFindFifaTeams();
+      }
     }
-    this.changeToWhiteBorder(this.teamButton);
-    this.toggleFindTeams();
+    else{
+      this.changeToWhiteBorder(this.teamButton);
+      if(this.isWhiteBorder(this.codButton)){
+        this.toggleFindCodTeams();
+      }
+      else if(this.isWhiteBorder(this.fifaButton)){
+        this.toggleFindFifaTeams();
+      }
+    }
+  }
+
+  selectCodGet(){
+    if(this.isWhiteBorder(this.codButton)){
+      this.changeToBlackBorder(this.codButton);
+    }
+    else if(this.isWhiteBorder(this.fifaButton)){
+      this.changeToWhiteBorder(this.codButton);
+      this.changeToBlackBorder(this.fifaButton);
+      if(this.isWhiteBorder(this.userButton)){
+        this.toggleFindCodUsers();
+      }
+      else if(this.isWhiteBorder(this.teamButton)){
+        this.toggleFindCodTeams();
+      }
+    }
+    else{
+     this.changeToWhiteBorder(this.codButton);
+     if(this.isWhiteBorder(this.userButton)){
+      this.toggleFindCodUsers();
+     } 
+     else if(this.isWhiteBorder(this.teamButton)){
+      this.toggleFindCodTeams();
+     }
+    }
+  }
+
+  selectFifaGet(){
+    if(this.isWhiteBorder(this.fifaButton) ){
+      this.changeToBlackBorder(this.fifaButton);
+    }
+    else if(this.isWhiteBorder(this.codButton)){
+      this.changeToBlackBorder(this.codButton);
+      this.changeToWhiteBorder(this.fifaButton);
+      if(this.isWhiteBorder(this.userButton)){
+        this.toggleFindFifaUsers();
+      }
+      else if(this.isWhiteBorder(this.teamButton)){
+        this.toggleFindFifaTeams();
+      }
+    }
+    else {
+      this.changeToWhiteBorder(this.fifaButton);
+      if(this.isWhiteBorder(this.userButton)){
+        this.toggleFindFifaUsers();
+      }
+      else if(this.isWhiteBorder(this.teamButton)){
+        this.toggleFindFifaTeams();
+      }
+    }
   }
 
   private isWhiteBorder(elementToEvaluate: ElementRef){

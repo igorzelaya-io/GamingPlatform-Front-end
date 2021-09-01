@@ -117,7 +117,7 @@ export class ChallengeCreationPageComponent implements OnInit {
 	this.challenge.challengeRegion = this.challengeCountry.value;
 	this.challenge.challengePlatforms = this.challengePlatform.valueOf();
 	this.challenge.challengeDate = this.challengeDateElement._selected;
-	this.challenge.challengeModerator = this.challengeModerator;
+	this.challenge.challengeModeratorId = this.challengeModerator.userId;
 	this.challenge.challengeGame = this.challengeGame.valueOf();
 	if(this.challengeGame === 'Call Of Duty'){
 		this.challenge.challengeCodGameMode = this.challengeCodGameMode;

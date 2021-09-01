@@ -13,8 +13,10 @@ export class Team {
     teamEmail: string;
     teamRequests: Array<TeamInviteRequest>;
     hasImage: boolean;
-    teamTotalLs: number;
-    teamTotalWs: number;
+    teamCodTotalLs: number;
+    teamCodTotalWs: number;
+    teamFifaTotalWs: number;
+    teamFifaTotalLs: number;
     teamTotalPlays: number;
 
     constructor(teamId ?: string, teamCountry?: string, teamName?: string, 

@@ -98,11 +98,11 @@
                         <li *ngIf="isAuthenticated" class="nav-item"><a href="javascript:void(0)" class="nav-link">Profile<i class="flaticon-down-arrow"></i></a>
                             <ul class="dropdown-menu">             
                                 <li class="nav-item"><a class="nav-link" routerLink="/my-account" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">My Account</a></li>
-                                <li class="nav-item"><a class="nav-link" routerLink="/my-tournaments" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">My Tournaments</a></li>                                
+                                <li class="nav-item"><a class="nav-link" routerLink="/my-tournaments" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">My Tournaments</a></li>
+                                <li class="nav-item"><a class="nav-link" routerLink="/my-challenges" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">My Challenges</a></li>                                
                                 <li class="nav-item"><a class="nav-link" routerLink="/team-invites" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Team Invites</a></li>
                                 <li class="nav-item"><a class="nav-link" routerLink="/my-teams" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">My Teams</a></li>                                
-                                
-                                
+                                <li *ngIf="isAdmin" class="nav-item"><a class="nav-link" routerLink="/disputed-matches" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Disputed Matches</a></li>
                             </ul>
                         </li>
                         

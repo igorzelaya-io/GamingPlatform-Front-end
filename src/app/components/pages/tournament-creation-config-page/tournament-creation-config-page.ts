@@ -25,7 +25,6 @@ export class TournamentCreationConfigPageComponent implements OnInit {
 	tournamentFormat: TournamentFormat;
 	tournamentFormatString: string;
 	tournamentMatchesNumber: string;
-	userTournamentRequest: UserTournamentRequest;
 
 	tournamentGameMode: TournamentMode;
 
@@ -77,8 +76,7 @@ export class TournamentCreationConfigPageComponent implements OnInit {
 				private router: Router,
 				private tokenService: TokenStorageService,
 				private sharedService: SharedService,
-				private tournamentService: TournamentService,
-				private userTournamentService: UserTournamentService){
+				private tournamentService: TournamentService){
 		
 		this.leagueFormatElement = this.sharedService.get();
 		this.pvpFormatElement = this.sharedService.get();
@@ -90,13 +88,13 @@ export class TournamentCreationConfigPageComponent implements OnInit {
 		this.squadsTeamSizeElement = this.sharedService.get();
 		this.tournament = new Tournament();
 		this.tournamentCreation = new TournamentCreationRequest();
-		this.userTournamentRequest = new UserTournamentRequest();
 	}
 
 	ngOnInit(): void {
 		this.route.queryParams
 			.subscribe(params => {
 				this.tournament = JSON.parse(params['tournament']);
+				console.log(this.tournament);
 			});
 		if(this.tournament.tournamentGame === 'Fifa'){
 			this.isFifaTournament = true;
@@ -116,9 +114,7 @@ export class TournamentCreationConfigPageComponent implements OnInit {
 		this.tournament.tournamentTeamSize = TournamentTeamSize[this.tournamentTeamSize];
 		this.tournamentCreation.tournamentDateInMilliseconds = this.tournament.tournamentDateInMilliseconds;
 		this.tournamentCreation.tournamentToBeCreated = this.tournament;
-		this.tournamentCreation.tournamentUserModerator = this.tournament.tournamentModerator;
-		this.userTournamentRequest.user = this.tournament.tournamentModerator;
-		this.userTournamentRequest.tournament = this.tournament;
+		this.tournamentCreation.tournamentUserModeratorId = this.tournament.tournamentModeratorId;
 		this.tournamentService.postTournament(this.tournamentCreation, this.tokenService.getToken())
 			.subscribe((data: Tournament) => {
 				this.message = 'Tournament created Successfully';

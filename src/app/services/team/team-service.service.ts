@@ -61,19 +61,35 @@ export class TeamService {
     );
   }
 
-  getFirstFifteenTeams(): Observable<Team[]>{
-    return this.httpClient.get<Team[]>(TEAM_API + '/leaderboards')
+  getFirstFifteenTeamsByCodWins(): Observable<Team[]>{
+    return this.httpClient.get<Team[]>(TEAM_API + '/leaderboards/cod')
     .pipe(
       retry(1),
-      catchError(this.handleError('getFirstFifteenTeams', []))
+      catchError(this.handleError('getFirstFifteenTeamsByCodWins', []))
     );
   }
 
-  getNextPageBy(lastUserId: string): Observable<Team[]>{
-    return this.httpClient.get<Team[]>(TEAM_API + '/leaderboards/next?lastUserId=' + lastUserId)
+  getFirstFifteenTeamsByFifaWins(): Observable<Team[]>{
+    return this.httpClient.get<Team[]>(TEAM_API + '/leaderboards/fifa')
+    .pipe(
+      retry(1),
+      catchError(this.handleError('getFirstFifteenTeamsByFifaWins', []))
+    );
+  }
+
+  getNextPageByCodWins(lastUserId: string): Observable<Team[]>{
+    return this.httpClient.get<Team[]>(TEAM_API + '/leaderboards/fifa/next?lastUserId=' + lastUserId)
     .pipe(
       retry(1),
       catchError(this.handleError('getNextPageBy', []))
+    );
+  }
+
+  getNextPageByFifaWins(lastUserId: string): Observable<Team[]>{
+    return this.httpClient.get<Team[]>(TEAM_API + '/leaderboards/fifa/next?lastUserId=' + lastUserId)
+    .pipe(
+      retry(1),
+      catchError(this.handleError('getNextPageByFifaWins', []))
     );
   }
 

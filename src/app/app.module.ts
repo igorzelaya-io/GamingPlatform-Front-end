@@ -99,7 +99,10 @@ import { PopularChallengesComponent } from './components/common/popular-challeng
 import { UpcomingChallengesComponent } from './components/common/upcoming-challenges/upcoming-challenges.component';
 import { ChallengesDetailsPageComponent } from './components/pages/challenges-details-page/challenges-details-page.component';
 import { ChallengeMatchDetailsPageComponent } from './components/pages/challenge-match-details-page/challenge-match-details-page.component';
-
+import { MyChallengesComponent } from './components/pages/my-challenges/my-challenges.component';
+import { DisputedMatchesComponent } from './components/pages/disputed-matches/disputed-matches.component';
+import { ImageZoomComponent } from './components/common/image-zoom/image-zoom.component';
+import { NgxImageZoomModule } from 'ngx-image-zoom';
 
 @NgModule({
   declarations: [
@@ -180,7 +183,10 @@ import { ChallengeMatchDetailsPageComponent } from './components/pages/challenge
     PopularChallengesComponent,
     UpcomingChallengesComponent,
     ChallengesDetailsPageComponent,
-    ChallengeMatchDetailsPageComponent
+    ChallengeMatchDetailsPageComponent,
+    MyChallengesComponent,
+    DisputedMatchesComponent,
+    ImageZoomComponent
   ],
   imports: [
     BrowserModule,
@@ -206,7 +212,8 @@ import { ChallengeMatchDetailsPageComponent } from './components/pages/challenge
     MatToolbarModule,
     MatMenuModule,
     FontAwesomeModule,
-    ImageCropperModule
+    ImageCropperModule,
+    NgxImageZoomModule
   ],
   providers: [],
   bootstrap: [AppComponent]

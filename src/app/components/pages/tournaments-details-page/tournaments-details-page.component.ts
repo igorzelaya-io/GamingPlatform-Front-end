@@ -10,14 +10,7 @@ import { MessageResponse } from 'src/app/models/messageresponse';
 import { UserTeamService } from 'src/app/services/user-team.service';
 import { TournamentService } from 'src/app/services/tournament/tournament.service';
 import { Match } from 'src/app/models/match';
-import { UserService } from 'src/app/services/user.service';
 import { UserTournament } from 'src/app/models/user/user-tournament';
-import { TreeNode } from '../../../models/treenode';
-import { MatchTournamentRequest } from 'src/app/models/matchtournamentrequest';
-import { BinaryTree } from 'src/app/models/binarytree';
-import { Stack } from 'src/app/models/helpers/stack';
-import { TreeRound } from 'src/app/models/treeround';
-import { TeamService } from 'src/app/services/team/team-service.service';
 import { Role } from 'src/app/models/role';
 import { MatDialog } from '@angular/material/dialog';
 import { FieldformConfirmationComponent } from '../../common/fieldform-confirmation/fieldform-confirmation.component';
@@ -29,7 +22,7 @@ import { FieldformCountryComponent } from '../../common/fieldform-country/fieldf
 const monthNames = [ "January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December" ];
 
-export interface DialogData{
+export interface DialogData {
   replaceValueString: string,
   field: string,
   chargeFee?: string;
@@ -94,9 +87,12 @@ export class TournamentsDetailsPageComponent implements OnInit {
 
   isUserAdmin: boolean = false;
 
+  isTerminatedTournament = false;
+
   isClickedExitButton = false;
   isClickedJoinButton = false;
   isClickedSelectButton = false;
+  isClickedStartTournament = false;
 
   alreadyJoinedTournament = false;
   
@@ -168,6 +164,9 @@ export class TournamentsDetailsPageComponent implements OnInit {
   evaluateTournamentDate(){
     if(new Date().getTime() > new Date(this.tournament.tournamentDate).getTime()){
       this.isStartedTournament = true;
+      if(this.tournament.tournamentStatus === 'TERMINATED'){
+        this.isTerminatedTournament = true;
+      }
       if(this.tournament.startedTournament){
         this.isActivatedTournament = true;
         if(this.alreadyJoinedTournament){
@@ -249,6 +248,7 @@ export class TournamentsDetailsPageComponent implements OnInit {
   }
 
   public joinTournament(){
+    this.isClickedJoinButton = true;
     if(this.tokenService.loggedIn()){
       if(this.selectedTeamToJoinTournamentWith){
         if(this.selectedTeamToJoinTournamentWith.teamModerator.userName !== this.userInspectingTournament.userName){
@@ -342,6 +342,7 @@ export class TournamentsDetailsPageComponent implements OnInit {
 
   public selectTeamToJoinTournament(team: Team){
     this.selectedTeamToJoinTournamentWith = team;
+    this.isClickedJoinButton = false;
   }
 
   public deselectTeamToJoinTournament(){
@@ -352,6 +353,7 @@ export class TournamentsDetailsPageComponent implements OnInit {
   
 
   public addTeamToFifaTournament(teamTournamentRequest: TeamTournamentRequest){
+    this.isClickedJoinButton = true;
     this.teamTournamentService.addTeamToFifaTournament(teamTournamentRequest, this.tokenService.getToken())
       .subscribe((data: MessageResponse) => {
         this.alreadyJoinedTournament = true;
@@ -372,6 +374,7 @@ export class TournamentsDetailsPageComponent implements OnInit {
   }
 
   public addTeamToCodTournament(teamTournamentRequest: TeamTournamentRequest){
+    this.isClickedJoinButton = true;
     this.teamTournamentService.addTeamToCodTournament(teamTournamentRequest, this.tokenService.getToken())
     .subscribe((data: MessageResponse) => {
       console.log(data);
@@ -418,6 +421,7 @@ export class TournamentsDetailsPageComponent implements OnInit {
     err => {
       console.error(err);
       this.isActivatedTournament = false;
+      this.isClickedStartTournament = false;
     });
   }
   
@@ -439,6 +443,7 @@ export class TournamentsDetailsPageComponent implements OnInit {
   }
 
   openConfirmationDialogForTournamentInitialization(){
+    this.isClickedStartTournament = true;
     const dialogRef = this.dialog.open(FieldformConfirmationComponent);
     dialogRef.afterClosed().subscribe((result: any) => {
       if(result){
@@ -464,7 +469,7 @@ export class TournamentsDetailsPageComponent implements OnInit {
 
   public isAdminUser(){
     let role: Role = this.userInspectingTournament.userRoles.filter(userRole => userRole.authority === 'ADMIN').find(userRole => userRole.authority === 'ADMIN');
-    if(role || this.userInspectingTournament.userName === this.tournament.tournamentModerator.userName){
+    if(role || this.userInspectingTournament.userId === this.tournament.tournamentModeratorId){
       this.isUserAdmin = true;
       return;
     }
@@ -473,22 +478,6 @@ export class TournamentsDetailsPageComponent implements OnInit {
 
   public navigateToTeamCreation(){
     this.router.navigate(['/team-creation']);
-  }
-
-  public getTournamentBracketRoundsNumber(){
-    const numberOfTeamsInTournament: number = this.tournament.tournamentNumberOfTeams;
-    let splitNumberOfTeams: number = numberOfTeamsInTournament;
-    let numberOfRounds: number = 0; 
-    if(numberOfTeamsInTournament % 2 == 0){
-      for(let i = 0; i < numberOfTeamsInTournament; i++){
-        if(splitNumberOfTeams === 2 ){
-          break;
-        }
-        splitNumberOfTeams = splitNumberOfTeams / 2;
-        numberOfRounds++;
-      }
-      return numberOfRounds;
-    }
   }
 
   openDialogForPrizePool(){

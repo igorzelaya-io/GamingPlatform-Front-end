@@ -55,8 +55,6 @@ export interface DialogDataCountry{
   templateUrl: './challenges-details-page.component.html',
   styleUrls: ['./challenges-details-page.component.scss']
 })
-
-
 export class ChallengesDetailsPageComponent implements OnInit {
 
 
@@ -95,11 +93,13 @@ export class ChallengesDetailsPageComponent implements OnInit {
   isClickedExitButton = false;
   isClickedJoinButton = false;
   isClickedSelectButton = false;
+  isClickedStartChallenge = false;
 
   alreadyJoinedChallenge = false;
   
   isStartedChallenge = false;
 
+  isTerminatedChallenge = false;
 
   constructor(private route: ActivatedRoute,
               private router: Router, 
@@ -107,7 +107,6 @@ export class ChallengesDetailsPageComponent implements OnInit {
               private userTeamService: UserTeamService, 
               private teamChallengeService: TeamChallengeService,
               private challengeService: ChallengeServiceService,
-              private userService: UserService,
               public dialog: MatDialog) {
 	  this.challenge = new Challenge();
     this.userTeamsAvailableToJoinChallenge  = [];
@@ -167,6 +166,9 @@ export class ChallengesDetailsPageComponent implements OnInit {
   evaluateChallengeDate(){
     if(new Date().getTime() > new Date(this.challenge.challengeDate).getTime()){
       this.isStartedChallenge = true;
+      if(this.challenge.challengeStatus === 'TERMINATED'){
+        this.isTerminatedChallenge = true;  
+      }
       if(this.challenge.startedChallenge){
         this.isActivatedChallenge = true;
         if(this.alreadyJoinedChallenge){
@@ -241,6 +243,7 @@ export class ChallengesDetailsPageComponent implements OnInit {
   }
 
   public joinChallenge(){
+    this.isClickedJoinButton = true;
     if(this.tokenService.loggedIn()){
       if(this.selectedTeamToJoinChallengeWith){
         if(this.selectedTeamToJoinChallengeWith.teamModerator.userName !== this.userInspectingChallenge.userName){
@@ -316,6 +319,7 @@ export class ChallengesDetailsPageComponent implements OnInit {
   
 
   public addTeamToCodChallenge(teamChallengeRequest: TeamChallengeRequest){
+    this.isClickedJoinButton = true;
     this.teamChallengeService.addTeamToCodChallenge(teamChallengeRequest, this.tokenService.getToken())
     .subscribe((data: MessageResponse) => {
       console.log(data);
@@ -361,6 +365,7 @@ export class ChallengesDetailsPageComponent implements OnInit {
     err => {
       console.error(err);
       this.isActivatedChallenge = false;
+      this.isClickedStartChallenge = false;
     });
   }
   
@@ -381,8 +386,8 @@ export class ChallengesDetailsPageComponent implements OnInit {
     this.router.navigate(['/challenge-match-details'], { queryParams: {matchId: matchId, challengeId: this.challenge.challengeId}});
   }
 
-
   openConfirmationDialogForChallengeInitialization(){
+    this.isClickedStartChallenge = true;
     const dialogRef = this.dialog.open(FieldformConfirmationComponent);
     dialogRef.afterClosed().subscribe((result: any) => {
       if(result){
@@ -410,7 +415,7 @@ export class ChallengesDetailsPageComponent implements OnInit {
 
   public isAdminUser(){
     let role: Role = this.userInspectingChallenge.userRoles.filter(userRole => userRole.authority === 'ADMIN').find(userRole => userRole.authority === 'ADMIN');
-    if(role || this.userInspectingChallenge.userName === this.challenge.challengeModerator.userName){
+    if(role || this.userInspectingChallenge.userId === this.challenge.challengeModeratorId){
       this.isUserAdmin = true;
       return;
     }

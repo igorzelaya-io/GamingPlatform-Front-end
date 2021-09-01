@@ -62,19 +62,35 @@ export class UserService {
     );
   }
 
-  public getFirstFifteenUsersByWins(): Observable<User[]>{
-    return this.httpClient.get<User[]>(USER_API + '/users/leaderboards')
+  public getFirstFifteenUsersByFifaWins(): Observable<User[]>{
+    return this.httpClient.get<User[]>(USER_API + '/users/leaderboards/fifa')
     .pipe(
       retry(1),
-      catchError(this.handleError('getFirstTwentyFiveUsersByWins', []))
+      catchError(this.handleError('getFirstFifteenUsersByWins', []))
     );
   }
 
-  public getNextPage(lastUserId: string): Observable<User[]>{
-    return this.httpClient.get<User[]>(USER_API + '/users/leaderboards/next?lastUserId=' + lastUserId)
+  public getFirstFifteenUsersByCodWins(): Observable<User[]>{
+    return this.httpClient.get<User[]>(USER_API + '/users/leaderboards/cod')
     .pipe(
       retry(1),
-      catchError(this.handleError('getNextPage', []))
+      catchError(this.handleError('getFirstFifteenUsersByCodWins', []))
+    );
+  }
+
+  public getNextFifaPage(lastUserId: string): Observable<User[]>{
+    return this.httpClient.get<User[]>(USER_API + '/users/leaderboards/fifa/next?lastUserId=' + lastUserId)
+    .pipe(
+      retry(1),
+      catchError(this.handleError('getNextFifaPage', []))
+    );
+  }
+
+  public getNextCodPage(lastUserId: string){
+    return this.httpClient.get<User[]>(USER_API + '/users/leaderboards/cod/next?lastUserId=' + lastUserId)
+    .pipe(
+      retry(1),
+      catchError(this.handleError('getNextCodPage', []))
     );
   }
 
